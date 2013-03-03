@@ -48,6 +48,8 @@ public:
     void setLoadingType(LoadingType type);
     void setVirtualScreenSize(QSize size);
 
+    EXIFInfo & getExifForFile(QString fname);
+
 //signals:
 //    void finishedLoading(const QString & id);
 
@@ -61,6 +63,7 @@ private:
 
     // caching
     QList< QPair<QString, QPixmap *> > m_cacheDB;
+    QMap< QString, EXIFInfo > m_exifMap;
     size_t m_currentCacheSize;
     size_t m_maxCacheSize;
 

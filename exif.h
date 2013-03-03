@@ -65,6 +65,8 @@ public:
   QString exposureTime_st;
   unsigned short orientation;
 
+  QString resolution_st;
+
   // Destructor
   ~EXIFInfo() {
     if(imgDescription)

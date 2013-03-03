@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
 Item {
+    id: info_screen_root
     width: 640
     height: 480
 
@@ -61,6 +62,101 @@ Item {
             text: ""
             opacity: 0.9
         }
+
+        Grid {
+            id: info_screen_leftGrid_annotations
+            height: parent.height - parent.height / 3
+            width: parent.height
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: height / 12
+            anchors.left: info_screen_imageNumber.right
+            anchors.leftMargin: parent.width / 25
+            columns: 1
+            rows: 3
+            opacity: 0.9
+            spacing: height / 15
+
+            Text {
+                id: info_screen_anno_fileName
+                font.pixelSize: parent.height / 5.5
+                font.family: textFont.name
+                width: parent.width
+                color: "#888888"
+                opacity: 1.0
+                text: "Dateiname: "
+            }
+
+            Text {
+                id: info_screen_anno_fileSize
+                font.pixelSize: info_screen_anno_fileName.font.pixelSize
+                font.family: textFont.name
+                width: parent.width
+                color: info_screen_anno_fileName.color
+                opacity: 1.0
+                text: "Bildgröße: "
+            }
+
+            Text {
+                id: info_screen_anno_params
+                font.pixelSize: info_screen_anno_fileName.font.pixelSize
+                font.family: textFont.name
+                width: parent.width
+                color: info_screen_anno_fileName.color
+                opacity: 1.0
+                text: "Einstellungen: "
+            }
+        }
+
+        Grid {
+            id: info_screen_leftGrid
+            height: parent.height - parent.height / 3
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: info_screen_leftGrid_annotations.anchors.verticalCenterOffset
+            anchors.left: info_screen_leftGrid_annotations.right
+            anchors.right: info_screen_info_image.left
+            anchors.rightMargin: parent.width / 25
+            columns: 1
+            rows: 3
+            opacity: 0.9
+            spacing: height / 15
+
+            Text {
+                id: info_screen_text_fileName
+                font.pixelSize: parent.height / 5.5
+                font.family: textFont.name
+                width: parent.width
+                color: "#FFFFFF"
+                opacity: 1.0
+                text: ""
+                elide: Text.ElideRight
+                maximumLineCount: 1
+            }
+
+            Text {
+                id: info_screen_text_fileSize
+                font.pixelSize: info_screen_text_fileName.font.pixelSize
+                font.family: textFont.name
+                width: parent.width
+                color: "#FFFFFF"
+                opacity: 1.0
+                text: ""
+                elide: Text.ElideRight
+                maximumLineCount: 1
+            }
+
+            Text {
+                id: info_screen_text_params
+                font.pixelSize: info_screen_text_fileName.font.pixelSize
+                font.family: textFont.name
+                width: parent.width
+                color: "#FFFFFF"
+                opacity: 1.0
+                text: ""
+                elide: Text.ElideRight
+                maximumLineCount: 1
+            }
+
+        }
     }
 
     function show_hide_infobox() {
@@ -91,6 +187,12 @@ Item {
 
     function update() {
         info_screen_imageNumber.text = _supervisor.getImageNumSlashTotalNumber()
+        info_screen_text_fileName.text = _supervisor.getExifTagOfCurrent("fileName")
+        info_screen_text_fileSize.text = _supervisor.getExifTagOfCurrent("resolutionAndSize")
+        info_screen_text_params.text = _supervisor.getExifTagOfCurrent("acquisitionParameters")
+
+        if (info_screen_text_params.text === "") info_screen_anno_params.visible = false;
+        else info_screen_anno_params.visible = true;
     }
 
     function update_fade(duration) {
@@ -107,6 +209,8 @@ Item {
         ParallelAnimation {
             NumberAnimation { target: info_screen_info_image; easing.type: Easing.InOutQuad; properties: "scale"; to: 0.9; duration: transition_dummy.duration / 2.5 }
             NumberAnimation { target: info_screen_imageNumber; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_leftGrid; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
 
         ScriptAction { script: { update() } }
@@ -114,6 +218,8 @@ Item {
         ParallelAnimation {
             NumberAnimation { target: info_screen_imageNumber; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_info_image; easing.type: Easing.InOutQuad; properties: "scale"; to: 1.0; duration: transition_dummy.duration / 2.5 }
+            NumberAnimation { target: info_screen_leftGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
     }
 

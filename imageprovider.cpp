@@ -135,11 +135,17 @@ void ImageProvider::deleteCache()
     }
 
     this->m_cacheDB.clear();
+    this->m_exifMap.clear();
 }
 
 void ImageProvider::setLoadingType(LoadingType type)
 {
     this->m_currentLoadingType = type;
+}
+
+EXIFInfo& ImageProvider::getExifForFile(QString fname)
+{
+    return this->m_exifMap[fname];
 }
 
 void ImageProvider::setVirtualScreenSize(QSize size)
@@ -198,8 +204,11 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
     if (new_pixmap->isNull())
         return;
 
-    // read exif to get orientation information
+    // read exif to cache and to get orientation information
     EXIFInfo exif = readExifHeader(fname);
+    exif.resolution_st = QObject::tr("%1 x %2").arg(image.width()).arg(image.height());
+
+    this->m_exifMap.insert(fname, exif);
 
     // adjust orientation and rotation of image
     if (exif.orientation != 1)

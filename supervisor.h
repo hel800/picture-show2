@@ -43,6 +43,8 @@ February 2013
 #include "settingsdialog.h"
 #include "imageprovider.h"
 #include "loaddirectory.h"
+#include "readExif.h"
+#include "global.h"
 
 class Supervisor : public QObject
 {
@@ -111,6 +113,7 @@ public slots:
     Q_INVOKABLE void startShowFinished();
     Q_INVOKABLE bool isFullscreen();
     Q_INVOKABLE QVariant getImageNumSlashTotalNumber();
+    Q_INVOKABLE QVariant getExifTagOfCurrent(QVariant tagname);
 
     Q_INVOKABLE void panoramaError(QVariant title, QVariant text);
     Q_INVOKABLE QVariant getAppVersion();

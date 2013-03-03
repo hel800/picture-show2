@@ -550,6 +550,71 @@ QVariant Supervisor::getImageNumSlashTotalNumber()
     return QVariant(tr("%1/%2").arg(m_currentIndex+1).arg(m_current_directory_list.size()));
 }
 
+QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
+{
+    if (tagname.toString().isEmpty())
+        return QVariant("");
+
+    QString current_file_name = m_current_directory_list.at(m_currentIndex).absoluteFilePath();
+    EXIFInfo &exif = m_imgProvider->getExifForFile(current_file_name);
+
+    QString tag_string = tagname.toString();
+
+    if (tag_string == "cameraMake")
+        return QVariant(tr("Kamerahersteller: %1").arg(exif.cameraMake_st));
+    else if (tag_string == "fileName")
+        return QVariant(m_current_directory_list.at(m_currentIndex).fileName());
+    else if (tag_string == "cameraModel")
+        return QVariant(tr("Kameramodell: %1").arg(exif.cameraModel_st));
+    else if (tag_string == "dateTimeModified")
+        return QVariant(exif.dateTimeModified_st);
+    else if (tag_string == "dateTimeOriginal")
+        return QVariant(tr("Datum: %1").arg(exif.dateTimeOriginal_st));
+    else if (tag_string == "imgDescription")
+        return QVariant(tr("Beschreibung: %1").arg(exif.imgDescription_st));
+    else if (tag_string == "exposureTime")
+        return QVariant(exif.exposureTime_st);
+    else if (tag_string == "resolutionAndSize")
+    {
+        QFileInfo info(current_file_name);
+        return QVariant(tr("%1  (%2 kB)").arg(exif.resolution_st).arg(info.size() / 1024));
+    }
+    else if (tag_string == "acquisitionParameters")
+    {
+        QString params = "";
+        bool sep_needed = false;
+
+        if (exif.exposureTime > 0.5 && exif.exposureTime != 0.0)
+        {
+            params += tr("%1 Sek  ").arg(QString::number(exif.exposureTime, 'f', 1));
+            sep_needed = true;
+        }
+        else if (exif.exposureTime <= 0.5 && exif.exposureTime != 0.0)
+        {
+            double den = 1.0 / exif.exposureTime;
+            params += tr("%1  Sek").arg(QString::number(int(den + .5)));
+            sep_needed = true;
+        }
+
+        if (exif.FStop != 0.0)
+        {
+            if (sep_needed) params += "   |   ";
+            params += tr("f/%1").arg(QString::number(exif.FStop, 'f', 1));
+            sep_needed = true;
+        }
+
+        if (exif.focalLength >= 1.0)
+        {
+            if (sep_needed) params += "   |   ";
+            params += tr("%1  mm").arg(QString::number(exif.focalLength, 'f', 0));
+        }
+
+        return QVariant(params);
+    }
+    else
+        return QVariant("");
+}
+
 void Supervisor::panoramaError(QVariant title, QVariant text)
 {
     m_panoramaModeActive = false;
@@ -793,6 +858,12 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
         switch (event->button()) {
         case Qt::LeftButton:
         {
+            if (this->showLoaded() && m_activeInputMode == MODE_JUMPTO && m_overlayTransitions == 0)
+            {
+                this->inputModeTimeout();
+                return;
+            }
+
             int dc_speed = qApp->styleHints()->mouseDoubleClickInterval();
             m_mousePressTimer->start(dc_speed + 1);
             break;
@@ -815,6 +886,11 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
         }
             break;
         case Qt::RightButton:
+            if (this->showLoaded() && m_activeInputMode == MODE_JUMPTO && m_overlayTransitions == 0)
+            {
+                this->hideMessage();
+                return;
+            }
             this->nextImagePressed();
             break;
         default:
@@ -825,6 +901,14 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
 
 void Supervisor::mouseWheelEvent ( QWheelEvent * event )
 {
+    if (m_showLoaded && m_setDialog->getMouseControl() && !this->anyBlendingsActive() && m_activeInputMode == NO_MODE)
+    {
+        m_jumpToImageValue = QString::number(m_currentIndex + 1);
+        this->startInputMode(MODE_JUMPTO, -1);
+        std::cout << "einmal" << std::endl;
+        return;
+    }
+
     if (event->angleDelta().y() > 0)
     {
         this->upOrDownPressed(true);
@@ -1017,6 +1101,9 @@ void Supervisor::numberPressed(const QString & number)
 
 void Supervisor::upOrDownPressed(bool up)
 {
+    if (m_overlayTransitions > 0)
+        return;
+
     if (m_activeInputMode == MODE_TIMER_ON)
     {
         m_inputTimeout->stop();
