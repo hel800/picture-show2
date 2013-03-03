@@ -110,6 +110,7 @@ public slots:
     Q_INVOKABLE void imageLoadingFinished(QVariant slot);
     Q_INVOKABLE void startShowFinished();
     Q_INVOKABLE bool isFullscreen();
+    Q_INVOKABLE QVariant getImageNumSlashTotalNumber();
 
     Q_INVOKABLE void panoramaError(QVariant title, QVariant text);
     Q_INVOKABLE QVariant getAppVersion();

@@ -78,7 +78,6 @@ Supervisor::Supervisor(QObject *parent) :
     m_setDialog->move(new_x_pos, new_y_pos);
 
     ///------   ------///
-
     m_dirLoader = new loadDirectory();
     m_dirLoader->setDirectoryList(&m_current_directory_list);
     m_currentIndex = -1;
@@ -372,17 +371,16 @@ void Supervisor::nextImagePressed()
         return;
     }
 
-    m_blendingsActive++;
-
-    emit blendImage(QVariant(m_cur), QVariant(m_next), QVariant(true));
-    int tmp_next = this->giveFreeSlot(m_cur, m_next);
-    m_cur = m_next;
-
     // increase index or start from new it looping is active
     if (m_setDialog->getLoopSlideShow() && m_current_directory_list.size() <= m_currentIndex + 1)
         m_currentIndex = 0;
     else
         m_currentIndex++;
+
+    m_blendingsActive++;
+    emit blendImage(QVariant(m_cur), QVariant(m_next), QVariant(true));
+    int tmp_next = this->giveFreeSlot(m_cur, m_next);
+    m_cur = m_next;
 
     m_next = tmp_next;
     m_loadingStateNext = IMAGE_LOADING;
@@ -419,17 +417,16 @@ void Supervisor::prevImagePressed()
         return;
     }
 
-    m_blendingsActive++;
-
-    emit blendImage(QVariant(m_cur), QVariant(m_prev), QVariant(false));
-    int tmp_next = this->giveFreeSlot(m_cur, m_prev);
-    m_cur = m_prev;
-
     // decrease index or goto last one if looping is active
     if (m_setDialog->getLoopSlideShow() && this->isFirstImage())
         m_currentIndex = m_current_directory_list.size() - 1;
     else
         m_currentIndex--;
+
+    m_blendingsActive++;
+    emit blendImage(QVariant(m_cur), QVariant(m_prev), QVariant(false));
+    int tmp_next = this->giveFreeSlot(m_cur, m_prev);
+    m_cur = m_prev;
 
     m_next = tmp_next;
     m_loadingStateNext = IMAGE_LOADING;
@@ -548,6 +545,11 @@ bool Supervisor::isFullscreen()
     return m_quickView->windowState() == Qt::WindowMaximized;
 }
 
+QVariant Supervisor::getImageNumSlashTotalNumber()
+{
+    return QVariant(tr("%1/%2").arg(m_currentIndex+1).arg(m_current_directory_list.size()));
+}
+
 void Supervisor::panoramaError(QVariant title, QVariant text)
 {
     m_panoramaModeActive = false;
@@ -568,7 +570,9 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
 {
     // leave Panoramamode if active
     bool panoramaModeWasActive = false;
-    if (m_panoramaModeActive && event->key() != Qt::Key_Escape)
+    if (m_panoramaModeActive &&
+        event->key() != Qt::Key_Escape &&
+        event->key() != Qt::Key_I)
     {
         m_panoramaModeActive = false;
         emit stopPanorama();

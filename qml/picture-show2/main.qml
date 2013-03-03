@@ -90,18 +90,31 @@ Rectangle {
         if (slot_end === 2) { image_slot2.opacity = 0.01; transition_stop.target = image_slot2; }
         if (slot_end === 3) { image_slot3.opacity = 0.01; transition_stop.target = image_slot3; }
 
-        if (_settings_dialog.getBlendTypeForQml() === "FADE")
+        if (_settings_dialog.getBlendTypeForQml() === "FADE") {
             transition_anim_blend.start();
-        else if (_settings_dialog.getBlendTypeForQml() === "FADE_BLACK")
+            info_box.update_fade(transition_start.duration)
+        }
+        else if (_settings_dialog.getBlendTypeForQml() === "FADE_BLACK") {
             transition_anim_blendOverBlack.start();
-        else if (_settings_dialog.getBlendTypeForQml() === "SLIDE")
+            info_box.update_fade(transition_start.duration)
+        }
+        else if (_settings_dialog.getBlendTypeForQml() === "SLIDE") {
             if (forward) transition_anim_slide_forward.start(); else transition_anim_slide_backward.start();
-        else if (_settings_dialog.getBlendTypeForQml() === "TWIST_FADE")
+            info_box.update_fade(transition_start.duration * 2)
+        }
+        else if (_settings_dialog.getBlendTypeForQml() === "TWIST_FADE") {
             if (forward) transition_anim_twist_forward.start(); else transition_anim_twist_backward.start();
-        else if (_settings_dialog.getBlendTypeForQml() === "ANDROID_STYLE")
+            info_box.update_fade(transition_start.duration)
+        }
+        else if (_settings_dialog.getBlendTypeForQml() === "ANDROID_STYLE") {
             if (forward) transition_anim_android_forward.start(); else transition_anim_android_backward.start();
-        else
+            info_box.update_fade(transition_start.duration)
+        }
+        else {
             if (forward) transition_anim_hard.start(); else transition_anim_hard.start();
+            info_box.update_fade(0)
+        }
+
     }
 
     function show_message(image, title, text, info) {
