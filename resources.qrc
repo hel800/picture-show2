@@ -2,7 +2,6 @@
     <qresource prefix="/img">
         <file alias="start_logo.png">img/start_logo.png</file>
         <file alias="logoText.png">img/logoText.png</file>
-        <file alias="start_logo_gray.png">img/start_logo_gray.png</file>
         <file alias="message_error.png">img/message_error.png</file>
         <file alias="message_info.png">img/message_info.png</file>
         <file alias="message_play.png">img/message_play.png</file>
