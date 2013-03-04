@@ -24,6 +24,11 @@
         <source>OpenGL UnterstÃ¼tzung wurde auf diesem System nicht gefunden. Das Programm wird keinen optimalen Leistungen erzielen! Soll dennoch gestartet werden?</source>
         <translation type="obsolete">OpenGL support is not available on this system. The application will not achieve optimal performance! Do you want to start anyway?</translation>
     </message>
+    <message>
+        <location filename="imageprovider.cpp" line="209"/>
+        <source>%1 x %2</source>
+        <translation>%1 x %2</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -376,70 +381,105 @@
         <translation>No</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="315"/>
-        <location filename="supervisor.cpp" line="340"/>
-        <location filename="supervisor.cpp" line="390"/>
-        <location filename="supervisor.cpp" line="814"/>
+        <location filename="supervisor.cpp" line="330"/>
+        <location filename="supervisor.cpp" line="356"/>
+        <location filename="supervisor.cpp" line="402"/>
+        <location filename="supervisor.cpp" line="978"/>
         <source>Fehler</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="328"/>
+        <location filename="supervisor.cpp" line="344"/>
         <source>Timer beendet</source>
         <translation>Timer stopped</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="329"/>
+        <location filename="supervisor.cpp" line="345"/>
         <source>Das letzte Bild der Show wurde erreicht</source>
         <translation>The last picture of the show has been reached</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="341"/>
+        <location filename="supervisor.cpp" line="357"/>
         <source>Das nÃ¤chste Bild existiert nicht: &quot;%1&quot;. Die Show sollte neugestartet werden.</source>
         <translation>The next picture does not exist: \&quot;%1\&quot;. The show should be restarted.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="391"/>
+        <location filename="supervisor.cpp" line="403"/>
         <source>Das vorherige Bild existiert nicht: &quot;%1&quot;. Die Show sollte neugestartet werden.</source>
         <translation>The previous picture does not exist: \&quot;%1\&quot;. The show should be restarted.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="577"/>
+        <location filename="supervisor.cpp" line="550"/>
+        <source>%1/%2</source>
+        <translation>%1/%2</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="592"/>
+        <source>%1  (%2 kB)</source>
+        <translation>%1  (%2 kB)</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="601"/>
+        <source>%1 Sek  </source>
+        <translation>%1 sec</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="607"/>
+        <source>%1  Sek</source>
+        <translation>%1  sec</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="614"/>
+        <source>f/%1</source>
+        <translation>f/%1</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="621"/>
+        <source>%1  mm</source>
+        <translation>%1  mm</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="706"/>
         <source>Beenden?</source>
         <translation>Exit?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="815"/>
+        <location filename="supervisor.cpp" line="706"/>
+        <source>Zum Beenden bitte erneut ESC drÃ¼cken</source>
+        <translation>Press ESC again to exit</translation>
+    </message>
+    <message>
+        <location filename="supervisor.cpp" line="979"/>
         <source>Das Bild &quot;%1&quot; konnte nicht geladen werden!</source>
         <translation>The picture \&quot;%1\&quot; could not be loaded!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1127"/>
+        <location filename="supervisor.cpp" line="1302"/>
         <source>Starte Timer:  %1 Sekunden</source>
         <translation>Start Timer: %1 seconds</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1135"/>
+        <location filename="supervisor.cpp" line="1310"/>
         <source>Stoppe Timer</source>
         <translation>Stopping Timer</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1141"/>
+        <location filename="supervisor.cpp" line="1316"/>
         <source>Bildnummer eingeben und ENTER drÃ¼cken</source>
         <translation>Enter number of picture and press ENTER</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1143"/>
+        <location filename="supervisor.cpp" line="1318"/>
         <source>Timer gestoppt. </source>
         <translation>Timer stopped.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1149"/>
+        <location filename="supervisor.cpp" line="1324"/>
         <source>Springe zu: %1 / %2</source>
         <translation>Jump to: %1 / %2</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="315"/>
+        <location filename="supervisor.cpp" line="331"/>
         <source>Der Ordner &quot;%1&quot; existiert nicht, oder es befinden sich keine Bilder darin!</source>
         <translation>The directory \&quot;%1\&quot; does not exist or does not contain any pictures!</translation>
     </message>

@@ -132,31 +132,6 @@ void QtQuick2ApplicationViewer::mousePressEvent( QMouseEvent * event)
 
 void QtQuick2ApplicationViewer::mouseMoveEvent( QMouseEvent * event)
 {
-//    if (this->bottomRightHandle && (this->windowState() != Qt::WindowMaximized))
-//    {
-//        QPoint distance = this->lastMousePos - event->globalPos();
-////        distance.setX(distance.x() + overdrive.x());
-
-////        if (distance.x() < 0)
-////            overdrive.setX(overdrive.x() + distance.x());
-
-//        if (this->width() - distance.x() >= 840 /*&& overdrive.x() < 0*/)
-//        {
-//            this->setWidth(this->width() - distance.x());
-//        }
-////        else/* if (distance.x() > 0)*/
-////        {
-////            overdrive.setX(overdrive.x() + distance.x());
-////        }
-//        if (this->height() - distance.y() >= 580)
-//        {
-//            this->setHeight(this->height() - distance.y());
-//        }
-////        else
-////        {
-
-////        }
-//    }
     if ((this->windowState() != Qt::WindowMaximized) && (event->buttons() & Qt::LeftButton))
     {
         QPoint distance = this->lastMousePos - event->globalPos();

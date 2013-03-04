@@ -45,8 +45,8 @@ Supervisor::Supervisor(QObject *parent) :
     m_quickView->engine()->setImportPathList(QStringList());
     m_quickView->engine()->addImportPath("./qml");
 
-//    m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
-    m_quickView->setMainQmlFile(QString("./qml/picture-show2/main.qml"));
+    m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
+//    m_quickView->setMainQmlFile(QString("./qml/picture-show2/main.qml"));
 
     // Display error, if QML is not ready
     if (m_quickView->status() == QQuickView::Error || m_quickView->status() == QQuickView::Null)
@@ -561,17 +561,31 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
     QString tag_string = tagname.toString();
 
     if (tag_string == "cameraMake")
-        return QVariant(tr("Kamerahersteller: %1").arg(exif.cameraMake_st));
+        return QVariant(exif.cameraMake_st);
     else if (tag_string == "fileName")
         return QVariant(m_current_directory_list.at(m_currentIndex).fileName());
     else if (tag_string == "cameraModel")
-        return QVariant(tr("Kameramodell: %1").arg(exif.cameraModel_st));
+        return QVariant(exif.cameraModel_st);
     else if (tag_string == "dateTimeModified")
         return QVariant(exif.dateTimeModified_st);
     else if (tag_string == "dateTimeOriginal")
-        return QVariant(tr("Datum: %1").arg(exif.dateTimeOriginal_st));
+    {
+        QString dateTime = exif.dateTimeOriginal_st.trimmed();
+        QRegExp exp("^[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$");
+        if (exp.exactMatch(dateTime))
+        {
+            QDateTime dt = QDateTime::fromString(dateTime, "yyyy:MM:dd hh:mm:ss");
+            if (dt.isValid())
+                dateTime = dt.toString("dd.MM.yyyy hh:mm:ss");
+            else
+                dateTime = "";
+        }
+        return QVariant(dateTime);
+    }
     else if (tag_string == "imgDescription")
-        return QVariant(tr("Beschreibung: %1").arg(exif.imgDescription_st));
+    {
+        return QVariant(exif.imgDescription_st.trimmed());
+    }
     else if (tag_string == "exposureTime")
         return QVariant(exif.exposureTime_st);
     else if (tag_string == "resolutionAndSize")
@@ -682,10 +696,16 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 m_panoramaModeActive = false;
                 emit stopPanorama();
             }
+            else if (m_infoActive)
+            {
+                m_overlayTransitions++;
+                m_infoActive = false;
+                emit infoBox();
+            }
             else
             {
                 m_exitRequested = true;
-                this->showCustomMessage(QString("qrc:///img/message_exit.png"), tr("Beenden?"), QString("Zum Beenden bitte erneut ESC drücken"), 2500, true);
+                this->showCustomMessage(QString("qrc:///img/message_exit.png"), tr("Beenden?"), tr("Zum Beenden bitte erneut ESC drücken"), 2500, true);
             }
         }
         break;
@@ -899,13 +919,20 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
     }
 }
 
+void Supervisor::mouseMoveEvent ( QMouseEvent * event )
+{
+    if (event->buttons() != Qt::LeftButton)
+        return;
+
+    m_mousePressTimer->stop();
+}
+
 void Supervisor::mouseWheelEvent ( QWheelEvent * event )
 {
-    if (m_showLoaded && m_setDialog->getMouseControl() && !this->anyBlendingsActive() && m_activeInputMode == NO_MODE)
+    if (m_showLoaded && m_setDialog->getMouseControl() && !this->anyBlendingsActive() && m_activeInputMode == NO_MODE && !m_helpActive)
     {
         m_jumpToImageValue = QString::number(m_currentIndex + 1);
         this->startInputMode(MODE_JUMPTO, -1);
-        std::cout << "einmal" << std::endl;
         return;
     }
 
@@ -1023,7 +1050,7 @@ void Supervisor::processWaitingQueue()
     }
     else if (m_wTask.head() == DIR_LOAD)
     {
-        if (m_showLoaded && !this->anyBlendingsActive())
+        if (!this->anyBlendingsActive())
         {
             m_wTask.dequeue();
             this->startDirectoryLoading();
@@ -1139,14 +1166,16 @@ void Supervisor::bindings()
     if (m_quickView == NULL && m_setDialog == NULL)
         return;
 
+    // SettingsDialog Bindings
     connect(m_setDialog, SIGNAL(accepted()), this, SLOT(applyNewOptions()));
     connect(m_setDialog, SIGNAL(accepted()), m_quickView, SLOT(hideCursorOnFullscreen()));
     connect(m_setDialog, SIGNAL(rejected()), m_quickView, SLOT(hideCursorOnFullscreen()));
     connect(m_setDialog, SIGNAL(languageChanged(QVariant)), this, SLOT(changeLanguage(QVariant)));
 
+    // QQuickWindow Bindings
     connect(m_quickView, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(keyPressEvent(QKeyEvent*)));
 //    connect(m_quickView, SIGNAL(keyReleased(QKeyEvent*)), this, SLOT(keyReleaseEvent(QKeyEvent*)));
-//    connect(m_quickView, SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
+    connect(m_quickView, SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
     connect(m_quickView, SIGNAL(mouseDoubleClicked(QMouseEvent*)), this, SLOT(mouseDoubleClickEvent(QMouseEvent*)));
     connect(m_quickView, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
     connect(m_quickView, SIGNAL(mouseWheelTurned(QWheelEvent*)), this, SLOT(mouseWheelEvent(QWheelEvent*)));
@@ -1155,9 +1184,9 @@ void Supervisor::bindings()
 
     connect(m_dirLoader, SIGNAL(loadDirectoryFinished(bool)), this, SLOT(directoryLoadingFinished(bool)));
 
+    // QML Bindings
     QObject * rootObject = (QObject*)m_quickView->rootObject();
     connect(this, SIGNAL(blendImage(QVariant,QVariant,QVariant)), rootObject, SLOT(image_transition(QVariant,QVariant,QVariant)));
-//    connect(this, SIGNAL(blendPrevImage(QVariant,QVariant)), rootObject, SLOT(fade_to_prev(QVariant,QVariant)));
     connect(this, SIGNAL(blendOutShow(QVariant)), rootObject, SLOT(show_to_waiting(QVariant)));
     connect(this, SIGNAL(quit()), rootObject, SLOT(quit()));
     connect(this, SIGNAL(waiting(QVariant)), rootObject, SLOT(animate_wait(QVariant)));

@@ -83,7 +83,7 @@ Item {
                 width: parent.width
                 color: "#888888"
                 opacity: 1.0
-                text: "Dateiname: "
+                text: "Dateiname:"
             }
 
             Text {
@@ -93,7 +93,7 @@ Item {
                 width: parent.width
                 color: info_screen_anno_fileName.color
                 opacity: 1.0
-                text: "Bildgröße: "
+                text: "Bildgröße:"
             }
 
             Text {
@@ -103,7 +103,7 @@ Item {
                 width: parent.width
                 color: info_screen_anno_fileName.color
                 opacity: 1.0
-                text: "Einstellungen: "
+                text: "Parameter:"
             }
         }
 
@@ -155,24 +155,84 @@ Item {
                 elide: Text.ElideRight
                 maximumLineCount: 1
             }
+        }
 
+        Grid {
+            id: info_screen_rightGrid
+            height: parent.height - parent.height / 3
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: info_screen_leftGrid_annotations.anchors.verticalCenterOffset
+            anchors.left: info_screen_info_image.right
+            anchors.leftMargin: parent.width / 30
+            anchors.right: parent.right
+            anchors.rightMargin: parent.width / 30
+            columns: 2
+            rows: 2
+            opacity: 0.9
+            spacing: height / 15
+
+            Text {
+                id: info_screen_anno_description
+                font.pixelSize: parent.height / 5.5
+                font.family: textFont.name
+                width: parent.width * 0.66
+                color: "#888888"
+                opacity: 1.0
+                text: "Beschreibung:"
+            }
+            Text {
+                id: info_screen_anno_date
+                font.pixelSize: parent.height / 5.5
+                font.family: textFont.name
+                width: parent.width / 3
+                color: "#888888"
+                opacity: 1.0
+                text: "Datum:"
+            }
+
+            Text {
+                id: info_screen_text_description
+                font.pixelSize: parent.height / 5
+                font.family: textFont.name
+                width: info_screen_anno_description.width
+                color: "#FFFFFF"
+                opacity: 1.0
+                text: ""
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
+                maximumLineCount: 2
+            }
+
+            Text {
+                id: info_screen_text_date
+                font.pixelSize: parent.height / 5
+                font.family: textFont.name
+                width: info_screen_anno_date.width
+                color: "#FFFFFF"
+                opacity: 1.0
+                text: ""
+                elide: Text.ElideRight
+                maximumLineCount: 1
+            }
         }
     }
 
     function show_hide_infobox() {
+        fade_info_content.stop()
+
         if (info_screen_content.opacity === 0.0) {
             info_screen_content.opacity = 0.01
 
             update()
-            fade_info_content.stop()
+            reset_content_opacity()
 
             info_screen_info_image.opacity = 0.6
             info_screen_info_image.scale = 0.65
-            info_screen_imageNumber.opacity = 0.9
 
             fade_info.start()
         }
         else if (info_screen_content.opacity === 1.0) {
+            fade_info_content.stop()
             fade_info_out.start()
         }
         else if (fade_info_out.running) {
@@ -185,14 +245,48 @@ Item {
         }
     }
 
+    function reset_content_opacity() {
+        info_screen_imageNumber.opacity = 0.9
+        info_screen_info_image.scale = 1.0
+        info_screen_leftGrid.opacity = 0.9
+        info_screen_rightGrid.opacity = 0.9
+        info_screen_leftGrid_annotations = 0.9
+    }
+
+    function update_lang() {
+        if (_settings_dialog.getLanguageForQml() === "en") {
+            info_screen_anno_fileName.text = "Filename:"
+            info_screen_anno_fileSize.text = "Size:"
+            info_screen_anno_params.text = "Parameter:"
+            info_screen_anno_description.text = "Description:"
+            info_screen_anno_date.text = "Date:"
+        }
+        else {
+            info_screen_anno_fileName.text = "Dateiname:"
+            info_screen_anno_fileSize.text = "Bildgröße:"
+            info_screen_anno_params.text = "Parameter:"
+            info_screen_anno_description.text = "Beschreibung:"
+            info_screen_anno_date.text = "Datum:"
+        }
+
+    }
+
     function update() {
         info_screen_imageNumber.text = _supervisor.getImageNumSlashTotalNumber()
         info_screen_text_fileName.text = _supervisor.getExifTagOfCurrent("fileName")
         info_screen_text_fileSize.text = _supervisor.getExifTagOfCurrent("resolutionAndSize")
         info_screen_text_params.text = _supervisor.getExifTagOfCurrent("acquisitionParameters")
+        info_screen_text_description.text = _supervisor.getExifTagOfCurrent("imgDescription")
+        info_screen_text_date.text = _supervisor.getExifTagOfCurrent("dateTimeOriginal")
 
         if (info_screen_text_params.text === "") info_screen_anno_params.visible = false;
         else info_screen_anno_params.visible = true;
+
+        if (info_screen_text_description.text === "") info_screen_anno_description.visible = false;
+        else info_screen_anno_description.visible = true;
+
+        if (info_screen_text_date.text === "") info_screen_anno_date.visible = false;
+        else info_screen_anno_date.visible = true;
     }
 
     function update_fade(duration) {
@@ -210,6 +304,7 @@ Item {
             NumberAnimation { target: info_screen_info_image; easing.type: Easing.InOutQuad; properties: "scale"; to: 0.9; duration: transition_dummy.duration / 2.5 }
             NumberAnimation { target: info_screen_imageNumber; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_rightGrid; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
 
@@ -219,6 +314,7 @@ Item {
             NumberAnimation { target: info_screen_imageNumber; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_info_image; easing.type: Easing.InOutQuad; properties: "scale"; to: 1.0; duration: transition_dummy.duration / 2.5 }
             NumberAnimation { target: info_screen_leftGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_rightGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
     }

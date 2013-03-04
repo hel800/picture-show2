@@ -22,6 +22,7 @@ Rectangle {
 
     function refresh() {
         hp_screen.update()
+        info_box.update_lang()
         setImageScale(image_slot1);
         setImageScale(image_slot2);
         setImageScale(image_slot3);

@@ -123,7 +123,7 @@ Item {
             message_screen_image.source = image
         }
 
-        if (hp_screen.get_opacity() > 0.0 || _supervisor.blendingCount() > 1 || !_supervisor.showLoaded()) {
+        if (hp_screen.get_opacity() > 0.0 || _supervisor.blendingCount() > 1 || _supervisor.overlayTransitionCount() > 1 || !_supervisor.showLoaded()) {
             message_screen_smoother.visible = false;
             background.visible = false;
         }
@@ -135,7 +135,6 @@ Item {
             message_screen_smoother.visible = true;
             background.visible = true;
         }
-
 
         // show
         if (title !== "" || text !== "") {
