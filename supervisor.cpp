@@ -42,6 +42,8 @@ Supervisor::Supervisor(QObject *parent) :
     context->setContextProperty("_settings_dialog", m_setDialog);
     context->setContextProperty("_supervisor", this);
 
+    qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
+
     m_quickView->engine()->setImportPathList(QStringList());
     m_quickView->engine()->addImportPath("./qml");
 
@@ -593,6 +595,19 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
         QFileInfo info(current_file_name);
         return QVariant(tr("%1  (%2 kB)").arg(exif.resolution_st).arg(info.size() / 1024));
     }
+    else if (tag_string == "cameraModelMake")
+    {
+        QString cam = "";
+        if (!exif.cameraModel_st.isEmpty())
+            cam += exif.cameraModel_st;
+        else if (!exif.cameraMake_st.isEmpty())
+            cam += exif.cameraMake_st;
+
+        if (!exif.cameraModel_st.isEmpty() && !exif.cameraMake_st.isEmpty())
+            cam += " (" + exif.cameraMake_st + ")";
+
+        return QVariant(cam);
+    }
     else if (tag_string == "acquisitionParameters")
     {
         QString params = "";
@@ -606,7 +621,7 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
         else if (exif.exposureTime <= 0.5 && exif.exposureTime != 0.0)
         {
             double den = 1.0 / exif.exposureTime;
-            params += tr("%1  Sek").arg(QString::number(int(den + .5)));
+            params += tr("1/%1  Sek").arg(QString::number(int(den + .5)));
             sep_needed = true;
         }
 
@@ -705,7 +720,14 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             else
             {
                 m_exitRequested = true;
-                this->showCustomMessage(QString("qrc:///img/message_exit.png"), tr("Beenden?"), tr("Zum Beenden bitte erneut ESC drücken"), 2500, true);
+                QString exit_message = tr("ESC zum Beenden drücken, ENTER zum Abbruch");
+                if (m_automaticForwardActive)
+                {
+                    m_automaticForwardActive = false;
+                    m_automaticForward->stop();
+                    exit_message.prepend(tr("Timer beendet! "));
+                }
+                this->showCustomMessage(QString("qrc:///img/message_exit.png"), tr("Beenden?"), exit_message, 0, true);
             }
         }
         break;
@@ -1079,7 +1101,7 @@ void Supervisor::numberPressed(const QString & number)
     {
         m_inputTimeout->stop();
 
-        if (m_timerInputValue.count("_") == 0)
+        if (m_timerInputValue.count("_") == 0 && number != "0")
         {
             m_timerInputValue = number + QString("_");
             m_inputTimeout->start(2000);
@@ -1095,7 +1117,12 @@ void Supervisor::numberPressed(const QString & number)
     {
         if (number == "0")
         {
-            QString temp_jump = QString(m_jumpToImageValue).replace("_", "").trimmed() + number;
+            QString temp_jump = "";
+            if (m_jumpToImageValue.contains("_"))
+                temp_jump = QString(m_jumpToImageValue).replace("_", "").trimmed() + number;
+            else
+                temp_jump = number;
+
             if (temp_jump.startsWith("0") || temp_jump.toInt() > m_current_directory_list.size())
                 return;
         }
@@ -1352,8 +1379,8 @@ void Supervisor::inputModeTimeout()
         m_timerValue = m_timerInputValue.toInt(&ok);
         if (ok)
         {
-            if (m_timerValue < 4)
-                m_timerValue = 4;
+            if (m_timerValue < 1)
+                m_timerValue = 1;
 
             m_automaticForwardActive = true;
             m_automaticForward->start(m_timerValue * 1000);
@@ -1381,8 +1408,8 @@ void Supervisor::timerInputValueTimeout()
     if (m_activeInputMode == MODE_TIMER_ON)
     {
         m_timerInputValue.replace("_", QString(""));
-        if (m_timerInputValue.toInt() < 4)
-            m_timerInputValue = QString("4");
+        if (m_timerInputValue.toInt() < 1)
+            m_timerInputValue = QString("1");
         this->startInputMode(MODE_TIMER_ON);
     }
     else if (m_activeInputMode == MODE_JUMPTO)

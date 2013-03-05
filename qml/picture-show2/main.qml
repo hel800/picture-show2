@@ -158,6 +158,11 @@ Rectangle {
         if (image_slot3.opacity === 1.0) transition_start.target = image_slot3;
 
         if (transition_start.target.anchors.horizontalCenterOffset !== 0) {
+            if (_settings_dialog.getScaleTypeQml() === 2)
+                panorama_animation_stop_scale_anim.to = transition_start.target.scale;
+            else
+                panorama_animation_stop_scale_anim.to = 1.0;
+
             panorama_animation_stop.start();
         }
         else {
@@ -613,10 +618,11 @@ Rectangle {
                                 easing.type: Easing.InOutQuad
                                 to: 0;
                                 duration: 1000 }
-            NumberAnimation {   target: transition_start.target;
+            NumberAnimation {   id: panorama_animation_stop_scale_anim
+                                target: transition_start.target;
                                 property: "scale";
                                 easing.type: Easing.InOutQuad
-                                to: (_settings_dialog.getScaleTypeQml() === 2) ? transition_start.target.scale : 1.0
+                                to: 1.0
                                 duration: 1000 }
         }
 

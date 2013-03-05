@@ -1,10 +1,17 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import my.library 1.0
 
 Item {
     id: info_screen_root
     width: 640
     height: 480
+
+    QTimer {
+        id: ticker
+        interval: 5000
+        onTimeout : run_ticker()
+    }
 
     FastBlur {
         id: info_screen_smoother
@@ -105,6 +112,17 @@ Item {
                 opacity: 1.0
                 text: "Parameter:"
             }
+
+            Text {
+                id: info_screen_anno_camera
+                font.pixelSize: info_screen_anno_fileName.font.pixelSize
+                font.family: textFont.name
+                width: parent.width
+                color: info_screen_anno_fileName.color
+                opacity: 1.0
+                text: "Kamera:"
+                visible: false;
+            }
         }
 
         Grid {
@@ -154,6 +172,19 @@ Item {
                 text: ""
                 elide: Text.ElideRight
                 maximumLineCount: 1
+            }
+
+            Text {
+                id: info_screen_text_camera
+                font.pixelSize: info_screen_text_fileName.font.pixelSize
+                font.family: textFont.name
+                width: parent.width
+                color: "#FFFFFF"
+                opacity: 1.0
+                text: ""
+                elide: Text.ElideRight
+                maximumLineCount: 1
+                visible: false
             }
         }
 
@@ -218,29 +249,37 @@ Item {
     }
 
     function show_hide_infobox() {
-        fade_info_content.stop()
+//        fade_info_content.stop()
+        ticker.stop()
 
         if (info_screen_content.opacity === 0.0) {
             info_screen_content.opacity = 0.01
 
             update()
             reset_content_opacity()
+            ticker_start_position()
 
-            info_screen_info_image.opacity = 0.6
-            info_screen_info_image.scale = 0.65
+            if (!fade_info_content.running) {
+                info_screen_info_image.opacity = 0.6
+                info_screen_info_image.scale = 0.65
+            }
 
             fade_info.start()
         }
         else if (info_screen_content.opacity === 1.0) {
-            fade_info_content.stop()
             fade_info_out.start()
         }
         else if (fade_info_out.running) {
             fade_info_out.stop()
-            fade_info.start()
+
+            if (!fade_info_content.running)
+                fade_info.start()
+            else
+                fade_info2.start()
         }
         else {
             fade_info.stop()
+            ticker.stop()
             fade_info_out.start()
         }
     }
@@ -260,6 +299,7 @@ Item {
             info_screen_anno_params.text = "Parameter:"
             info_screen_anno_description.text = "Description:"
             info_screen_anno_date.text = "Date:"
+            info_screen_anno_camera.text = "Camera:"
         }
         else {
             info_screen_anno_fileName.text = "Dateiname:"
@@ -267,6 +307,7 @@ Item {
             info_screen_anno_params.text = "Parameter:"
             info_screen_anno_description.text = "Beschreibung:"
             info_screen_anno_date.text = "Datum:"
+            info_screen_anno_camera.text = "Kamera:"
         }
 
     }
@@ -278,6 +319,7 @@ Item {
         info_screen_text_params.text = _supervisor.getExifTagOfCurrent("acquisitionParameters")
         info_screen_text_description.text = _supervisor.getExifTagOfCurrent("imgDescription")
         info_screen_text_date.text = _supervisor.getExifTagOfCurrent("dateTimeOriginal")
+        info_screen_text_camera.text = _supervisor.getExifTagOfCurrent("cameraModelMake")
 
         if (info_screen_text_params.text === "") info_screen_anno_params.visible = false;
         else info_screen_anno_params.visible = true;
@@ -291,7 +333,29 @@ Item {
 
     function update_fade(duration) {
         transition_dummy.duration = duration
-        fade_info_content.start()
+        ticker.stop()
+        if (info_screen_content.opacity !== 0.0)
+            fade_info_content.start()
+    }
+
+    function run_ticker() {
+        if (!info_screen_text_camera.visible)
+            fade_ticker_1.start()
+        else
+            fade_ticker_2.start()
+    }
+
+    function ticker_start_position() {
+        info_screen_anno_params.opacity = 1.0
+        info_screen_text_params.opacity = 1.0
+        info_screen_anno_camera.opacity = 1.0
+        info_screen_text_camera.opacity = 1.0
+
+        if (info_screen_text_params.text !== "")
+            info_screen_anno_params.visible = true
+        info_screen_text_params.visible = true
+        info_screen_anno_camera.visible = false
+        info_screen_text_camera.visible = false
     }
 
     NumberAnimation { id: transition_dummy; duration: 1000 }
@@ -308,7 +372,7 @@ Item {
             NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
 
-        ScriptAction { script: { update() } }
+        ScriptAction { script: { update(); ticker_start_position() } }
 
         ParallelAnimation {
             NumberAnimation { target: info_screen_imageNumber; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
@@ -317,6 +381,8 @@ Item {
             NumberAnimation { target: info_screen_rightGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
+
+        ScriptAction { script: { if (info_screen_text_camera.text !== "") ticker.start() } }
     }
 
     ParallelAnimation {
@@ -326,12 +392,30 @@ Item {
         onRunningChanged: {
             if (!fade_info.running) {
                 _supervisor.overlayTransitionFinished()
+                if (info_screen_text_camera.text !== "")
+                    ticker.start()
             }
         }
 
         NumberAnimation { target: info_screen_content; properties: "opacity"; to: 1.0; duration: 500; easing.type: Easing.InOutQuad }
         NumberAnimation { target: info_screen_smoother; properties: "opacity"; to: 0.85; duration: 500; easing.type: Easing.InOutQuad }
         NumberAnimation { target: info_screen_info_image; easing.overshoot: 5; easing.type: Easing.InOutBack; properties: "scale"; to: 1.0; duration: 500; }
+    }
+
+    ParallelAnimation {
+        id: fade_info2
+        running: false
+
+        onRunningChanged: {
+            if (!fade_info2.running) {
+                _supervisor.overlayTransitionFinished()
+                if (info_screen_text_camera.text !== "")
+                    ticker.start()
+            }
+        }
+
+        NumberAnimation { target: info_screen_content; properties: "opacity"; to: 1.0; duration: 500; easing.type: Easing.InOutQuad }
+        NumberAnimation { target: info_screen_smoother; properties: "opacity"; to: 0.85; duration: 500; easing.type: Easing.InOutQuad }
     }
 
     ParallelAnimation {
@@ -348,5 +432,55 @@ Item {
         NumberAnimation { target: info_screen_smoother; properties: "opacity"; to: 0.0; duration: 500; easing.type: Easing.InOutQuad }
         NumberAnimation { target: info_screen_info_image; easing.type: Easing.InQuad; properties: "scale"; to: 0.65; duration: 500; }
 
+    }
+
+    SequentialAnimation {
+        id: fade_ticker_1
+        running: false
+
+        ParallelAnimation {
+            NumberAnimation { target: info_screen_text_params; properties: "opacity"; to: 0.0; duration: 250; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: info_screen_anno_params; properties: "opacity"; to: 0.0; duration: 250; easing.type: Easing.InOutQuad }
+        }
+
+        ScriptAction { script: {
+                                info_screen_anno_params.visible = false
+                                info_screen_text_params.visible = false
+                                info_screen_anno_camera.opacity = 0.0
+                                info_screen_text_camera.opacity = 0.0
+                                info_screen_anno_camera.visible = true
+                                info_screen_text_camera.visible = true
+                     }
+        }
+
+        ParallelAnimation {
+            NumberAnimation { target: info_screen_text_camera; properties: "opacity"; to: 1.0; duration: 250; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: info_screen_anno_camera; properties: "opacity"; to: 1.0; duration: 250; easing.type: Easing.InOutQuad }
+        }
+    }
+
+    SequentialAnimation {
+        id: fade_ticker_2
+        running: false
+
+        ParallelAnimation {
+            NumberAnimation { target: info_screen_text_camera; properties: "opacity"; to: 0.0; duration: 250; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: info_screen_anno_camera; properties: "opacity"; to: 0.0; duration: 250; easing.type: Easing.InOutQuad }
+        }
+
+        ScriptAction { script: {
+                                info_screen_anno_camera.visible = false
+                                info_screen_text_camera.visible = false
+                                info_screen_anno_params.opacity = 0.0
+                                info_screen_text_params.opacity = 0.0
+                                info_screen_anno_params.visible = true
+                                info_screen_text_params.visible = true
+                     }
+        }
+
+        ParallelAnimation {
+            NumberAnimation { target: info_screen_text_params; properties: "opacity"; to: 1.0; duration: 250; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: info_screen_anno_params; properties: "opacity"; to: 1.0; duration: 250; easing.type: Easing.InOutQuad }
+        }
     }
 }
