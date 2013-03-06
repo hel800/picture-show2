@@ -80,8 +80,9 @@ int ParseEXIF(unsigned char *buf, unsigned len, EXIFInfo &result) {
   for(offs = 0; offs < len-1; offs++)
     if(buf[offs] == 0xFF && buf[offs+1] == 0xE1)
       break;
-  if(offs == len-1)
+  if(offs+18 >= len-1)
     return PARSE_EXIF_ERROR_NO_EXIF;
+
   offs += 4;
   if(buf[offs] != 0x45 || buf[offs+1] != 0x78 || buf[offs+2] != 0x69)
     return PARSE_EXIF_ERROR_NO_EXIF;
@@ -112,6 +113,10 @@ int ParseEXIF(unsigned char *buf, unsigned len, EXIFInfo &result) {
   unsigned ifdOffset = offs-10;
   unsigned exifSubIFD = 0;
   for(int j = 0; j < nentries; j++)  {
+    if(offs+12 >= len) {
+        return PARSE_EXIF_ERROR_CORRUPT;
+    }
+
     unsigned short tag = parse16(buf+offs, alignIntel);
     unsigned ncomp = parse32(buf+offs+4, alignIntel);
     unsigned coffs = parse32(buf+offs+8, alignIntel);
@@ -179,9 +184,17 @@ int ParseEXIF(unsigned char *buf, unsigned len, EXIFInfo &result) {
 
   // At the EXIF SubIFD, read the rest of the EXIF tags
   offs = exifSubIFD;
+
+  if(offs+2 >= len) {
+      return 0;
+  }
+
   nentries = parse16(buf+offs, alignIntel);
   offs += 2;
   for(int j = 0; j < nentries; j++)  {
+    if(offs+12 >= len) {
+        return 0;
+    }
     unsigned short tag = parse16(buf+offs, alignIntel);
     unsigned ncomp = parse32(buf+offs+4, alignIntel);
     unsigned coffs = parse32(buf+offs+8, alignIntel);
@@ -237,7 +250,7 @@ int ExtractDateTime(unsigned char *buf, unsigned len, QString &dateString)
     for(offs = 0; offs < len-1; offs++)
       if(buf[offs] == 0xFF && buf[offs+1] == 0xE1)
         break;
-    if(offs == len-1)
+    if(offs+18 >= len-1)
       return PARSE_EXIF_ERROR_NO_EXIF;
     offs += 4;
     if(buf[offs] != 0x45 || buf[offs+1] != 0x78 || buf[offs+2] != 0x69)
@@ -269,6 +282,11 @@ int ExtractDateTime(unsigned char *buf, unsigned len, QString &dateString)
     unsigned exifSubIFD = 0;
 
     unsigned tryoff = 298;
+
+    if(tryoff+12 >= len) {
+      return PARSE_EXIF_ERROR_CORRUPT;
+    }
+
     unsigned short tag = parse16(buf+tryoff, alignIntel);
     if (tag == 0x9003)
     {
@@ -280,6 +298,11 @@ int ExtractDateTime(unsigned char *buf, unsigned len, QString &dateString)
         return 0;
     }
     tryoff = 288;
+
+    if(tryoff+12 >= len) {
+      return PARSE_EXIF_ERROR_CORRUPT;
+    }
+
     tag = parse16(buf+tryoff, alignIntel);
     if (tag == 0x9003)
     {

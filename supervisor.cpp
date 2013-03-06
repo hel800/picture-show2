@@ -136,8 +136,7 @@ Supervisor::Supervisor(QObject *parent) :
 
     this->bindings();
 
-    //QTimer::singleShot(1000, &s_dialog, SLOT(show()));
-    //s_dialog.show();
+    QTimer::singleShot(900, m_setDialog, SLOT(show()));
 
     emit refresh();
 }
@@ -680,6 +679,8 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             if (m_currentlyWaiting)
                 return;
 
+            m_wTask.clear();
+
             if (m_blendingsActive == 0 && m_automaticForwardActive)
                 this->startInputMode(MODE_TIMER_OFF, 2500);
             else if (m_automaticForwardActive)
@@ -719,6 +720,8 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             }
             else
             {
+                m_wTask.clear();
+
                 m_exitRequested = true;
                 QString exit_message = tr("ESC zum Beenden drücken, ENTER zum Abbruch");
                 if (m_automaticForwardActive)
@@ -810,6 +813,13 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                     m_overlayTransitions++;
                     m_panoramaModeActive = true;
                     emit startPanorama();
+
+                    if (m_automaticForwardActive)
+                    {
+                        m_automaticForwardActive = false;
+                        m_automaticForward->stop();
+                        this->startInputMode(MODE_TIMER_OFF, 1500);
+                    }
                 }
             }
         }
