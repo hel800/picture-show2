@@ -16,7 +16,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 
 ......................................................................
 
-author: Sebastian Schäfer
+author: Sebastian SchÃ¤fer
 February 2013
 
 --------------------------------------------------------------------*/
@@ -323,6 +323,18 @@ QPoint SettingsDialog::getWindowPosition()
     return settings.value("windowPos", QVariant(QPoint(50, 50))).toPoint();
 }
 
+void SettingsDialog::setFirstStart(bool state)
+{
+    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    settings.setValue("firstStart", QVariant(state));
+}
+
+bool SettingsDialog::getFirstStart()
+{
+    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    return settings.value("firstStart", QVariant(true)).toBool();
+}
+
 size_t SettingsDialog::getMaxCacheSize()
 {
     return (size_t)ui->spinBox_cacheSize->value() * 1024 * 1024;
@@ -397,7 +409,7 @@ int SettingsDialog::getScaleTypeQml()
 
 void SettingsDialog::on_pushButton_browse_clicked()
 {
-    QString directory = QFileDialog::getExistingDirectory(this, tr(QString::fromLatin1("Öffne Verzeichnis").toStdString().c_str()),
+    QString directory = QFileDialog::getExistingDirectory(this, tr(QString::fromLatin1("Ã–ffne Verzeichnis").toStdString().c_str()),
                                                           ui->comboBox_directoryPath->lineEdit()->text(),
                                                           QFileDialog::ShowDirsOnly);
 

@@ -16,7 +16,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 
 ......................................................................
 
-author: Sebastian Sch‰fer
+author: Sebastian Sch√§fer
 February 2013
 
 --------------------------------------------------------------------*/
@@ -78,6 +78,9 @@ public:
 
     void setWindowPosition(QPoint size);
     QPoint getWindowPosition();
+
+    void setFirstStart(bool state);
+    bool getFirstStart();
 
     size_t getMaxCacheSize();
 

@@ -16,12 +16,14 @@
         <file alias="message_exit.png">img/message_exit.png</file>
         <file alias="info_mini.png">img/info_mini.png</file>
         <file alias="picture-show.ico">img/picture-show.ico</file>
+        <file alias="bubble.png">img/bubble.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>
         <file alias="Helpscreen.qml">qml/picture-show2/Helpscreen.qml</file>
         <file alias="Messagebox.qml">qml/picture-show2/Messagebox.qml</file>
         <file alias="Infobox.qml">qml/picture-show2/Infobox.qml</file>
+        <file alias="BubbleMessage.qml">qml/picture-show2/BubbleMessage.qml</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="good_times.ttf">fonts/good_times.ttf</file>

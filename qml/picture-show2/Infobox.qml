@@ -284,6 +284,13 @@ Item {
         }
     }
 
+    function isVisible() {
+        if (info_screen_content.opacity === 0.0)
+            return false;
+        else
+            return true;
+    }
+
     function reset_content_opacity() {
         info_screen_imageNumber.opacity = 0.9
         info_screen_info_image.scale = 1.0

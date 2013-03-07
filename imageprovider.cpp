@@ -36,6 +36,7 @@ ImageProvider::ImageProvider(QList<QFileInfo> *list, int *ind)
     this->m_loadingCur = &dummy_next;
     this->m_loadingNext = &dummy_next;
     this->m_loadingPrev = &dummy_next;
+    this->m_loadingJumpto = &dummy_next;
 
     this->m_currentCacheSize = 0;
     this->m_maxCacheSize = 209715200;
@@ -110,15 +111,39 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
                 *this->m_loadingPrev = IMAGE_READY;
         }
     }
+    else if (id.section("/", -1).section("_", 0, 0) == "jumpto")
+    {
+        QString jumpto_number = id.section("/", -1).section("_", 1);
+
+        bool ok = false;
+        int nr = jumpto_number.toInt(&ok) - 1;
+
+        if (ok && nr >= 0 && nr < this->m_dirList->size())
+        {
+            *this->m_loadingJumpto = IMAGE_LOADING;
+            QString fname = this->m_dirList->at(nr).absoluteFilePath();
+
+            this->lookForCachedPixmap(fname, pixmap);
+            if (pixmap.isNull())
+                this->loadNewPixmap(fname, pixmap);
+
+            // still null --> error
+            if (pixmap.isNull())
+                *this->m_loadingJumpto = IMAGE_ERROR;
+            else
+                *this->m_loadingJumpto = IMAGE_READY;
+        }
+    }
 
     return pixmap;
 }
 
-void ImageProvider::setLoadingPointers(ImageState *cur, ImageState *next, ImageState *prev)
+void ImageProvider::setLoadingPointers(ImageState *cur, ImageState *next, ImageState *prev, ImageState *jump)
 {
      this->m_loadingCur = cur;
      this->m_loadingNext = next;
      this->m_loadingPrev = prev;
+     this->m_loadingJumpto = jump;
 }
 
 void ImageProvider::setCacheSize(size_t bytes)

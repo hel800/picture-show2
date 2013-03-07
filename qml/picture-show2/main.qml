@@ -48,6 +48,8 @@ Rectangle {
     }
 
     function load_new_image(image, slot) {
+        var patt = /^jumpto/;
+
         if (image === "current") {
             if (slot === 1) { image_slot1.source = ""; setImageScale(image_slot1); image_slot1.source = "image://pictures/current" }
             else if (slot === 2) { image_slot2.source = ""; setImageScale(image_slot2); image_slot2.source = "image://pictures/current" }
@@ -63,6 +65,9 @@ Rectangle {
             if (slot === 1) { image_slot1.source = ""; setImageScale(image_slot1); image_slot1.source = "image://pictures/prev" }
             else if (slot === 2) { image_slot2.source = ""; setImageScale(image_slot2); image_slot2.source = "image://pictures/prev" }
             else if (slot === 3) { image_slot3.source = ""; setImageScale(image_slot3); image_slot3.source = "image://pictures/prev" }
+        }
+        else if (patt.test(image)) {
+            message_box.load_jumpto_image(image)
         }
     }
 
@@ -174,6 +179,10 @@ Rectangle {
         info_box.show_hide_infobox()
     }
 
+    function show_hide_bubble(text, timeout) {
+        bubble_box.show_hide_bubble(text, timeout)
+    }
+
 
 // =================================================================================== //
 // ----- ELEMENTS ----- //
@@ -270,6 +279,12 @@ Rectangle {
 
     Messagebox {
         id: message_box
+        width: root.width
+        height: root.height
+    }
+
+    BubbleMessage {
+        id: bubble_box
         width: root.width
         height: root.height
     }

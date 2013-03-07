@@ -84,7 +84,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_dirLoader->setDirectoryList(&m_current_directory_list);
     m_currentIndex = -1;
     m_imgProvider = new ImageProvider(&m_current_directory_list, &m_currentIndex);
-    m_imgProvider->setLoadingPointers(&m_loadingStateCurrent, &m_loadingStateNext, &m_loadingStatePrev);
+    m_imgProvider->setLoadingPointers(&m_loadingStateCurrent, &m_loadingStateNext, &m_loadingStatePrev, &m_loadingStateJumpto);
     m_imgProvider->setLoadingType(m_setDialog->getLoadingType());
     m_imgProvider->setVirtualScreenSize(m_quickView->screen()->virtualGeometry().size());
     m_quickView->engine()->addImageProvider(QLatin1String("pictures"), m_imgProvider);
@@ -136,7 +136,17 @@ Supervisor::Supervisor(QObject *parent) :
 
     this->bindings();
 
-    QTimer::singleShot(900, m_setDialog, SLOT(show()));
+    if (!m_setDialog->getFirstStart())
+        QTimer::singleShot(900, m_setDialog, SLOT(show()));
+    else
+    {
+        QTimer::singleShot(900, this, SLOT(showHelpOverlay()));
+        m_setDialog->setFirstStart(false);
+    }
+
+    QString id = "jumpto_132";
+    std::cout << id.section("/", -1).section("_", 1).toStdString().c_str() << std::endl;
+
 
     emit refresh();
 }
@@ -525,6 +535,25 @@ void Supervisor::waitingFinished()
 
 void Supervisor::imageLoadingFinished(QVariant slot)
 {
+    std::cout << slot.toString().toStdString().c_str() << std::endl;
+
+    QString slot_string = slot.toString();
+    if ( (slot_string.section("/", -1).section("_", 0, 0) == "jumpto") &&
+         (m_activeInputMode == MODE_JUMPTO) &&
+         (m_jumpToImageValue.trimmed() == slot_string.section("/", -1).section("_", 1).trimmed()) )
+    {
+        QString jumpto_number = slot_string.section("/", -1).section("_", 1);
+
+        bool ok = false;
+        int nr = jumpto_number.toInt(&ok) - 1;
+
+        if (ok)
+        {
+            // show jumpto image...
+            std::cout << "show jump to image: " << nr << std::endl;
+        }
+    }
+
     this->processWaitingQueue();
 }
 
@@ -661,6 +690,8 @@ QVariant Supervisor::getAppVersion()
 
 void Supervisor::keyPressEvent( QKeyEvent * event )
 {
+    emit bubbleBox(QVariant(""), QVariant(8000));
+
     // leave Panoramamode if active
     bool panoramaModeWasActive = false;
     if (m_panoramaModeActive &&
@@ -1236,6 +1267,7 @@ void Supervisor::bindings()
     connect(this, SIGNAL(startPanorama()), rootObject, SLOT(start_panorama()));
     connect(this, SIGNAL(stopPanorama()), rootObject, SLOT(stop_panorama()));
     connect(this, SIGNAL(infoBox()), rootObject, SLOT(show_hide_info()));
+    connect(this, SIGNAL(bubbleBox(QVariant,QVariant)), rootObject, SLOT(show_hide_bubble(QVariant,QVariant)));
 }
 
 bool Supervisor::isQmlReady()
@@ -1266,6 +1298,7 @@ void Supervisor::showHelpOverlay()
     {
         m_overlayTransitions++;
         emit showHelp();
+        emit bubbleBox(QVariant(tr("Willkommen in picture-show 2!\n\"O\" drücken, um Bilder zu öffnen!")), QVariant(8000));
         m_helpActive = true;
     }
 }
@@ -1358,12 +1391,15 @@ void Supervisor::startInputMode(InputMode mode, int timeout)
 
         m_automaticForwardActive = false;
         m_automaticForward->stop();
+        m_activeInputMode = mode;
 
         this->showCustomMessage(QString("qrc:///img/message_jumpto.png"),
                                tr("Springe zu: %1 / %2").arg(m_jumpToImageValue).arg(m_current_directory_list.size()),
                                announce,
                                0,
                                true);
+
+        emit loadImage(QVariant("jumpto_1"), 4);
     }
         break;
     default:

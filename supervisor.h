@@ -97,6 +97,7 @@ signals:
     void startPanorama();
     void stopPanorama();
     void infoBox();
+    void bubbleBox(QVariant text, QVariant timeout);
 
     
 public slots:
@@ -195,6 +196,7 @@ private:
     ImageState m_loadingStateCurrent;
     ImageState m_loadingStateNext;
     ImageState m_loadingStatePrev;
+    ImageState m_loadingStateJumpto;
 
     // Overlay STATES
     bool m_helpActive;

@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
 Item {
+    id: message_screen_root
     width: 640
     height: 480
 
@@ -107,6 +108,19 @@ Item {
             opacity: 0.8
             text: ""
         }
+
+        Image {
+            id: image_jumpto
+            height: parent.height * 1.5
+            width: height * (message_screen_root.width / message_screen_root.height)
+            anchors.centerIn: parent
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            opacity: 0.0
+            scale: 1.0
+
+            onStatusChanged: if (image_jumpto.status === Image.Ready) _supervisor.imageLoadingFinished(source)
+        }
     }
 
     function show_hide_message(image, title, text, info) {
@@ -171,6 +185,16 @@ Item {
                 fade_message_out.start()
             }
         }
+    }
+
+    function load_jumpto_image(image) {
+        if ((image_jumpto.source == "image://pictures/" + image) && (image_jumpto.status === Image.Ready)) {
+            _supervisor.imageLoadingFinished(image_jumpto.source)
+            return
+        }
+
+
+        image_jumpto.source = "image://pictures/" + image
     }
 
     ParallelAnimation {
