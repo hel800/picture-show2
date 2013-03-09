@@ -146,6 +146,11 @@ void ImageProvider::setLoadingPointers(ImageState *cur, ImageState *next, ImageS
      this->m_loadingJumpto = jump;
 }
 
+bool ImageProvider::getJumpLoadingFinished()
+{
+    return (this->m_loadingJumpCounter == 0);
+}
+
 void ImageProvider::setCacheSize(size_t bytes)
 {
     this->m_maxCacheSize = bytes;

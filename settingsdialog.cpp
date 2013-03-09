@@ -34,6 +34,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->setModal(true);
     this->setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint );
     ui->groupBox_news->hide();
+    ui->pushButton_load->setFocus();
 
     this->resizeDialog();
 

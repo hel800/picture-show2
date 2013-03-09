@@ -183,6 +183,10 @@ Rectangle {
         bubble_box.show_hide_bubble(text, timeout)
     }
 
+    function show_jumpto_preview() {
+        message_box.blend_jumpto();
+    }
+
 
 // =================================================================================== //
 // ----- ELEMENTS ----- //

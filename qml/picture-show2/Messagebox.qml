@@ -29,7 +29,7 @@ Item {
         color: "black"
         opacity: 0.0
         width: parent.width
-        height: parent.width > parent.height ? parent.height / 6 : parent.width / 6;
+        height: parent.width * 0.65 > parent.height ? parent.height / 6 : (parent.width * 0.65)  / 6;
         anchors.verticalCenter: parent.verticalCenter
     }
 
@@ -109,21 +109,40 @@ Item {
             text: ""
         }
 
+        Rectangle {
+            id: image_jumpto_rect
+            color: "black"
+            height: image_jumpto.paintedHeight + (image_jumpto.height * 0.13)
+            width: image_jumpto.paintedWidth + (image_jumpto.height * 0.13)
+            anchors.centerIn: image_jumpto
+            opacity: 0.0
+            radius: 10.0
+            scale: 0.5
+            smooth: true
+        }
+
         Image {
             id: image_jumpto
-            height: parent.height * 1.5
-            width: height * (message_screen_root.width / message_screen_root.height)
-            anchors.centerIn: parent
-            fillMode: Image.PreserveAspectCrop
+            height: message_screen.height * 1.35
+            width: _settings_dialog.getScaleTypeQml() === 2 ? height * (message_screen_root.width / message_screen_root.height) : height * 1.7
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: width * 0.25
+            fillMode: _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
             smooth: true
             opacity: 0.0
-            scale: 1.0
+            scale: 0.5
 
             onStatusChanged: if (image_jumpto.status === Image.Ready) _supervisor.imageLoadingFinished(source)
         }
     }
 
     function show_hide_message(image, title, text, info) {
+        if (image_jumpto.opacity !== 0.0 && message_screen_title.text !== title) {
+            fade_jumpto_preview.stop()
+            fade_jumpto_preview_out.start()
+        }
+
         if (title !== "" && text !== "") {
             message_screen_title2.text = ""
             message_screen_title.text = title
@@ -193,8 +212,12 @@ Item {
             return
         }
 
-
         image_jumpto.source = "image://pictures/" + image
+    }
+
+    function blend_jumpto() {
+        fade_jumpto_preview_out.stop()
+        fade_jumpto_preview.start()
     }
 
     ParallelAnimation {
@@ -239,5 +262,31 @@ Item {
         NumberAnimation { target: message_screen_image; properties: "scale"; to: 0.8; duration: 250; easing.type: Easing.InOutQuad }
         NumberAnimation { target: message_screen_smoother; properties: "radius"; to: 0; duration: 250; easing.type: Easing.InQuint }
         NumberAnimation { target: message_screen_smoother; properties: "opacity"; to: 0.0; duration: 250; easing.type: Easing.InOutQuad }
+    }
+
+    SequentialAnimation {
+        id: fade_jumpto_preview
+        running: false
+
+//        ScriptAction { script:  { image_jumpto.scale = 0.2  } }
+
+        ParallelAnimation {
+            NumberAnimation { target: image_jumpto; properties: "opacity"; to: 0.85; duration: 650; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: image_jumpto; properties: "scale"; to: 1.0; duration: 650; easing.type: Easing.InOutBack }
+            NumberAnimation { target: image_jumpto_rect; properties: "opacity"; to: 0.5; duration: 650; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: image_jumpto_rect; properties: "scale"; to: 1.0; duration: 650; easing.type: Easing.InOutBack }
+        }
+    }
+
+    SequentialAnimation {
+        id: fade_jumpto_preview_out
+        running: false
+
+        ParallelAnimation {
+            NumberAnimation { target: image_jumpto; properties: "opacity"; to: 0.0; duration: 200; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: image_jumpto; properties: "scale"; to: 0.5; duration: 200; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: image_jumpto_rect; properties: "opacity"; to: 0.0; duration: 200; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: image_jumpto_rect; properties: "scale"; to: 0.5; duration: 200; easing.type: Easing.InOutQuad }
+        }
     }
 }

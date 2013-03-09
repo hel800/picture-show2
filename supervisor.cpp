@@ -115,6 +115,11 @@ Supervisor::Supervisor(QObject *parent) :
     m_mousePressTimer->setSingleShot(true);
     connect(m_mousePressTimer, SIGNAL(timeout()), this, SLOT(leftMousePress()));
 
+    m_jumptoPreview = new QTimer(this);
+    m_jumptoPreview->setSingleShot(true);
+    m_jumptoPreview->setInterval(1000);
+    connect(m_jumptoPreview, SIGNAL(timeout()), this, SLOT(showJumpToPreview()));
+
     m_showLoaded = false;
     m_currentlyLoading = false;
 
@@ -535,7 +540,7 @@ void Supervisor::waitingFinished()
 
 void Supervisor::imageLoadingFinished(QVariant slot)
 {
-    std::cout << slot.toString().toStdString().c_str() << std::endl;
+//    std::cout << slot.toString().toStdString().c_str() << std::endl;
 
     QString slot_string = slot.toString();
     if ( (slot_string.section("/", -1).section("_", 0, 0) == "jumpto") &&
@@ -550,7 +555,7 @@ void Supervisor::imageLoadingFinished(QVariant slot)
         if (ok)
         {
             // show jumpto image...
-            std::cout << "show jump to image: " << nr << std::endl;
+            emit blendJumpToPreview();
         }
     }
 
@@ -1156,6 +1161,8 @@ void Supervisor::numberPressed(const QString & number)
     }
     else if (m_activeInputMode == MODE_JUMPTO)
     {
+        m_jumptoPreview->stop();
+
         if (number == "0")
         {
             QString temp_jump = "";
@@ -1189,6 +1196,8 @@ void Supervisor::numberPressed(const QString & number)
 
         if (m_jumpToImageValue.contains("_"))
             m_inputTimeout->start(2000);
+        else
+            m_jumptoPreview->start();
 
         this->startInputMode(MODE_JUMPTO, -1);
     }
@@ -1221,11 +1230,26 @@ void Supervisor::upOrDownPressed(bool up)
         int cur_val = m_jumpToImageValue.toInt();
 
         if (up && cur_val != 0 && cur_val + 1 <= m_current_directory_list.size())
+        {
             m_jumpToImageValue = QString::number(cur_val + 1);
+            m_jumptoPreview->start();
+            this->startInputMode(MODE_JUMPTO, -1);
+        }
         else if (!up && cur_val != 0 && cur_val - 1 > 0)
+        {
             m_jumpToImageValue = QString::number(cur_val - 1);
+            m_jumptoPreview->start();
+            this->startInputMode(MODE_JUMPTO, -1);
+        }
+    }
+}
 
-        this->startInputMode(MODE_JUMPTO, -1);
+void Supervisor::showJumpToPreview()
+{
+    if (m_activeInputMode == MODE_JUMPTO)
+    {
+        QString jumptoString = "jumpto_" + m_jumpToImageValue;
+        emit loadImage(QVariant(jumptoString), 4);
     }
 }
 
@@ -1268,6 +1292,7 @@ void Supervisor::bindings()
     connect(this, SIGNAL(stopPanorama()), rootObject, SLOT(stop_panorama()));
     connect(this, SIGNAL(infoBox()), rootObject, SLOT(show_hide_info()));
     connect(this, SIGNAL(bubbleBox(QVariant,QVariant)), rootObject, SLOT(show_hide_bubble(QVariant,QVariant)));
+    connect(this, SIGNAL(blendJumpToPreview()), rootObject, SLOT(show_jumpto_preview()));
 }
 
 bool Supervisor::isQmlReady()
@@ -1336,6 +1361,7 @@ void Supervisor::hideMessage()
         m_exitRequested = false;
 
         m_messageTimeout->stop();
+        m_jumptoPreview->stop();
         m_overlayTransitions++;
         emit showMessage(QVariant(""), QVariant(""), QVariant(""), QVariant(false));
         m_activeInputMode = NO_MODE;
@@ -1391,7 +1417,6 @@ void Supervisor::startInputMode(InputMode mode, int timeout)
 
         m_automaticForwardActive = false;
         m_automaticForward->stop();
-        m_activeInputMode = mode;
 
         this->showCustomMessage(QString("qrc:///img/message_jumpto.png"),
                                tr("Springe zu: %1 / %2").arg(m_jumpToImageValue).arg(m_current_directory_list.size()),
@@ -1399,7 +1424,6 @@ void Supervisor::startInputMode(InputMode mode, int timeout)
                                0,
                                true);
 
-        emit loadImage(QVariant("jumpto_1"), 4);
     }
         break;
     default:
@@ -1462,6 +1486,7 @@ void Supervisor::timerInputValueTimeout()
     {
         m_jumpToImageValue.replace("_", QString("")).trimmed();
         this->startInputMode(MODE_JUMPTO, -1);
+        this->showJumpToPreview();
     }
 }
 

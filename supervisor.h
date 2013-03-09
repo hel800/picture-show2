@@ -98,6 +98,7 @@ signals:
     void stopPanorama();
     void infoBox();
     void bubbleBox(QVariant text, QVariant timeout);
+    void blendJumpToPreview();
 
     
 public slots:
@@ -141,6 +142,7 @@ private slots:
 
     void numberPressed(const QString & number);
     void upOrDownPressed(bool up);
+    void showJumpToPreview();
     bool overlayActive();
     void hideOverlays();
 
@@ -180,6 +182,7 @@ private:
     QTimer * m_inputMessageTimeout;
     QTimer * m_inputTimeout;
     QTimer * m_mousePressTimer;
+    QTimer * m_jumptoPreview;
     QQueue<WaitingTask> m_wTask;
 
     // LIST containing all images

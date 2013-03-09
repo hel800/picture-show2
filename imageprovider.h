@@ -41,6 +41,7 @@ public:
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
     void setLoadingPointers(ImageState * cur, ImageState * next, ImageState * prev, ImageState * jump);
+    bool getJumpLoadingFinished();
 
     void setCacheSize(size_t bytes);
     void deleteCache();
@@ -61,6 +62,7 @@ private:
     ImageState * m_loadingNext;
     ImageState * m_loadingPrev;
     ImageState * m_loadingJumpto;
+    int m_loadingJumpCounter;
 
     // caching
     QList< QPair<QString, QPixmap *> > m_cacheDB;
