@@ -99,6 +99,7 @@ signals:
     void infoBox();
     void bubbleBox(QVariant text, QVariant timeout);
     void blendJumpToPreview();
+    void fadeToJumpToPreview(QVariant slot_current);
 
     
 public slots:
@@ -113,7 +114,9 @@ public slots:
     Q_INVOKABLE void waitingFinished();
     Q_INVOKABLE void imageLoadingFinished(QVariant slot);
     Q_INVOKABLE void startShowFinished();
+    Q_INVOKABLE void jumtoPreviewReady();
     Q_INVOKABLE bool isFullscreen();
+    Q_INVOKABLE bool isInfoActive();
     Q_INVOKABLE QVariant getImageNumSlashTotalNumber();
     Q_INVOKABLE QVariant getExifTagOfCurrent(QVariant tagname);
 
@@ -135,7 +138,7 @@ private slots:
     void startDirectoryLoading();
     void nextImagePressed();
     void prevImagePressed();
-    void jumpToImage();
+    void jumpToImage(bool fromPreview = false);
 
     void processWaitingQueue();
     void changeLanguage(QVariant language);
@@ -219,6 +222,7 @@ private:
     bool m_panoramaModeActive;
     bool m_exitRequested;
     InputMode m_activeInputMode;
+    bool m_jumptoPreviewVisible;
 };
 
 #endif // SUPERVISOR_H

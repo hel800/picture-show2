@@ -187,6 +187,18 @@ Rectangle {
         message_box.blend_jumpto();
     }
 
+    function fade_preview_to_screen(current_slot) {
+        if (image_slot1.opacity === 1.0) transition_start.target = image_slot1;
+        if (image_slot2.opacity === 1.0) transition_start.target = image_slot2;
+        if (image_slot3.opacity === 1.0) transition_start.target = image_slot3;
+
+        if (current_slot === 1) transition_stop.target = image_slot1;
+        if (current_slot === 2) transition_stop.target = image_slot2;
+        if (current_slot === 3) transition_stop.target = image_slot3;
+
+        fade_preview_to_big.start()
+    }
+
 
 // =================================================================================== //
 // ----- ELEMENTS ----- //
@@ -286,6 +298,21 @@ Rectangle {
         width: root.width
         height: root.height
     }
+
+    Image {
+        id: image_jumpto_big
+        height: root.width * 0.65 > root.height ? (root.height / 6) * 1.35 : ((root.width * 0.65)  / 6) * 1.35;
+        width: _settings_dialog.getScaleTypeQml() === 2 ? height * (root.width / root.height) : height * 1.7
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: width * 0.25
+        fillMode: _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+        smooth: true
+        opacity: 0.0
+        scale: 0.5
+        visible: false
+    }
+
 
     BubbleMessage {
         id: bubble_box
@@ -654,5 +681,55 @@ Rectangle {
              }
         }
     }
+
+    SequentialAnimation {
+        id: fade_preview_to_big
+        running: false
+
+        onRunningChanged: {
+            if (!fade_preview_to_big.running) {
+                _supervisor.blendingFinished()
+            }
+        }
+
+        ScriptAction {
+            script: {
+                image_jumpto_big.source = message_box.get_jumpto_source()
+                image_jumpto_big.height = root.width * 0.65 > root.height ? (root.height / 6) * 1.35 : ((root.width * 0.65)  / 6) * 1.35;
+                image_jumpto_big.width = _settings_dialog.getScaleTypeQml() === 2 ? image_jumpto_big.height * (root.width / root.height) : image_jumpto_big.height * 1.7
+                image_jumpto_big.anchors.verticalCenter = root.verticalCenter
+                image_jumpto_big.anchors.right = root.right
+                image_jumpto_big.anchors.rightMargin = image_jumpto_big.width * 0.25
+                image_jumpto_big.fillMode = _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+                image_jumpto_big.scale = 1.0
+                image_jumpto_big.visible = true
+                image_jumpto_big.opacity = 1.0
+
+                if (info_box.isVisible())
+                    info_box.show_hide_infobox()
+            }
+        }
+
+        ParallelAnimation {
+            NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "height"; to: root.height; duration: 800 }
+            NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "width"; to: root.width; duration: 800 }
+            NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "scale"; to: 1.0; duration: 800 }
+            NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "anchors.rightMargin"; to: 0; duration: 800 }
+            NumberAnimation { target: transition_start.target;  properties: "opacity"; to: 0.0; duration: 800; easing.type: Easing.InOutQuad }
+        }
+
+        ScriptAction {
+            script: {
+//                message_box.show_hide_message("", "", "", false)
+                transition_stop.target.opacity = 1.0
+                image_jumpto_big.visible = false
+                if (_supervisor.isInfoActive())
+                    info_box.show_hide_infobox()
+            }
+        }
+    }
+
+
+
 
 }

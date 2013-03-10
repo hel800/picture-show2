@@ -112,8 +112,8 @@ Item {
         Rectangle {
             id: image_jumpto_rect
             color: "black"
-            height: image_jumpto.paintedHeight + (image_jumpto.height * 0.13)
-            width: image_jumpto.paintedWidth + (image_jumpto.height * 0.13)
+            height: image_jumpto.paintedHeight + (message_screen.height * 0.1755)
+            width: image_jumpto.paintedWidth + (message_screen.height * 0.1755)
             anchors.centerIn: image_jumpto
             opacity: 0.0
             radius: 10.0
@@ -125,6 +125,7 @@ Item {
             id: image_jumpto
             height: message_screen.height * 1.35
             width: _settings_dialog.getScaleTypeQml() === 2 ? height * (message_screen_root.width / message_screen_root.height) : height * 1.7
+//            width: height * 1.7
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: width * 0.25
@@ -206,6 +207,15 @@ Item {
         }
     }
 
+    function hide_instantly() {
+        background.opacity = 0.0
+        message_screen.opacity = 0.0
+        message_screen_content.opacity = 0.0
+        message_screen_image.scale = 0.8
+        message_screen_smoother.radius = 0
+        message_screen_smoother.opacity = 0.0
+    }
+
     function load_jumpto_image(image) {
         if ((image_jumpto.source == "image://pictures/" + image) && (image_jumpto.status === Image.Ready)) {
             _supervisor.imageLoadingFinished(image_jumpto.source)
@@ -218,6 +228,10 @@ Item {
     function blend_jumpto() {
         fade_jumpto_preview_out.stop()
         fade_jumpto_preview.start()
+    }
+
+    function get_jumpto_source() {
+        return image_jumpto.source
     }
 
     ParallelAnimation {
@@ -268,7 +282,11 @@ Item {
         id: fade_jumpto_preview
         running: false
 
-//        ScriptAction { script:  { image_jumpto.scale = 0.2  } }
+        onRunningChanged: {
+            if (!fade_jumpto_preview.running && image_jumpto.scale === 1.0) {
+                _supervisor.jumtoPreviewReady()
+            }
+        }
 
         ParallelAnimation {
             NumberAnimation { target: image_jumpto; properties: "opacity"; to: 0.85; duration: 650; easing.type: Easing.InOutQuad }

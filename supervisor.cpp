@@ -138,6 +138,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_currentlyWaiting = false;
     m_activeInputMode = NO_MODE;
     m_exitRequested = false;
+    m_jumptoPreviewVisible = false;
 
     this->bindings();
 
@@ -449,7 +450,7 @@ void Supervisor::prevImagePressed()
     emit loadImage(QVariant("next"), QVariant(m_next));
 }
 
-void Supervisor::jumpToImage()
+void Supervisor::jumpToImage(bool fromPreview)
 {
     // set current Index to jump image
     QString new_index = QString(m_jumpToImageValue).replace("_", "").trimmed();
@@ -479,8 +480,22 @@ void Supervisor::jumpToImage()
     // clear queued tasks
     m_wTask.clear();
 
-    this->queueTask(JUMP_FADE_OUT);
-    this->queueTask(START_TASK);
+    if (!fromPreview)
+    {
+        this->queueTask(JUMP_FADE_OUT);
+        this->queueTask(START_TASK);
+    }
+    else
+    {
+        m_blendingsActive++;
+        emit fadeToJumpToPreview(m_cur);
+        this->hideMessage();
+//        m_jumptoPreviewVisible = false;
+//        m_messageTimeout->stop();
+//        m_jumptoPreview->stop();
+//        m_activeInputMode = NO_MODE;
+//        m_messageActive = false;
+    }
 }
 
 void Supervisor::blendingFinished()
@@ -575,9 +590,19 @@ void Supervisor::startShowFinished()
     this->processWaitingQueue();
 }
 
+void Supervisor::jumtoPreviewReady()
+{
+    m_jumptoPreviewVisible = true;
+}
+
 bool Supervisor::isFullscreen()
 {
     return m_quickView->windowState() == Qt::WindowMaximized;
+}
+
+bool Supervisor::isInfoActive()
+{
+    return m_infoActive;
 }
 
 QVariant Supervisor::getImageNumSlashTotalNumber()
@@ -1293,6 +1318,7 @@ void Supervisor::bindings()
     connect(this, SIGNAL(infoBox()), rootObject, SLOT(show_hide_info()));
     connect(this, SIGNAL(bubbleBox(QVariant,QVariant)), rootObject, SLOT(show_hide_bubble(QVariant,QVariant)));
     connect(this, SIGNAL(blendJumpToPreview()), rootObject, SLOT(show_jumpto_preview()));
+    connect(this, SIGNAL(fadeToJumpToPreview(QVariant)), rootObject, SLOT(fade_preview_to_screen(QVariant)));
 }
 
 bool Supervisor::isQmlReady()
@@ -1349,6 +1375,7 @@ void Supervisor::showCustomMessage(QString & imageUrl, QString & title, QString 
     m_messageTimeout->stop();
     m_overlayTransitions++;
     m_messageActive = true;
+    m_jumptoPreviewVisible = false;
     emit showMessage(QVariant(imageUrl), QVariant(title), QVariant(text), QVariant(info));
     if (timeout != 0)
         m_messageTimeout->start(timeout);
@@ -1359,6 +1386,7 @@ void Supervisor::hideMessage()
     if (m_messageActive)
     {
         m_exitRequested = false;
+        m_jumptoPreviewVisible = false;
 
         m_messageTimeout->stop();
         m_jumptoPreview->stop();
@@ -1455,22 +1483,27 @@ void Supervisor::inputModeTimeout()
             m_automaticForwardActive = true;
             m_automaticForward->start(m_timerValue * 1000);
         }
+
+        m_activeInputMode = NO_MODE;
+        this->hideMessage();
     }
         break;
 
     case MODE_JUMPTO:
     {
-        this->jumpToImage();
+        this->jumpToImage(m_jumptoPreviewVisible);
+
+        if (!m_jumptoPreviewVisible)
+        {
+            m_activeInputMode = NO_MODE;
+            this->hideMessage();
+        }
     }
         break;
 
     default:
         break;
     }
-
-    m_activeInputMode = NO_MODE;
-    this->hideMessage();
-//    this->printState();
 }
 
 void Supervisor::timerInputValueTimeout()
