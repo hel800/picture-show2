@@ -44,7 +44,7 @@ Supervisor::Supervisor(QObject *parent) :
 
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
-    m_quickView->engine()->setImportPathList(QStringList());
+//    m_quickView->engine()->setImportPathList(QStringList());
     m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
@@ -1370,7 +1370,7 @@ void Supervisor::hideHelpOverlay()
     }
 }
 
-void Supervisor::showCustomMessage(QString & imageUrl, QString & title, QString & text, int timeout, bool info)
+void Supervisor::showCustomMessage(QString imageUrl, QString title, QString text, int timeout, bool info)
 {
     m_messageTimeout->stop();
     m_overlayTransitions++;

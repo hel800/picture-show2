@@ -152,7 +152,7 @@ private slots:
     void showHelpOverlay();
     void hideHelpOverlay();
 
-    void showCustomMessage(QString & imageUrl, QString & title, QString & text, int timeout = 0, bool info = false);
+    void showCustomMessage(QString imageUrl, QString title, QString text, int timeout = 0, bool info = false);
     void hideMessage();
 
     void queueTask(WaitingTask task);

@@ -32,6 +32,8 @@ February 2013
 #include "settingsdialog.h"
 #include "supervisor.h"
 
+#include <sstream>
+
 int main(int argc, char *argv[])
 {
     QString appVersion = QString("2.01 beta ");
@@ -74,7 +76,10 @@ int main(int argc, char *argv[])
                             QMessageBox::Yes | QMessageBox::No);
 
         if (warning.exec() == QMessageBox::No)
-            return app.quit();
+        {
+            app.quit();
+            return -1;
+        }
     }
 //    qmlRegisterType<SettingsDialog>("CustomComponents", 1, 0, "SettingsDialog");
 
@@ -95,7 +100,10 @@ int main(int argc, char *argv[])
 
     Supervisor sup(&app);
     if (!sup.isQmlReady())
-        return app.quit();
+    {
+        app.quit();
+        return -1;
+    }
 //    superV->setDialog(&s_dialog);
 //    superV->setView(&viewer);
 
