@@ -112,8 +112,8 @@ Item {
         Rectangle {
             id: image_jumpto_rect
             color: "black"
-            height: image_jumpto.paintedHeight + (message_screen.height * 0.1755)
-            width: image_jumpto.paintedWidth + (message_screen.height * 0.1755)
+            height: _settings_dialog.getScaleTypeQml() === 2 ? image_jumpto.height + (message_screen.height * 0.1755) : image_jumpto.paintedHeight + (message_screen.height * 0.1755)
+            width: _settings_dialog.getScaleTypeQml() === 2 ? image_jumpto.width + (message_screen.height * 0.1755) : image_jumpto.paintedWidth + (message_screen.height * 0.1755)
             anchors.centerIn: image_jumpto
             opacity: 0.0
             radius: 10.0
@@ -125,11 +125,11 @@ Item {
             id: image_jumpto
             height: message_screen.height * 1.35
             width: _settings_dialog.getScaleTypeQml() === 2 ? height * (message_screen_root.width / message_screen_root.height) : height * 1.7
-//            width: height * 1.7
             anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: width * 0.25
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: parent.width * 0.3
             fillMode: _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+//            fillMode: Image.PreserveAspectFit
             smooth: true
             opacity: 0.0
             scale: 0.5
@@ -226,6 +226,26 @@ Item {
     }
 
     function blend_jumpto() {
+        image_jumpto.width = _settings_dialog.getScaleTypeQml() === 2 ? image_jumpto.height * (message_screen_root.width / message_screen_root.height) : image_jumpto.height * 1.7
+        image_jumpto.fillMode = _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+
+//        if (_settings_dialog.getScaleTypeQml() === 2)
+//        {
+//            image_jumpto_rect.height = image_jumpto.height + (message_screen.height * 0.1755)
+//            image_jumpto_rect.width = image_jumpto.width + (message_screen.height * 0.1755)
+//        }
+//        else
+//        {
+//            if ((image_jumpto.sourceSize.width / image_jumpto.sourceSize.height) > 1.7) {
+//                image_jumpto_rect.height = (image_jumpto.width / (image_jumpto.sourceSize.width / image_jumpto.sourceSize.height)) + (message_screen.height * 0.1755)
+//                image_jumpto_rect.width = image_jumpto.width + (message_screen.height * 0.1755)
+//            }
+//            else {
+//                image_jumpto_rect.height = image_jumpto.height + (message_screen.height * 0.1755)
+//                image_jumpto_rect.width = (image_jumpto.height * (image_jumpto.sourceSize.width / image_jumpto.sourceSize.height)) + (message_screen.height * 0.1755)
+//            }
+//        }
+
         fade_jumpto_preview_out.stop()
         fade_jumpto_preview.start()
     }
@@ -306,5 +326,13 @@ Item {
             NumberAnimation { target: image_jumpto_rect; properties: "opacity"; to: 0.0; duration: 200; easing.type: Easing.InOutQuad }
             NumberAnimation { target: image_jumpto_rect; properties: "scale"; to: 0.5; duration: 200; easing.type: Easing.InOutQuad }
         }
+
+//        ScriptAction {
+//            script: {
+//                console.log(image_jumpto.paintedWidth)
+//                console.log(image_jumpto.paintedHeight)
+//                console.log("")
+//            }
+//        }
     }
 }

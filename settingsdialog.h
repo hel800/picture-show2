@@ -95,6 +95,7 @@ public slots:
     Q_INVOKABLE QVariant getBlendTypeForQml();
     Q_INVOKABLE QVariant getMouseControlForQml();
     Q_INVOKABLE QVariant getLanguageForQml();
+    Q_INVOKABLE QVariant getBackgroundColorQml();
 
     void resizeDialog();
 

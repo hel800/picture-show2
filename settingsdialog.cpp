@@ -135,6 +135,11 @@ QVariant SettingsDialog::getLanguageForQml()
     return QVariant(this->getLanguage());
 }
 
+QVariant SettingsDialog::getBackgroundColorQml()
+{
+    return QVariant(ui->comboBox_bgColor->currentIndex());
+}
+
 void SettingsDialog::resizeDialog()
 {
     this->adjustSize();
@@ -453,6 +458,7 @@ void SettingsDialog::loadSettings()
     ui->spinBox_cacheSize->setValue(settings.value("maxCacheSize", QVariant(256)).toInt());
     ui->comboBox_loadingType->setCurrentIndex(settings.value("loadingType", QVariant(0)).toInt());
     ui->checkBox_updateNotification->setChecked(settings.value("checkForUpdates", QVariant(true)).toBool());
+    ui->comboBox_bgColor->setCurrentIndex(settings.value("bgColor", QVariant(1)).toInt());
 }
 
 void SettingsDialog::saveSettings()
@@ -470,6 +476,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("maxCacheSize", QVariant(ui->spinBox_cacheSize->value()));
     settings.setValue("loadingType", QVariant(ui->comboBox_loadingType->currentIndex()));
     settings.setValue("checkForUpdates", QVariant(ui->checkBox_updateNotification->isChecked()));
+    settings.setValue("bgColor", QVariant(ui->comboBox_bgColor->currentIndex()));
 }
 
 void SettingsDialog::on_comboBox_language_currentIndexChanged(int index)

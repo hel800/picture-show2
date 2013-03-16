@@ -153,7 +153,6 @@ Supervisor::Supervisor(QObject *parent) :
     QString id = "jumpto_132";
     std::cout << id.section("/", -1).section("_", 1).toStdString().c_str() << std::endl;
 
-
     emit refresh();
 }
 
@@ -459,7 +458,14 @@ void Supervisor::jumpToImage(bool fromPreview)
 
     int index = new_index.toInt() - 1;
     if (index < 0 || index >= m_current_directory_list.size() || index == m_currentIndex)
+    {
+        if (fromPreview)
+        {
+            m_activeInputMode = NO_MODE;
+            this->hideMessage();
+        }
         return;
+    }
 
     // set new index
     m_currentIndex = index;
@@ -1433,7 +1439,7 @@ void Supervisor::startInputMode(InputMode mode, int timeout)
     {
         m_automaticForwardActive = false;
         m_automaticForward->stop();
-        this->showCustomMessage(QString("qrc:///img/message_stop.png"), tr("Stoppe Timer"), QString(""));
+        this->showCustomMessage(QString("qrc:///img/message_stop.png"), tr("Stoppe Timer"), QString(""), 2000);
     }
         break;
 

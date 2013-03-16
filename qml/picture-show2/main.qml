@@ -26,6 +26,16 @@ Rectangle {
         setImageScale(image_slot1);
         setImageScale(image_slot2);
         setImageScale(image_slot3);
+
+        if (_settings_dialog.getBackgroundColorQml() === 0) {
+            root.color = "#000000"
+        }
+        else if (_settings_dialog.getBackgroundColorQml() === 1) {
+            root.color = "#222222"
+        }
+        else {
+            root.color = "#555555"
+        }
     }
 
     function animate_wait(anim) {
@@ -203,6 +213,13 @@ Rectangle {
 // =================================================================================== //
 // ----- ELEMENTS ----- //
 
+    Item {
+        id: jumpto_dummy
+        visible: false
+        height: root.height
+        width: root.width
+    }
+
     Image {
         id: start_logo
         width: 249
@@ -285,32 +302,38 @@ Rectangle {
         id: info_box
         width: root.width;
         height: root.height
+        z: 5
     }
 
     Helpscreen {
         id: hp_screen
         width: root.width
         height: root.height
+        z: 5
     }
 
     Messagebox {
         id: message_box
         width: root.width
         height: root.height
+        z: 5
     }
 
     Image {
         id: image_jumpto_big
         height: root.width * 0.65 > root.height ? (root.height / 6) * 1.35 : ((root.width * 0.65)  / 6) * 1.35;
         width: _settings_dialog.getScaleTypeQml() === 2 ? height * (root.width / root.height) : height * 1.7
+//        width: height * 1.7
         anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        anchors.rightMargin: width * 0.25
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: root.width * 0.3
         fillMode: _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+//        fillMode: Image.PreserveAspectFit
         smooth: true
         opacity: 0.0
         scale: 0.5
         visible: false
+        z: 5
     }
 
 
@@ -318,6 +341,7 @@ Rectangle {
         id: bubble_box
         width: root.width
         height: root.height
+        z: 5
     }
 
 // =================================================================================== //
@@ -560,16 +584,31 @@ Rectangle {
             }
         }
 
-        ScriptAction { script: { transition_stop.target.scale = 0.9; transition_stop.target.opacity = 0.0 } }
+        ScriptAction {
+            script: {
+                transition_start.target.z = 1
+                transition_stop.target.z = 0
+                transition_stop.target.scale = 0.8;
+                transition_stop.target.opacity = 0.0
+            }
+        }
 
         ParallelAnimation {
             NumberAnimation { target: transition_start.target;  properties: "anchors.horizontalCenterOffset"; to: -root.width; duration: transition_start.duration; easing.type: Easing.InQuad }
-            NumberAnimation { target: transition_start.target;  properties: "opacity"; to: 0.7; duration: transition_start.duration; easing.type: Easing.InQuad }
+            NumberAnimation { target: transition_start.target;  properties: "opacity"; to: 0.6; duration: transition_start.duration; easing.type: Easing.InQuad }
             NumberAnimation { target: transition_stop.target;   properties: "scale"; to: 1.0; duration: transition_start.duration; easing.type: Easing.InOutQuad }
             NumberAnimation { target: transition_stop.target;   properties: "opacity"; to: 1.0; duration: transition_stop.duration; easing.type: Easing.InOutQuad }
         }
 
-        ScriptAction { script: { transition_start.target.anchors.horizontalCenterOffset = 0; transition_start.target.scale = 1.0; transition_start.target.opacity = 0.0} }
+        ScriptAction {
+            script: {
+                transition_start.target.z = 0
+                transition_stop.target.z = 0
+                transition_start.target.anchors.horizontalCenterOffset = 0;
+                transition_start.target.scale = 1.0;
+                transition_start.target.opacity = 0.0
+            }
+        }
     }
 
     SequentialAnimation {
@@ -582,7 +621,14 @@ Rectangle {
             }
         }
 
-        ScriptAction { script: { transition_stop.target.opacity = 0.7; transition_stop.target.anchors.horizontalCenterOffset = -root.width} }
+        ScriptAction {
+            script: {
+                transition_start.target.z = 0
+                transition_stop.target.z = 1
+                transition_stop.target.opacity = 0.7;
+                transition_stop.target.anchors.horizontalCenterOffset = -root.width
+            }
+        }
 
         ParallelAnimation {
             NumberAnimation { target: transition_start.target;  properties: "scale"; to: 0.9; duration: transition_start.duration; easing.type: Easing.InQuad }
@@ -591,7 +637,14 @@ Rectangle {
             NumberAnimation { target: transition_stop.target;   properties: "opacity"; to: 1.0; duration: transition_stop.duration; easing.type: Easing.InOutQuad }
         }
 
-        ScriptAction { script: { transition_start.target.scale = 1.0; transition_start.target.opacity = 0.0} }
+        ScriptAction {
+            script: {
+                transition_start.target.z = 0
+                transition_stop.target.z = 0
+                transition_start.target.scale = 1.0;
+                transition_start.target.opacity = 0.0
+            }
+        }
 }
     // ^----- ANDROID TRANSITION -----^ //
 
@@ -697,16 +750,34 @@ Rectangle {
                 image_jumpto_big.source = message_box.get_jumpto_source()
                 image_jumpto_big.height = root.width * 0.65 > root.height ? (root.height / 6) * 1.35 : ((root.width * 0.65)  / 6) * 1.35;
                 image_jumpto_big.width = _settings_dialog.getScaleTypeQml() === 2 ? image_jumpto_big.height * (root.width / root.height) : image_jumpto_big.height * 1.7
-                image_jumpto_big.anchors.verticalCenter = root.verticalCenter
-                image_jumpto_big.anchors.right = root.right
-                image_jumpto_big.anchors.rightMargin = image_jumpto_big.width * 0.25
+//                image_jumpto_big.width = image_jumpto_big.height * 1.7
+                image_jumpto_big.anchors.horizontalCenterOffset = root.width * 0.3
                 image_jumpto_big.fillMode = _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+//                image_jumpto_big.fillMode = Image.PreserveAspectFit
                 image_jumpto_big.scale = 1.0
                 image_jumpto_big.visible = true
                 image_jumpto_big.opacity = 1.0
 
                 if (info_box.isVisible())
                     info_box.show_hide_infobox()
+
+                if (_settings_dialog.getScaleTypeQml() === 2) {
+                    if ((image_jumpto_big.sourceSize.width / image_jumpto_big.sourceSize.height) > (root.width / root.height)) {
+                        jumpto_dummy.height = root.height
+                        jumpto_dummy.width = root.height * (image_jumpto_big.sourceSize.width / image_jumpto_big.sourceSize.height)
+                    }
+                    else {
+                        jumpto_dummy.width = root.width
+                        jumpto_dummy.height = root.width * (image_jumpto_big.sourceSize.height / image_jumpto_big.sourceSize.width)
+                    }
+                }
+                else {
+                    jumpto_dummy.height = root.height
+                    jumpto_dummy.width = root.width
+                }
+
+                console.log(jumpto_dummy.width)
+                console.log(jumpto_dummy.height)
             }
         }
 
@@ -714,7 +785,7 @@ Rectangle {
             NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "height"; to: root.height; duration: 800 }
             NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "width"; to: root.width; duration: 800 }
             NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "scale"; to: 1.0; duration: 800 }
-            NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "anchors.rightMargin"; to: 0; duration: 800 }
+            NumberAnimation { target: image_jumpto_big; easing.type: Easing.InOutQuart; properties: "anchors.horizontalCenterOffset"; to: 0; duration: 800 }
             NumberAnimation { target: transition_start.target;  properties: "opacity"; to: 0.0; duration: 800; easing.type: Easing.InOutQuad }
         }
 
