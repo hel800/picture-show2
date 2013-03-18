@@ -37,6 +37,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->pushButton_load->setFocus();
 
     this->resizeDialog();
+    this->setAcceptDrops(true);
 
     this->m_helpWindow = new HelpWindow(this);
     this->m_helpWindow->setModal(true);
@@ -47,6 +48,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->comboBox_directoryPath->setEditable(true);
     if (ui->comboBox_effect->currentIndex() == 0)
         ui->comboBox_fadeTime->setEnabled(false);
+
+    this->m_droppedItemsList = new QList<QFileInfo>();
 
     this->languageChangeSignalOff = true;
     this->loadSettings();
@@ -64,6 +67,7 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 
     delete this->m_networkManager;
+    delete this->m_droppedItemsList;
 }
 
 QString SettingsDialog::getCurrentDirectory()
@@ -143,6 +147,69 @@ QVariant SettingsDialog::getBackgroundColorQml()
 void SettingsDialog::resizeDialog()
 {
     this->adjustSize();
+}
+
+void SettingsDialog::dragEnterEvent( QDragEnterEvent *event )
+{
+    event->acceptProposedAction();
+}
+
+void SettingsDialog::dragMoveEvent( QDragMoveEvent *event )
+{
+    event->acceptProposedAction();
+}
+
+void SettingsDialog::dragLeaveEvent( QDragLeaveEvent *event )
+{
+    event->accept();
+}
+
+void SettingsDialog::dropEvent( QDropEvent * event )
+{
+    QList<QUrl> url_list = event->mimeData()->urls();
+
+    // empty
+    if (url_list.size() == 0)
+    {
+        return;
+    }
+    // is folder
+    else if (url_list.size() == 1)
+    {
+        QDir folder(url_list.first().toLocalFile());
+        if (folder.exists())
+        {
+            ui->comboBox_directoryPath->lineEdit()->setText(url_list.first().toLocalFile());
+            ui->label_drop->setText(tr("Ordner importiert"));
+        }
+    }
+    else
+    {
+        this->m_droppedItemsList->clear();
+
+        QStringList filters;
+        filters << "jpeg" << "jpg" << "JPG" << "JPEG";
+        filters << "bmp" << "BMP";
+        filters << "gif" << "GIF";
+        filters << "png" << "PNG";
+        filters << "tif" << "tiff" << "TIF" << "TIFF";
+
+        foreach(QUrl url, url_list)
+        {
+            QFileInfo file(url.toLocalFile());
+            if (file.exists() && filters.contains(file.suffix()))
+            {
+                this->m_droppedItemsList->append(file);
+            }
+        }
+
+        int numImages = this->m_droppedItemsList->size();
+
+        ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
+        ui->label_drop->setText(tr("%1 Bilder abgelegt").arg(numImages));
+
+        return;
+    }
 }
 
 void SettingsDialog::networkReplyReady(QNetworkReply * reply)
@@ -286,6 +353,11 @@ void SettingsDialog::setLoadingType(LoadingType type)
     ui->comboBox_loadingType->setCurrentIndex(int(type));
 }
 
+QList<QFileInfo> * SettingsDialog::getDroppedItems()
+{
+    return this->m_droppedItemsList;
+}
+
 void SettingsDialog::setTimerValue(int value)
 {
     QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
@@ -383,6 +455,9 @@ void SettingsDialog::updateHistory()
 void SettingsDialog::addDirectoryToHistory(const QString & dir)
 {
     if (!ui->checkBox_historySave->isChecked())
+        return;
+
+    if (dir == "psl://drop_list")
         return;
 
     QString newDir = QString(dir);
@@ -515,4 +590,20 @@ void SettingsDialog::on_pushButton_help_clicked()
         this->m_helpWindow->setLanguage(ENGLISH);
 
     this->m_helpWindow->exec();
+}
+
+void SettingsDialog::on_comboBox_scaling_currentIndexChanged(int index)
+{
+    emit propertiesChanged();
+}
+
+void SettingsDialog::on_comboBox_bgColor_currentIndexChanged(int index)
+{
+    emit propertiesChanged();
+}
+
+void SettingsDialog::on_groupBox_2_clicked()
+{
+    if (this->m_droppedItemsList->size() > 0)
+        ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
 }

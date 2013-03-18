@@ -278,6 +278,7 @@ void Supervisor::startDirectoryLoading()
 
     m_currentlyLoading = true;
     m_dirLoader->setDirectory(m_setDialog->getCurrentDirectory());
+    m_dirLoader->setDropList(m_setDialog->getDroppedItems());
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
     m_dirLoader->setIncludeSubdirs(m_setDialog->getIncludeSubdirs());
     m_dirLoader->start(QThread::NormalPriority);
@@ -1058,6 +1059,8 @@ void Supervisor::resizeEvent( QResizeEvent * event )
         m_panoramaModeActive = false;
         emit stopPanorama();
     }
+
+    emit refresh();
 }
 
 void Supervisor::processWaitingQueue()
@@ -1294,6 +1297,7 @@ void Supervisor::bindings()
     connect(m_setDialog, SIGNAL(accepted()), m_quickView, SLOT(hideCursorOnFullscreen()));
     connect(m_setDialog, SIGNAL(rejected()), m_quickView, SLOT(hideCursorOnFullscreen()));
     connect(m_setDialog, SIGNAL(languageChanged(QVariant)), this, SLOT(changeLanguage(QVariant)));
+    connect(m_setDialog, SIGNAL(propertiesChanged()), this, SIGNAL(refresh()));
 
     // QQuickWindow Bindings
     connect(m_quickView, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(keyPressEvent(QKeyEvent*)));

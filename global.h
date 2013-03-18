@@ -61,4 +61,5 @@ enum Language {
     ENGLISH
 };
 
+
 #endif // GLOBAL_H

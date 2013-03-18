@@ -29,6 +29,7 @@ loadDirectory::loadDirectory() : QThread()
 {
     this->m_dirList = NULL;
     this->m_subdirs = false;
+    this->m_dropList = NULL;
 }
 
 void loadDirectory::setDirectory(const QString &path)
@@ -44,6 +45,11 @@ const QString& loadDirectory::getDirectory()
 void loadDirectory::setDirectoryList(QList<QFileInfo> * list)
 {
     this->m_dirList = list;
+}
+
+void loadDirectory::setDropList(QList<QFileInfo> * d_list)
+{
+    this->m_dropList = d_list;
 }
 
 void loadDirectory::setSorting(Sorting sortType)
@@ -83,22 +89,39 @@ void loadDirectory::run()
     filters << "*.png" << "*.PNG";
     filters << "*.tif" << "*.tiff" << "*.TIF" << "*.TIFF";
 
-    QDir current_dir = QDir(this->m_path);
-    if (!current_dir.exists())
-    {
-        this->m_error_msg = tr("Das angegebene Verzeichnis existiert nicht!");
-        emit loadDirectoryFinished(false);
-        return;
-    }
-
-    this->m_dirList->clear();
 
     QList<QFileInfo> tempList;
 
-    if (this->m_subdirs)
-        this->addItemsInDir(tempList, filters, current_dir);
+    if (this->m_path == "psl://drop_list")
+    {
+        if (this->m_dropList != NULL && this->m_dropList->isEmpty())
+        {
+            this->m_error_msg = tr("Die abgelegten Bilder sind ungültig!");
+            emit loadDirectoryFinished(false);
+            return;
+        }
+
+        this->m_dirList->clear();
+
+        tempList.append(*this->m_dropList);
+    }
     else
-        tempList.append(current_dir.entryInfoList(filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
+    {
+        QDir current_dir = QDir(this->m_path);
+        if (!current_dir.exists())
+        {
+            this->m_error_msg = tr("Das angegebene Verzeichnis existiert nicht!");
+            emit loadDirectoryFinished(false);
+            return;
+        }
+
+        this->m_dirList->clear();
+
+        if (this->m_subdirs)
+            this->addItemsInDir(tempList, filters, current_dir);
+        else
+            tempList.append(current_dir.entryInfoList(filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
+    }
 
     if (this->m_sorting == DATE_CREATED)
     {

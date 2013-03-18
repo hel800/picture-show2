@@ -5,45 +5,49 @@
 <style type="text/css">
 
 body {
-	background-color: #222222;
-	color: #eeeeee;
+        background-color: #222222;
+        color: #eeeeee;
 }
 
 h1 {
-	color: #cc6600;
-	font-family: Helvetica;
-	text-align: center;
+        color: #cc6600;
+        font-family: Helvetica;
+        text-align: center;
 }
 
 h2 {
-	color: #cc6600;	
-	font-family: Helvetica;
-	text-align: center;
+        color: #cc6600;
+        font-family: Helvetica;
+        text-align: center;
 }
 
 p {
-	font-family: Helvetica;
-	font-size: 12pt;
+        font-family: Helvetica;
+        font-size: 12pt;
 }
 
 table {
-	font-family: Helvetica;
-	font-size: 14pt;
-	border-collapse:collapse;
+        font-family: Helvetica;
+        font-size: 14pt;
+        border-collapse:collapse;
 }
 
 td {
-	border-bottom: #444444 solid thin;
-	border-top: #444444 solid thin;
-	border-left: none;
-	border-right: none;
-	padding: 5px;
-	vertical-align: top;
+        border-bottom: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        padding: 5px;
+        vertical-align: top;
+}
+
+td.hl {
+        border-top: 1px solid #aa5500;
 }
 
 img.title {
-	display: block;
-	margin-left: auto;
+        display: block;
+        margin-left: auto;
     margin-right: auto;
 }
 
@@ -54,46 +58,102 @@ img.title {
 <body>
 <center>
 <img class="title" src="qrc:///img/help_logo.png" width="343" height="124" />
-<h1>picture-show 2 - Help</h1>
+<h1>picture show 2 - help</h1>
 </center>
 
 <p>
-picture-show 2 ist eine einfache aber elegante Anwendung um Fotos zu pr�sentieren. 
-Es unterst�tzt Vollbildaufl�sung und verschiedene �bergangseffekte. 
-Bilder k�nnen manuell weitergeschaltet werden oder �ber einen Timer. 
-Beide Modi k�nnen auch gemischt verwendet werden. Es ist zudem kein Pre-rendering 
-erforderlich, ein Verzeichnis ausw�hlen reicht und die Show kann beginnen...</p>
+picture show 2 is a simple but elegant application to present your photos. Fullscreen
+resolution is supported with different transition effects between the images. No pre-rendering
+is required, just select a folder and start the show...
+You can advance to the next image manually or by the use of an automatic timer function. Both
+modes can be combined.
+</p>
 
 <p>
-Die Anwendung ist einfach gehalten. Es k�nnen neben dem Bilderverzeichnis ein paar 
-grundlegende Anzeigeeinstellungen getroffen werden. Im Vollbildmodus wird zudem 
-der Mauszeiger ausgeblendet. Es werden keine overlays ungefragt eingeblendet, 
-die mit der Wirkung der Bilder interferieren k�nnten. Die Steuerung w�hrend der 
-picture show erfolgt daher mit Tastatur bzw. den Tasten der Maus (sofern aktiviert). 
+Your pictures are in the main focus of the application. Except for the folder containing the your
+pictures you can specify a couple of settings related to the presentation, like the transition time and
+effect as well as sorting and control options.
+In fullscreen mode the mouse cursor is hidden so it doesn't interfere with the picture presentation.
+Overlays are not shown unasked. Use the keyboard to control advancing and additional functions or
+the mouse buttons if activated in the options.
 </p>
 
 <center>
-<h2>Tastenbelegung</h2>
+<h2>Controls</h2>
 
 <table>
-<tr><td width="100">H</td><td>Zeigt eine Kurzhilfe w�hrend der Pr�sentation an</td></tr>
-<tr><td>O</td><td>�ffnet den Dialog zum Laden von Ordnern und zum Vornehmen von Einstellungen</td></tr>
-<tr><td><-<br />Bild auf</td><td>Schaltet ein Bild zur�ck mit eingestelltem �berblendeffekt und eingestellter �berblendzeit</td></tr>
-<tr><td>-><br />Bild ab</td><td>Schaltet ein Bild vor mit eingestelltem �berblendeffekt und eingestellter �berblendzeit</td></tr>
-</table>
+<tr><td width="120">H</td><td>A summary of the most important controls is shown.</td></tr>
+<tr><td>O<br />middle mouse</td><td>Öffnet den Dialog zum Laden von Ordnern und zum Vornehmen von Einstellungen.</td></tr>
+<tr><td>&lt;-<br />page up<br />linke Maus</td><td>Schaltet ein Bild zurück mit eingestelltem Überblendeffekt und eingestellter Überblendzeit.</td></tr>
+<tr><td>-&gt;<br />page down<br />rechte Maus</td><td>Schaltet ein Bild weiter mit eingestelltem Überblendeffekt und eingestellter Überblendzeit.</td></tr>
 
+<tr><td class="hl">&lt;Leer&gt;</td><td class="hl">Startet und beendet den automatischen Timer. Die Zeit kann mit den Nummerntasten eingegeben werden, oder
+mit den Cursortasten hoch und runter eingestellt werden. Der Timer startet nach wenigen Sekunden automatisch oder kann mit Enter sofort
+gestartet werden.</td></tr>
+<tr><td>J</td><td>Startet Springe zu Bild Dialog. Bildnummer kann mit Nummerntasten eingegeben werden, oder mit den Cursortasten hoch und
+ runter eingestellt werden. Bildwechsel wird nach drücken der Entertaste vollzogen. Ein Vorschaubild wird angezeigt, sobald das Zielbild geladen wurde.</td></tr>
+<tr><td>P</td><td>Startet den Panoramamodus bei Bildern, die im Panoramaformat vorliegen. Der Panoramamodus wird mit P oder ESC wieder beendet.
+</td></tr>
+<tr><td>I</td><td>Blendet Metainformationen zum aktuellen Bild ein. Kann mit I oder ESC wieder ausgeblendet werden. Die Informationen bleiben auch beim
+ wechsel des Bildes eingeblendet.
+</td></tr>
+<tr><td>F<br />Doppelklick</td><td>Wechsel zwischen Vollbild und Fenstermodus.
+</td></tr>
+</table>
 </center>
 
 <center>
-<h2>�ffnen Dialog / Einstellungen</h2>
+<h2>Öffnen Dialog / Einstellungen</h2>
+</center>
+<p>
+Der Öffnen Dialog / Einstellungsdialog beinhaltet alle Konfigurationsmöglichkeiten für picture-show. Neben der Angabe
+eines Bilderordners können zusätzlich Präsentationsoptionen und generelle Programmoptionen auf zwei weiteren Registerkarten
+gefunden werden. Beim bestätigen des Dialogs mit OK werden alle neu getätigten Einstellungen übernommen. Im Folgenden werden
+die Einstellungen erläutert
+</p>
+<center>
+<table>
+<tr><td width="150">Bilderverzeichnis</td><td>Hier kann ein Ordner spezifiziert werden, der nach Bildern durchsucht wird, die
+ in der picture-show gezeigt werden sollen. Alle Bilder vom Typ jpg/jpeg, tif/tiff, gif und png werden mit einbezogen. Zusätzlich
+ kann festgelegt werden, ob eventuelle Unterordner auch nach Bildern durchsucht werden sollen.</td></tr>
+<tr><td>Übergangseffekt</td><td>Hier kann ein Blendeffekt ausgewählt werden, der verwendet wird, um zwischen den Bildern während der
+ Show zu wechseln.</td></tr>
+<tr><td>Übergangszeit</td><td>Die Dauer der Übergangseffekte ist für jeden effekt unterschiedlich festgelegt. Es können aber stets
+ zwischen sehr kurz und lang unterschiedliche Stufen gewählt werden.</td></tr>
+ <tr><td>Sortierung</td><td>Die Sortierung bestimmt, in welcher Reihenfolge die Bilder in der Show gezeigt werden. Zur Auswahl
+ steht die alphabetische Sortierung nach Dateiname, sowie die Sortierung nach dem Aufnahmedatum. Dazu muss das Datum der Aufnahme
+ in den EXIF-Informationen des Bildes gespeichert sein.</td></tr>
+<tr><td>Skalierung</td><td>Legt fest, ob entweder das ganze Bild unter Beibehaltung des Seitenverhältnisses angezeigt werden
+ soll, oder der Bildschirm gefüllt werden soll. Letzters geschieht ebenfalls unter Beibehaltung des Seitenverhältnisses, allerdings
+ wird das Bild geeignet beschnitten.</td></tr>
+<tr><td>Endloswiedergabe</td><td>Wenn aktiviert, wird nach dem letzten Bild wieder mit dem ersten begonnen. Beim zurückschalten des ersten
+ Bildes erscheint entsprechend das letzte Bild. Diese Einstellung wirkt sich auch bei aktivierter Timerfunktion aus.</td></tr>
+<tr><td>Maussteuerung</td><td>Bei aktivierter Maussteuerung können Bilder mit linker und rechter Maustaste zurück bzw. weiter geschaltet
+ werden. Die mittlere Maustaste dient zum öffnen des Öffnen-Dialogs.</td></tr>
+<tr><td>Sprache</td><td>Dient zur Festlegung der Sprache.</td></tr>
+<tr><td>Hintergrundfarbe</td><td>Legt die Hintergrundfarbe während der Show fest.</td></tr>
+<tr><td>Bei Updates benachrichtigen</td><td>Wenn aktiviert, berichtet das Programm mit einer kleinen Meldung innerhalb des Öffnen-Dialogs über neue Programmversionen. Ein Downloadlink
+ wird angezeigt.</td></tr>
+<tr><td>Cache Größe</td><td>Größe des Arbeitsspeichers, der, zusätzlich zur Speicherung des aktuellen Bildes, temporär zur Speicherung von
+Bildern genutzt werden kann. Ein Speicher zwischen 150 und 400 MB sorgt für einen flüssigeren Ablauf des Programms.</td></tr>
+<tr><td>History speichern</td><td>Legt fest, ob Ordner, die einmal in picture-show geöffnet wurden in Zukunft im Drop-down Menü Bilderverzeichnis
+ angezeigt werden sollen.</td></tr>
+<tr><td>History löschen</td><td>Löscht eben jede gespeicherten Ordner aus der Drop-down Liste.</td></tr>
+</table>
+
 </center>
 
 <center>
 <h2>Disclaimer</h2>
 </center>
 
-<p>picture-show 2 wird unter der GPL v3 Lizenz ver�ffentlicht. </p>
-
+<p>
+picture-show 2 unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss
+allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version 5).
+</p>
+<p>
+2013 Sebastian Schäfer  -  web: http://code.google.com/p/picture-show/</p>
+</p>
 </body>
 
 </html>

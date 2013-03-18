@@ -207,6 +207,11 @@ Item {
         }
     }
 
+    function update_preview_dimensions() {
+        image_jumpto.width = _settings_dialog.getScaleTypeQml() === 2 ? image_jumpto.height * (message_screen_root.width / message_screen_root.height) : image_jumpto.height * 1.7
+        image_jumpto.fillMode = _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
+    }
+
     function hide_instantly() {
         background.opacity = 0.0
         message_screen.opacity = 0.0

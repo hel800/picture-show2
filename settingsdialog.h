@@ -31,6 +31,7 @@ February 2013
 #include <QHideEvent>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QMimeData>
 
 #include "helpwindow.h"
 #include "global.h"
@@ -66,6 +67,8 @@ public:
     bool getMouseControl();
     LoadingType getLoadingType();
     void setLoadingType(LoadingType type);
+
+    QList<QFileInfo> * getDroppedItems();
 
     void setTimerValue(int value);
     int getTimerValue();
@@ -103,6 +106,12 @@ signals:
     void languageChanged(QVariant lang);
     void applyClicked();
     void propertiesChanged();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
+    void dropEvent(QDropEvent *event);
     
 private slots:
     void networkReplyReady(QNetworkReply * reply);
@@ -115,12 +124,20 @@ private slots:
     void on_comboBox_effect_currentIndexChanged(int index);
     void on_pushButton_help_clicked();
 
+    void on_comboBox_scaling_currentIndexChanged(int index);
+
+    void on_comboBox_bgColor_currentIndexChanged(int index);
+
+    void on_groupBox_2_clicked();
+
 private:
     Ui::SettingsDialog *ui;
     bool languageChangeSignalOff;
 
     HelpWindow * m_helpWindow;
     QNetworkAccessManager * m_networkManager;
+
+    QList<QFileInfo> * m_droppedItemsList;
 
     void loadSettings();
     void saveSettings();
