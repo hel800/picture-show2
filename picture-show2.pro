@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     loaddirectory.cpp \
     iptcinfo.cpp \
     exif.cpp \
-    helpwindow.cpp
+    helpwindow.cpp \
+    readdirlist.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
@@ -43,7 +44,8 @@ HEADERS += \
     loaddirectory.h \
     iptcinfo.h \
     exif.h \
-    helpwindow.h
+    helpwindow.h \
+    readdirlist.h
 
 FORMS += \
     settingsdialog.ui \

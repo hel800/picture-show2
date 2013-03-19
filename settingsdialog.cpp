@@ -39,6 +39,10 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->resizeDialog();
     this->setAcceptDrops(true);
 
+    this->m_dirListReader = new readDirList();
+    connect(this->m_dirListReader, SIGNAL(listready()), this, SLOT(readDirListReady()));
+    connect(this->m_dirListReader, SIGNAL(finished()), this, SLOT(readDirListCanceled()));
+
     this->m_helpWindow = new HelpWindow(this);
     this->m_helpWindow->setModal(true);
 
@@ -168,48 +172,36 @@ void SettingsDialog::dropEvent( QDropEvent * event )
 {
     QList<QUrl> url_list = event->mimeData()->urls();
 
+    if (this->m_dirListReader->isRunning())
+    {
+        this->m_cachedDropList = url_list;
+        this->m_dirListReader->cancel();
+        return;
+    }
+
     // empty
     if (url_list.size() == 0)
     {
         return;
     }
-    // is folder
-    else if (url_list.size() == 1)
-    {
-        QDir folder(url_list.first().toLocalFile());
-        if (folder.exists())
-        {
-            ui->comboBox_directoryPath->lineEdit()->setText(url_list.first().toLocalFile());
-            ui->label_drop->setText(tr("Ordner importiert"));
-        }
-    }
     else
     {
-        this->m_droppedItemsList->clear();
-
-        QStringList filters;
-        filters << "jpeg" << "jpg" << "JPG" << "JPEG";
-        filters << "bmp" << "BMP";
-        filters << "gif" << "GIF";
-        filters << "png" << "PNG";
-        filters << "tif" << "tiff" << "TIF" << "TIFF";
-
-        foreach(QUrl url, url_list)
-        {
-            QFileInfo file(url.toLocalFile());
-            if (file.exists() && filters.contains(file.suffix()))
-            {
-                this->m_droppedItemsList->append(file);
-            }
-        }
-
-        int numImages = this->m_droppedItemsList->size();
-
-        ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
-        ui->label_drop->setText(tr("%1 Bilder abgelegt").arg(numImages));
-
-        return;
+        ui->pushButton_drop->setText(tr("Bitte\n warten..."));
+        ui->pushButton_drop->setEnabled(false);
+        this->m_dirListReader->setUrlList(url_list);
+        this->m_dirListReader->start(QThread::NormalPriority);
     }
+}
+
+void SettingsDialog::hideEvent(QHideEvent * event)
+{
+    if (this->m_dirListReader->isRunning())
+    {
+        this->m_dirListReader->cancel();
+        this->m_cachedDropList.clear();
+    }
+
+    event->accept();
 }
 
 void SettingsDialog::networkReplyReady(QNetworkReply * reply)
@@ -261,6 +253,38 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
                 }
             }
         }
+    }
+}
+
+void SettingsDialog::readDirListReady()
+{
+    this->m_droppedItemsList->clear();
+    this->m_droppedItemsList->append(this->m_dirListReader->getItemList());
+
+    int num_elements = this->m_droppedItemsList->size();
+
+    ui->pushButton_drop->setText(tr("%1 Bilder\n abgelegt").arg(num_elements));
+    ui->pushButton_drop->setEnabled(true);
+
+    if (num_elements > 0)
+    {
+        ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
+    }
+}
+
+void SettingsDialog::readDirListCanceled()
+{
+    if (!this->m_dirListReader->success && this->m_cachedDropList.size() > 0 && !this->m_dirListReader->isRunning())
+    {
+        ui->pushButton_drop->setText(tr("Bitte\n warten..."));
+        ui->pushButton_drop->setEnabled(false);
+        this->m_dirListReader->setUrlList(this->m_cachedDropList);
+        this->m_dirListReader->start(QThread::NormalPriority);
+        this->m_cachedDropList.clear();
+    }
+    else if (!this->m_dirListReader->success)
+    {
+        ui->pushButton_drop->setText(tr("Drop Zone"));
     }
 }
 
@@ -602,8 +626,33 @@ void SettingsDialog::on_comboBox_bgColor_currentIndexChanged(int index)
     emit propertiesChanged();
 }
 
-void SettingsDialog::on_groupBox_2_clicked()
+void SettingsDialog::on_pushButton_drop_clicked()
 {
-    if (this->m_droppedItemsList->size() > 0)
+    if (!this->m_dirListReader->isRunning() && this->m_droppedItemsList->size() > 0)
+    {
         ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
+    }
+}
+
+void SettingsDialog::on_comboBox_directoryPath_currentIndexChanged(int index)
+{
+    if (this->m_dirListReader->isRunning())
+    {
+        this->m_dirListReader->cancel();
+        this->m_cachedDropList.clear();
+    }
+}
+
+void SettingsDialog::on_pushButton_load_clicked()
+{
+    if (ui->comboBox_directoryPath->lineEdit()->text() == "psl://drop_list")
+    {
+        if (this->m_dirListReader->isRunning())
+        {
+            QMessageBox::warning(this, tr("Abgelegte Ordner werden durchsucht!"), tr("Die abgelegten Ordner und Bilder werden noch durchsucht. Einen Moment bitte noch."));
+            return;
+        }
+    }
+
+    this->accept();
 }

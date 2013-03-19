@@ -744,7 +744,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
 
     case Qt::Key_O:
         {
-            if (m_currentlyWaiting)
+            if (m_currentlyWaiting || m_waitingActive)
                 return;
 
             m_wTask.clear();

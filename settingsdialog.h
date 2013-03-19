@@ -32,9 +32,11 @@ February 2013
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QMimeData>
+#include <QMessageBox>
 
 #include "helpwindow.h"
 #include "global.h"
+#include "readdirlist.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -112,9 +114,13 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
     void dropEvent(QDropEvent *event);
+
+    void hideEvent(QHideEvent * event);
     
 private slots:
     void networkReplyReady(QNetworkReply * reply);
+    void readDirListReady();
+    void readDirListCanceled();
 
     void on_pushButton_browse_clicked();
     void on_comboBox_language_currentIndexChanged(int index);
@@ -128,7 +134,11 @@ private slots:
 
     void on_comboBox_bgColor_currentIndexChanged(int index);
 
-    void on_groupBox_2_clicked();
+    void on_pushButton_drop_clicked();
+
+    void on_comboBox_directoryPath_currentIndexChanged(int index);
+
+    void on_pushButton_load_clicked();
 
 private:
     Ui::SettingsDialog *ui;
@@ -137,7 +147,9 @@ private:
     HelpWindow * m_helpWindow;
     QNetworkAccessManager * m_networkManager;
 
+    readDirList * m_dirListReader;
     QList<QFileInfo> * m_droppedItemsList;
+    QList<QUrl> m_cachedDropList;
 
     void loadSettings();
     void saveSettings();
