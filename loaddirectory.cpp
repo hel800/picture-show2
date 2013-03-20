@@ -16,7 +16,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 
 ......................................................................
 
-author: Sebastian Sch�fer
+author: Sebastian Schäfer
 March 2013
 
 --------------------------------------------------------------------*/
@@ -101,7 +101,7 @@ void loadDirectory::run()
     {
         if (this->m_dropList != NULL && this->m_dropList->isEmpty())
         {
-            this->m_error_msg = tr("Die abgelegten Bilder sind ung�ltig!");
+            this->m_error_msg = tr("Die abgelegten Bilder sind ungültig");
             emit loadDirectoryFinished(false);
             return;
         }
@@ -115,7 +115,7 @@ void loadDirectory::run()
         QDir current_dir = QDir(this->m_path);
         if (!current_dir.exists())
         {
-            this->m_error_msg = tr("Das angegebene Verzeichnis existiert nicht!");
+            this->m_error_msg = tr("Das angegebene Verzeichnis existiert nicht");
             emit loadDirectoryFinished(false);
             return;
         }
@@ -128,7 +128,12 @@ void loadDirectory::run()
             tempList.append(current_dir.entryInfoList(filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
     }
 
-    std::cout << "templist: " << tempList.size() << std::endl;
+    if (tempList.size() == 0)
+    {
+        this->m_error_msg = tr("Das angegebene Verzeichnis enthält keine unterstützten Bilder");
+        emit loadDirectoryFinished(false);
+        return;
+    }
 
     if (!m_forcing_large_data && tempList.size() > LARGE_DATA)
     {
