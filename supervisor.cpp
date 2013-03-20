@@ -44,7 +44,8 @@ Supervisor::Supervisor(QObject *parent) :
 
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
-//    m_quickView->engine()->setImportPathList(QStringList());
+    m_quickView->engine()->setImportPathList(QStringList());
+//    m_quickView->engine()->addImportPath("qrc:///qml/qml");
     m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));

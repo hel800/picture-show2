@@ -24,6 +24,11 @@
         <file alias="Messagebox.qml">qml/picture-show2/Messagebox.qml</file>
         <file alias="Infobox.qml">qml/picture-show2/Infobox.qml</file>
         <file alias="BubbleMessage.qml">qml/picture-show2/BubbleMessage.qml</file>
+        <file>qml/QtGraphicalEffects/FastBlur.qml</file>
+        <file>qml/QtGraphicalEffects/qmldir</file>
+        <file>qml/QtGraphicalEffects/private/SourceProxy.qml</file>
+        <file>qml/QtQuick.2/plugins.qmltypes</file>
+        <file>qml/QtQuick.2/qmldir</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="good_times.ttf">fonts/good_times.ttf</file>
