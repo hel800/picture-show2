@@ -30,6 +30,7 @@ loadDirectory::loadDirectory() : QThread()
     this->m_dirList = NULL;
     this->m_subdirs = false;
     this->m_dropList = NULL;
+    this->m_forcing_large_data = false;
 }
 
 void loadDirectory::setDirectory(const QString &path)
@@ -72,6 +73,11 @@ void loadDirectory::setIncludeSubdirs(bool sd)
     this->m_subdirs = sd;
 }
 
+void loadDirectory::setForceLargeData(bool state)
+{
+    this->m_forcing_large_data = state;
+}
+
 QString& loadDirectory::getErrorMsg()
 {
     return this->m_error_msg;
@@ -88,7 +94,6 @@ void loadDirectory::run()
     filters << "*.gif" << "*.GIF";
     filters << "*.png" << "*.PNG";
     filters << "*.tif" << "*.tiff" << "*.TIF" << "*.TIFF";
-
 
     QList<QFileInfo> tempList;
 
@@ -123,6 +128,22 @@ void loadDirectory::run()
             tempList.append(current_dir.entryInfoList(filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
     }
 
+    std::cout << "templist: " << tempList.size() << std::endl;
+
+    if (!m_forcing_large_data && tempList.size() > LARGE_DATA)
+    {
+        this->m_error_msg = tr("LARGE_DATA");
+        emit loadDirectoryFinished(false);
+        return;
+    }
+
+    if (!m_forcing_large_data && this->m_sorting == DATE_CREATED && tempList.size() > LARGE_DATA2)
+    {
+        this->m_error_msg = tr("LARGE_DATA2");
+        emit loadDirectoryFinished(false);
+        return;
+    }
+
     if (this->m_sorting == DATE_CREATED)
     {
         QList< QPair<QFileInfo, QDateTime> > temp2list;
@@ -155,6 +176,9 @@ void loadDirectory::run()
 
 void loadDirectory::addItemsInDir(QList<QFileInfo> & t_list, QStringList t_filters, QDir t_directory)
 {
+    if (!m_forcing_large_data && t_list.size() > LARGE_DATA)
+        return;
+
     QList<QFileInfo> dirList = t_directory.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot, QDir::Name);
     foreach (QFileInfo str_dir, dirList)
     {
@@ -165,6 +189,9 @@ void loadDirectory::addItemsInDir(QList<QFileInfo> & t_list, QStringList t_filte
                 this->addItemsInDir(t_list, t_filters, cur_dir);
         }
     }
+
+    if (!m_forcing_large_data && t_list.size() > LARGE_DATA)
+        return;
 
     t_list.append(t_directory.entryInfoList(t_filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
 }

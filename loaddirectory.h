@@ -35,6 +35,8 @@ March 2013
 #include "global.h"
 
 static bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPair<QFileInfo, QDateTime> &f2);
+static int LARGE_DATA = 50000;
+static int LARGE_DATA2 = 1000;
 
 class loadDirectory : public QThread
 {
@@ -50,6 +52,8 @@ public:
     Sorting getSorting();
     bool getIncludeSubdirs();
     void setIncludeSubdirs(bool sd);
+
+    void setForceLargeData(bool state);
 
     QString& getErrorMsg();
 
@@ -67,6 +71,8 @@ private:
     QString m_error_msg;
     QList<QFileInfo> * m_dropList;
     QList<QFileInfo> * m_dirList;
+
+    bool m_forcing_large_data;
     
 };
 

@@ -42,6 +42,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->m_dirListReader = new readDirList();
     connect(this->m_dirListReader, SIGNAL(listready()), this, SLOT(readDirListReady()));
     connect(this->m_dirListReader, SIGNAL(finished()), this, SLOT(readDirListCanceled()));
+    this->m_dropListChanged = false;
 
     this->m_helpWindow = new HelpWindow(this);
     this->m_helpWindow->setModal(true);
@@ -263,12 +264,17 @@ void SettingsDialog::readDirListReady()
 
     int num_elements = this->m_droppedItemsList->size();
 
-    ui->pushButton_drop->setText(tr("%1 Bilder\n abgelegt").arg(num_elements));
-    ui->pushButton_drop->setEnabled(true);
-
     if (num_elements > 0)
     {
+        ui->pushButton_drop->setText(tr("%1 Bilder\n abgelegt").arg(num_elements));
+        ui->pushButton_drop->setEnabled(true);
         ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
+        this->m_dropListChanged = true;
+    }
+    else
+    {
+        ui->pushButton_drop->setText(tr("keine Bilder\n gefunden"));
+        ui->pushButton_drop->setEnabled(false);
     }
 }
 
@@ -379,7 +385,13 @@ void SettingsDialog::setLoadingType(LoadingType type)
 
 QList<QFileInfo> * SettingsDialog::getDroppedItems()
 {
+    this->m_dropListChanged = false;
     return this->m_droppedItemsList;
+}
+
+bool SettingsDialog::getDropListChanged()
+{
+    return this->m_dropListChanged;
 }
 
 void SettingsDialog::setTimerValue(int value)

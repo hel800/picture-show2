@@ -71,6 +71,7 @@ public:
     void setLoadingType(LoadingType type);
 
     QList<QFileInfo> * getDroppedItems();
+    bool getDropListChanged();
 
     void setTimerValue(int value);
     int getTimerValue();
@@ -150,6 +151,7 @@ private:
     readDirList * m_dirListReader;
     QList<QFileInfo> * m_droppedItemsList;
     QList<QUrl> m_cachedDropList;
+    bool m_dropListChanged;
 
     void loadSettings();
     void saveSettings();

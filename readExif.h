@@ -67,6 +67,8 @@ static QDateTime readOriginalDate(const QString &fname)
     }
     else
     {
+       qDebug("CANNOT READ DATE!!!");
+        /*
        delete[] buf;
        buf = new unsigned char[fsize];
 
@@ -89,7 +91,7 @@ static QDateTime readOriginalDate(const QString &fname)
         if(!date.isEmpty())
             originalDate = QDateTime::fromString(date, QString("yyyy:MM:dd HH:mm:ss"));
         else
-            qDebug("CANNOT READ DATE!!!");
+            qDebug("CANNOT READ DATE!!!");   */
     }
 
     delete[] buf;

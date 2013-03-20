@@ -139,6 +139,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_activeInputMode = NO_MODE;
     m_exitRequested = false;
     m_jumptoPreviewVisible = false;
+    m_largeDataDetected = false;
 
     this->bindings();
 
@@ -204,7 +205,12 @@ void Supervisor::applyNewOptions()
     m_imgProvider->setCacheSize(m_setDialog->getMaxCacheSize());
     m_imgProvider->setLoadingType(m_setDialog->getLoadingType());
 
-    if ( (!m_showLoaded) || (m_dirLoader->getDirectory() != m_setDialog->getCurrentDirectory()) )
+    if (m_setDialog->getDropListChanged())
+        std::cout << "FUCK" << std::endl;
+
+    if ( (!m_showLoaded) ||
+         (m_dirLoader->getDirectory() != m_setDialog->getCurrentDirectory()) ||
+         (m_setDialog->getCurrentDirectory() == "psl://drop_list" && m_setDialog->getDropListChanged()) )
     {
         m_wTask.clear();
         this->hideOverlays();
@@ -271,7 +277,7 @@ void Supervisor::applyNewOptions()
     }
 }
 
-void Supervisor::startDirectoryLoading()
+void Supervisor::startDirectoryLoading(bool forceLargeData)
 {
     if (m_currentlyLoading)
         return;
@@ -281,6 +287,10 @@ void Supervisor::startDirectoryLoading()
     m_dirLoader->setDropList(m_setDialog->getDroppedItems());
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
     m_dirLoader->setIncludeSubdirs(m_setDialog->getIncludeSubdirs());
+    if (forceLargeData)
+        m_dirLoader->setForceLargeData(true);
+    else
+        m_dirLoader->setForceLargeData(false);
     m_dirLoader->start(QThread::NormalPriority);
 
     m_imgProvider->deleteCache();
@@ -342,10 +352,27 @@ void Supervisor::directoryLoadingFinished(bool success)
     }
     else
     {
-        emit waiting(QVariant(false));
-        this->showCustomMessage(QString("qrc:///img/message_error.png"),
+        if (m_dirLoader->getErrorMsg() == "LARGE_DATA")
+        {
+            m_largeDataDetected = true;
+            this->showCustomMessage(QString("qrc:///img/message_question.png"),
+                                tr("Große Mengen an Daten"),
+                                tr("Das Laden kann einige Zeit in Anspruch nehmen. ENTER für Forsetzen, ESC zum Abbruch."));
+        }
+        else if (m_dirLoader->getErrorMsg() == "LARGE_DATA2")
+        {
+            m_largeDataDetected = true;
+            this->showCustomMessage(QString("qrc:///img/message_question.png"),
+                                tr("Viele Bilder für Datumssortierung"),
+                                tr("Das Laden mit Datumssortierung kann einige Zeit in Anspruch nehmen. ENTER für Forsetzen, ESC zum Abbruch."));
+        }
+        else
+        {
+            emit waiting(QVariant(false));
+            this->showCustomMessage(QString("qrc:///img/message_error.png"),
                                 tr("Fehler"),
-                                tr("Der Ordner \"%1\" existiert nicht, oder es befinden sich keine Bilder darin!").arg(m_dirLoader->getDirectory()));
+                                tr("%1: %2").arg(m_dirLoader->getErrorMsg()).arg(m_dirLoader->getDirectory()));
+        }
     }
 }
 
@@ -769,6 +796,12 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             }
             else if (m_messageActive)
             {
+                if (m_waitingActive && m_largeDataDetected)
+                {
+                    m_largeDataDetected = false;
+                    emit waiting(QVariant(false));
+                    QTimer::singleShot(500, m_setDialog, SLOT(show()));
+                }
                 this->hideMessage();
             }
             else if (m_helpActive)
@@ -925,6 +958,12 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 this->inputModeTimeout();
             else if (m_exitRequested && m_messageActive)
                 this->hideMessage();
+            else if (m_waitingActive && m_largeDataDetected)
+            {
+                m_largeDataDetected = false;
+                this->hideMessage();
+                this->startDirectoryLoading(true);
+            }
         }
         break;
     case Qt::Key_0:

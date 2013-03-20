@@ -66,6 +66,7 @@ class Supervisor : public QObject
         MODE_JUMPTO,
         MODE_TIMER_ON,
         MODE_TIMER_OFF,
+        MODE_LARGE_DATA,
         NO_MODE
     };
 
@@ -135,7 +136,7 @@ public slots:
     void resizeEvent( QResizeEvent * event );
 
 private slots:
-    void startDirectoryLoading();
+    void startDirectoryLoading(bool forceLargeData = false);
     void nextImagePressed();
     void prevImagePressed();
     void jumpToImage(bool fromPreview = false);
@@ -223,6 +224,7 @@ private:
     bool m_exitRequested;
     InputMode m_activeInputMode;
     bool m_jumptoPreviewVisible;
+    bool m_largeDataDetected;
 };
 
 #endif // SUPERVISOR_H

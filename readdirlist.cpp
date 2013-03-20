@@ -30,11 +30,11 @@ void readDirList::run()
     filters << "tif" << "tiff" << "TIF" << "TIFF";
 
     QStringList filters2;
-    filters << "*.jpeg" << "*.jpg" << "*.JPG" << "*.JPEG";
-    filters << "*.bmp" << "*.BMP";
-    filters << "*.gif" << "*.GIF";
-    filters << "*.png" << "*.PNG";
-    filters << "*.tif" << "*.tiff" << "*.TIF" << "*.TIFF";
+    filters2 << "*.jpeg" << "*.jpg" << "*.JPG" << "*.JPEG";
+    filters2 << "*.bmp" << "*.BMP";
+    filters2 << "*.gif" << "*.GIF";
+    filters2 << "*.png" << "*.PNG";
+    filters2 << "*.tif" << "*.tiff" << "*.TIF" << "*.TIFF";
 
     foreach(QUrl url, this->m_urlList)
     {
