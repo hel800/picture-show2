@@ -17,6 +17,9 @@
         <file alias="info_mini.png">img/info_mini.png</file>
         <file alias="picture-show.ico">img/picture-show.ico</file>
         <file alias="bubble.png">img/bubble.png</file>
+        <file alias="folder-16.png">img/folder-16.png</file>
+        <file alias="Drop-16.png">img/Drop-16.png</file>
+        <file alias="pictureFolder-48.png">img/pictureFolder-48.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>

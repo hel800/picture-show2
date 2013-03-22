@@ -97,7 +97,7 @@ void loadDirectory::run()
 
     QList<QFileInfo> tempList;
 
-    if (this->m_path == "psl://drop_list")
+    if (this->m_path == "")
     {
         if (this->m_dropList != NULL && this->m_dropList->isEmpty())
         {

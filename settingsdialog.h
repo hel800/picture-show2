@@ -50,8 +50,15 @@ class SettingsDialog : public QDialog
     Q_PROPERTY(ScaleType scale READ getScaleType NOTIFY propertiesChanged)
     
 public:
+    enum OpenMode {
+        MODE_FOLDER,
+        MODE_DROPLIST
+    };
+
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
+
+    OpenMode getOpenMode();
 
     QString getCurrentDirectory();
     void setCurrentDirectory(const QString & dir);
@@ -135,11 +142,11 @@ private slots:
 
     void on_comboBox_bgColor_currentIndexChanged(int index);
 
-    void on_pushButton_drop_clicked();
-
     void on_comboBox_directoryPath_currentIndexChanged(int index);
 
     void on_pushButton_load_clicked();
+
+    void on_pushButton_clearZone_clicked();
 
 private:
     Ui::SettingsDialog *ui;
@@ -148,9 +155,11 @@ private:
     HelpWindow * m_helpWindow;
     QNetworkAccessManager * m_networkManager;
 
+    // Drag and Drop Support
     readDirList * m_dirListReader;
     QList<QFileInfo> * m_droppedItemsList;
     QList<QUrl> m_cachedDropList;
+    QList<QUrl> m_current_collection;
     bool m_dropListChanged;
 
     void loadSettings();

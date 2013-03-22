@@ -12,6 +12,11 @@ void readDirList::setUrlList(QList<QUrl> & u_list)
     this->m_urlList = QList<QUrl>(u_list);
 }
 
+QList<QUrl> readDirList::getUrlList()
+{
+    return this->m_urlList;
+}
+
 QList<QFileInfo> readDirList::getItemList()
 {
     return this->m_itemList;

@@ -35,6 +35,9 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint );
     ui->groupBox_news->hide();
     ui->pushButton_load->setFocus();
+    ui->label_folderImage->setVisible(false);
+    ui->line_dropbox->setVisible(false);
+    ui->label_collection->setVisible(false);
 
     this->resizeDialog();
     this->setAcceptDrops(true);
@@ -73,6 +76,14 @@ SettingsDialog::~SettingsDialog()
 
     delete this->m_networkManager;
     delete this->m_droppedItemsList;
+}
+
+SettingsDialog::OpenMode SettingsDialog::getOpenMode()
+{
+    if (ui->tabWidget_open->currentIndex() == 1)
+        return MODE_DROPLIST;
+    else
+        return MODE_FOLDER;
 }
 
 QString SettingsDialog::getCurrentDirectory()
@@ -172,6 +183,7 @@ void SettingsDialog::dragLeaveEvent( QDragLeaveEvent *event )
 void SettingsDialog::dropEvent( QDropEvent * event )
 {
     QList<QUrl> url_list = event->mimeData()->urls();
+    ui->tabWidget_open->setCurrentIndex(1);
 
     if (this->m_dirListReader->isRunning())
     {
@@ -187,8 +199,7 @@ void SettingsDialog::dropEvent( QDropEvent * event )
     }
     else
     {
-        ui->pushButton_drop->setText(tr("Bitte\n warten..."));
-        ui->pushButton_drop->setEnabled(false);
+        ui->label_droppingInstruction->setText(tr("Bitte warten..."));
         this->m_dirListReader->setUrlList(url_list);
         this->m_dirListReader->start(QThread::NormalPriority);
     }
@@ -259,22 +270,36 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
 
 void SettingsDialog::readDirListReady()
 {
-    this->m_droppedItemsList->clear();
-    this->m_droppedItemsList->append(this->m_dirListReader->getItemList());
+//    this->m_droppedItemsList->clear();
+    QList<QFileInfo> newItems = this->m_dirListReader->getItemList();
+    this->m_droppedItemsList->append(newItems);
 
+    int num_addedElements = newItems.size();
     int num_elements = this->m_droppedItemsList->size();
 
     if (num_elements > 0)
     {
-        ui->pushButton_drop->setText(tr("%1 Bilder\n abgelegt").arg(num_elements));
-        ui->pushButton_drop->setEnabled(true);
-        ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
+        this->m_current_collection.append(this->m_dirListReader->getUrlList());
+
+        int num_folders = 0;
+        foreach (QUrl url, this->m_current_collection)
+        {
+            QFileInfo folder(url.toLocalFile());
+            if (folder.exists() && folder.isDir())
+                num_folders++;
+        }
+
+        ui->label_droppingInstruction->setText(tr("%1 Bilder hinzugefügt").arg(num_addedElements));
+        ui->label_foldersDropped->setText(tr("%1 Ordner").arg(num_folders));
+        ui->label_imagesDropped->setText(tr("%1 Bilder").arg(num_elements));
+        ui->label_folderImage->setVisible(true);
+        ui->label_collection->setVisible(true);
+        ui->line_dropbox->setVisible(true);
         this->m_dropListChanged = true;
     }
     else
     {
-        ui->pushButton_drop->setText(tr("keine Bilder\n gefunden"));
-        ui->pushButton_drop->setEnabled(false);
+        ui->label_droppingInstruction->setText(tr("keine Bilder gefunden"));
     }
 }
 
@@ -282,15 +307,18 @@ void SettingsDialog::readDirListCanceled()
 {
     if (!this->m_dirListReader->success && this->m_cachedDropList.size() > 0 && !this->m_dirListReader->isRunning())
     {
-        ui->pushButton_drop->setText(tr("Bitte\n warten..."));
-        ui->pushButton_drop->setEnabled(false);
+        ui->label_droppingInstruction->setText(tr("Bitte warten..."));
+
         this->m_dirListReader->setUrlList(this->m_cachedDropList);
         this->m_dirListReader->start(QThread::NormalPriority);
         this->m_cachedDropList.clear();
     }
     else if (!this->m_dirListReader->success)
     {
-        ui->pushButton_drop->setText(tr("Drop Zone"));
+        if (this->m_droppedItemsList->size() > 0)
+            ui->label_droppingInstruction->setText(tr("Hier weitere Bilder und/oder Ordner ablegen..."));
+        else
+            ui->label_droppingInstruction->setText(tr("Hier Bilder und/oder Ordner ablegen..."));
     }
 }
 
@@ -493,9 +521,6 @@ void SettingsDialog::addDirectoryToHistory(const QString & dir)
     if (!ui->checkBox_historySave->isChecked())
         return;
 
-    if (dir == "psl://drop_list")
-        return;
-
     QString newDir = QString(dir);
     if (dir.endsWith(QDir::separator()))
         newDir = dir.left(dir.length()-1);
@@ -638,33 +663,40 @@ void SettingsDialog::on_comboBox_bgColor_currentIndexChanged(int index)
     emit propertiesChanged();
 }
 
-void SettingsDialog::on_pushButton_drop_clicked()
-{
-    if (!this->m_dirListReader->isRunning() && this->m_droppedItemsList->size() > 0)
-    {
-        ui->comboBox_directoryPath->lineEdit()->setText("psl://drop_list");
-    }
-}
-
 void SettingsDialog::on_comboBox_directoryPath_currentIndexChanged(int index)
 {
-    if (this->m_dirListReader->isRunning())
-    {
-        this->m_dirListReader->cancel();
-        this->m_cachedDropList.clear();
-    }
+
 }
 
 void SettingsDialog::on_pushButton_load_clicked()
 {
-    if (ui->comboBox_directoryPath->lineEdit()->text() == "psl://drop_list")
+    if (this->getOpenMode() == MODE_DROPLIST)
     {
         if (this->m_dirListReader->isRunning())
         {
             QMessageBox::warning(this, tr("Abgelegte Ordner werden durchsucht!"), tr("Die abgelegten Ordner und Bilder werden noch durchsucht. Einen Moment bitte noch."));
             return;
         }
+
+        if (this->m_droppedItemsList->size() == 0)
+        {
+            QMessageBox::warning(this, tr("Keine Bilder gefunden"), tr("Es wurden keine Bilder/Ordner abgelegt, oder keine unterstützten Bilder in den Ordnern gefunden!"));
+            return;
+        }
     }
 
     this->accept();
+}
+
+void SettingsDialog::on_pushButton_clearZone_clicked()
+{
+    this->m_droppedItemsList->clear();
+    this->m_current_collection.clear();
+
+    ui->label_folderImage->setVisible(false);
+    ui->line_dropbox->setVisible(false);
+    ui->label_collection->setVisible(false);
+    ui->label_imagesDropped->setText(tr(""));
+    ui->label_foldersDropped->setText(tr(""));
+    ui->label_droppingInstruction->setText(tr("Hier Bilder und/oder Ordner ablegen..."));
 }

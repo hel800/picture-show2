@@ -14,6 +14,7 @@ public:
     explicit readDirList(QObject *parent = 0);
 
     void setUrlList(QList<QUrl> & u_list);
+    QList<QUrl> getUrlList();
     QList<QFileInfo> getItemList();
 
     void run();

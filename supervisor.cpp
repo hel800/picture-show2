@@ -206,12 +206,9 @@ void Supervisor::applyNewOptions()
     m_imgProvider->setCacheSize(m_setDialog->getMaxCacheSize());
     m_imgProvider->setLoadingType(m_setDialog->getLoadingType());
 
-    if (m_setDialog->getDropListChanged())
-        std::cout << "FUCK" << std::endl;
-
     if ( (!m_showLoaded) ||
          (m_dirLoader->getDirectory() != m_setDialog->getCurrentDirectory()) ||
-         (m_setDialog->getCurrentDirectory() == "psl://drop_list" && m_setDialog->getDropListChanged()) )
+         (m_setDialog->getOpenMode() == SettingsDialog::MODE_DROPLIST && m_setDialog->getDropListChanged()) )
     {
         m_wTask.clear();
         this->hideOverlays();
@@ -284,7 +281,10 @@ void Supervisor::startDirectoryLoading(bool forceLargeData)
         return;
 
     m_currentlyLoading = true;
-    m_dirLoader->setDirectory(m_setDialog->getCurrentDirectory());
+    if (m_setDialog->getOpenMode() == SettingsDialog::MODE_FOLDER)
+        m_dirLoader->setDirectory(m_setDialog->getCurrentDirectory());
+    else
+        m_dirLoader->setDirectory("");
     m_dirLoader->setDropList(m_setDialog->getDroppedItems());
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
     m_dirLoader->setIncludeSubdirs(m_setDialog->getIncludeSubdirs());
@@ -337,7 +337,8 @@ void Supervisor::directoryLoadingFinished(bool success)
             }
         }
 
-        m_setDialog->addDirectoryToHistory(m_dirLoader->getDirectory());
+        if (m_setDialog->getOpenMode() == SettingsDialog::MODE_FOLDER)
+            m_setDialog->addDirectoryToHistory(m_dirLoader->getDirectory());
 
         m_currentIndex = 0;
         int tmp_cur = m_cur;
