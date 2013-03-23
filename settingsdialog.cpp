@@ -67,6 +67,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
         this->m_networkManager->get(QNetworkRequest(QUrl("http://code.google.com/p/picture-show/")));
 
     ui->comboBox_directoryPath->setCurrentIndex(0);
+
+    m_qSet_format = QSettings::IniFormat;
+    m_qSet_scope = QSettings::SystemScope;
+    m_qSet_organization = "bsSoft";
+    m_qSet_application = "picture-show2";
 }
 
 SettingsDialog::~SettingsDialog()
@@ -309,6 +314,8 @@ void SettingsDialog::readDirListReady()
         ui->label_folderImage->setVisible(true);
         ui->label_collection->setVisible(true);
         ui->line_dropbox->setVisible(true);
+        ui->pushButton_clearZone->setEnabled(true);
+        ui->pushButton_saveColl->setEnabled(true);
         this->m_dropListChanged = true;
     }
     else
@@ -711,10 +718,93 @@ void SettingsDialog::on_pushButton_clearZone_clicked()
     this->m_droppedItemsList->clear();
     this->m_current_collection.clear();
 
+    ui->label_collection->setText(tr("In Sammlung: "));
     ui->label_folderImage->setVisible(false);
     ui->line_dropbox->setVisible(false);
     ui->label_collection->setVisible(false);
     ui->label_imagesDropped->setText(tr(""));
     ui->label_foldersDropped->setText(tr(""));
     ui->label_droppingInstruction->setText(tr("Hier Bilder und/oder Ordner ablegen..."));
+    ui->pushButton_clearZone->setEnabled(false);
+    ui->pushButton_saveColl->setEnabled(false);
+}
+
+void SettingsDialog::on_pushButton_saveColl_clicked()
+{
+    Ui_SaveCollectionDialog scd_gen;
+    QDialog saveCollDialog(this);
+    saveCollDialog.setWindowFlags( saveCollDialog.windowFlags() & ~Qt::WindowContextHelpButtonHint );
+    scd_gen.setupUi(&saveCollDialog);
+    if (saveCollDialog.exec() == QDialog::Accepted)
+    {
+        QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+        QStringList groups = settings.childGroups();
+        foreach (QString gr, groups)
+        {
+            if (gr.section("_", 1) == scd_gen.lineEdit_collName->text())
+            {
+                QMessageBox::warning(this, tr("Sammlung existiert bereits!"), tr("Eine Sammlung mit dem Namen: \"%1\" existiert bereits, bitte einen anderen wählen!").arg(scd_gen.lineEdit_collName->text()));
+                this->on_pushButton_saveColl_clicked();
+                return;
+            }
+        }
+
+        QStringList converted_list;
+        foreach (QUrl url, this->m_current_collection)
+            converted_list.append(url.toString());
+
+        int num_folders = 0;
+        int num_images = 0;
+        foreach (QUrl url, this->m_current_collection)
+        {
+            QFileInfo folder(url.toLocalFile());
+            if (folder.exists() && folder.isDir())
+                num_folders++;
+            else if (folder.exists() && folder.isFile())
+                num_images++;
+        }
+
+        settings.beginGroup("collection_" + scd_gen.lineEdit_collName->text());
+        settings.setValue("url_list", QVariant(converted_list));
+        settings.setValue("num_folders", QVariant(num_folders));
+        settings.setValue("num_images", QVariant(num_images));
+        settings.endGroup();
+    }
+}
+
+void SettingsDialog::on_pushButton_loadColl_clicked()
+{
+    LoadCollectionDialog loadCollDialog(this);
+    loadCollDialog.setSettingsOptions(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+    loadCollDialog.createCollection();
+
+    // fill list with collections
+
+    if (loadCollDialog.exec() == QDialog::Accepted)
+    {
+        QString col_name;
+        QList<QUrl> collection_list = loadCollDialog.getSelectedCollection(col_name);
+
+        this->m_droppedItemsList->clear();
+        this->m_current_collection.clear();
+
+        if (collection_list.size() > 0)
+        {
+            ui->label_collection->setText(tr("Sammlung: %1").arg(col_name));
+            ui->label_droppingInstruction->setText(tr("Bitte warten..."));
+            this->m_dirListReader->setUrlList(collection_list);
+            this->m_dirListReader->start(QThread::NormalPriority);
+        }
+        else
+        {
+            ui->label_droppingInstruction->setText(tr("Sammlung ungültig!"));
+            ui->label_folderImage->setVisible(false);
+            ui->line_dropbox->setVisible(false);
+            ui->label_collection->setVisible(false);
+            ui->label_imagesDropped->setText(tr(""));
+            ui->label_foldersDropped->setText(tr(""));
+            ui->pushButton_clearZone->setEnabled(false);
+            ui->pushButton_saveColl->setEnabled(false);
+        }
+    }
 }

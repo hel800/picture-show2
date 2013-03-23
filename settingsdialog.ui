@@ -348,6 +348,9 @@
              </property>
              <item>
               <widget class="QPushButton" name="pushButton_saveColl">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Sammlung speichern...</string>
                </property>
@@ -362,6 +365,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="pushButton_clearZone">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Drop Zone leeren</string>
                </property>
@@ -1124,7 +1130,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>404</x>
-     <y>432</y>
+     <y>485</y>
     </hint>
     <hint type="destinationlabel">
      <x>235</x>

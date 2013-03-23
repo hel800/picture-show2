@@ -33,10 +33,13 @@ February 2013
 #include <QNetworkReply>
 #include <QMimeData>
 #include <QMessageBox>
+#include <QIcon>
 
 #include "helpwindow.h"
 #include "global.h"
 #include "readdirlist.h"
+#include "ui_savecolldialog.h"
+#include "loadcollectiondialog.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -132,21 +135,16 @@ private slots:
 
     void on_pushButton_browse_clicked();
     void on_comboBox_language_currentIndexChanged(int index);
-
     void on_pushButton_deleteHistory_clicked();
-
     void on_comboBox_effect_currentIndexChanged(int index);
     void on_pushButton_help_clicked();
-
     void on_comboBox_scaling_currentIndexChanged(int index);
-
     void on_comboBox_bgColor_currentIndexChanged(int index);
-
     void on_comboBox_directoryPath_currentIndexChanged(int index);
-
     void on_pushButton_load_clicked();
-
     void on_pushButton_clearZone_clicked();
+    void on_pushButton_saveColl_clicked();
+    void on_pushButton_loadColl_clicked();
 
 private:
     Ui::SettingsDialog *ui;
@@ -164,6 +162,12 @@ private:
 
     void loadSettings();
     void saveSettings();
+
+    QSettings::Format m_qSet_format;
+    QSettings::Scope m_qSet_scope;
+    QString m_qSet_organization;
+    QString m_qSet_application;
+
 };
 
 #endif // SETTINGSDIALOG_H

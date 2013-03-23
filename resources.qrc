@@ -20,6 +20,8 @@
         <file alias="folder-16.png">img/folder-16.png</file>
         <file alias="Drop-16.png">img/Drop-16.png</file>
         <file alias="pictureFolder-48.png">img/pictureFolder-48.png</file>
+        <file alias="images-16.png">img/images-16.png</file>
+        <file alias="picturesFolder-16.png">img/pictureFolder-16.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>
