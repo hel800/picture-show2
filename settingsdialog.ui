@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>415</width>
-    <height>487</height>
+    <height>497</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -71,7 +71,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -324,7 +324,7 @@
             <property name="maximumSize">
              <size>
               <width>130</width>
-              <height>80</height>
+              <height>120</height>
              </size>
             </property>
             <property name="frameShape">

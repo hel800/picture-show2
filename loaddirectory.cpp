@@ -48,7 +48,7 @@ void loadDirectory::setDirectoryList(QList<QFileInfo> * list)
     this->m_dirList = list;
 }
 
-void loadDirectory::setDropList(QList<QFileInfo> * d_list)
+void loadDirectory::setDropList(QSet<QString> *d_list)
 {
     this->m_dropList = d_list;
 }
@@ -95,7 +95,7 @@ void loadDirectory::run()
     filters << "*.png" << "*.PNG";
     filters << "*.tif" << "*.tiff" << "*.TIF" << "*.TIFF";
 
-    QList<QFileInfo> tempList;
+    QList<QString> tempList;
 
     if (this->m_path == "")
     {
@@ -108,7 +108,7 @@ void loadDirectory::run()
 
         this->m_dirList->clear();
 
-        tempList.append(*this->m_dropList);
+        tempList.append(this->m_dropList->toList());
     }
     else
     {
@@ -123,9 +123,15 @@ void loadDirectory::run()
         this->m_dirList->clear();
 
         if (this->m_subdirs)
+        {
             this->addItemsInDir(tempList, filters, current_dir);
+        }
         else
-            tempList.append(current_dir.entryInfoList(filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
+        {
+            QList<QFileInfo> f_info_list = current_dir.entryInfoList(filters, QDir::Files, QDir::Name | QDir::IgnoreCase);
+            foreach (QFileInfo inf, f_info_list)
+                tempList.append(inf.absoluteFilePath());
+        }
     }
 
     if (tempList.size() == 0)
@@ -153,8 +159,9 @@ void loadDirectory::run()
     {
         QList< QPair<QFileInfo, QDateTime> > temp2list;
 
-        foreach(QFileInfo info, tempList)
+        foreach(QString file, tempList)
         {
+            QFileInfo info(file);
             QDateTime date = readOriginalDate(info.absoluteFilePath());
             QPair<QFileInfo, QDateTime> pair;
             pair.first = info;
@@ -171,6 +178,8 @@ void loadDirectory::run()
     {
         for (int i = 0; i < tempList.size(); i++)
             this->m_dirList->append(tempList.at(i));
+
+        qSort(this->m_dirList->begin(), this->m_dirList->end(), fileNameLessThan);
     }
 
 //    end = clock();
@@ -179,7 +188,7 @@ void loadDirectory::run()
     emit loadDirectoryFinished(true);
 }
 
-void loadDirectory::addItemsInDir(QList<QFileInfo> & t_list, QStringList t_filters, QDir t_directory)
+void loadDirectory::addItemsInDir(QList<QString> &t_list, QStringList t_filters, QDir t_directory)
 {
     if (!m_forcing_large_data && t_list.size() > LARGE_DATA)
         return;
@@ -198,7 +207,9 @@ void loadDirectory::addItemsInDir(QList<QFileInfo> & t_list, QStringList t_filte
     if (!m_forcing_large_data && t_list.size() > LARGE_DATA)
         return;
 
-    t_list.append(t_directory.entryInfoList(t_filters, QDir::Files, QDir::Name | QDir::IgnoreCase));
+    QList<QFileInfo> f_info_list = t_directory.entryInfoList(t_filters, QDir::Files, QDir::Name | QDir::IgnoreCase);
+    foreach (QFileInfo inf, f_info_list)
+        t_list.append(inf.absoluteFilePath());
 }
 
 bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPair<QFileInfo, QDateTime> &f2)
@@ -214,4 +225,9 @@ bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPair<QFile
         return true;
     else
         return f1.first.fileName() < f2.first.fileName();
+}
+
+bool fileNameLessThan(const QFileInfo &f1, const QFileInfo &f2)
+{
+    return f1.fileName() < f2.fileName();
 }

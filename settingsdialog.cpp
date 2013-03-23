@@ -57,7 +57,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     if (ui->comboBox_effect->currentIndex() == 0)
         ui->comboBox_fadeTime->setEnabled(false);
 
-    this->m_droppedItemsList = new QList<QFileInfo>();
+    this->m_droppedItemsList = new QSet<QString>();
 
     this->languageChangeSignalOff = true;
     this->loadSettings();
@@ -199,8 +199,10 @@ void SettingsDialog::dropEvent( QDropEvent * event )
     }
     else
     {
+        QList<QUrl> dupplicates_removed = url_list.toSet().subtract(this->m_current_collection).toList();
+
         ui->label_droppingInstruction->setText(tr("Bitte warten..."));
-        this->m_dirListReader->setUrlList(url_list);
+        this->m_dirListReader->setUrlList(dupplicates_removed);
         this->m_dirListReader->start(QThread::NormalPriority);
     }
 }
@@ -271,15 +273,21 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
 void SettingsDialog::readDirListReady()
 {
 //    this->m_droppedItemsList->clear();
+    int num_elements_before = this->m_droppedItemsList->size();
     QList<QFileInfo> newItems = this->m_dirListReader->getItemList();
-    this->m_droppedItemsList->append(newItems);
 
-    int num_addedElements = newItems.size();
-    int num_elements = this->m_droppedItemsList->size();
+    foreach (QFileInfo info, newItems)
+        this->m_droppedItemsList->insert(info.absoluteFilePath());
+
+    int num_elements_after = this->m_droppedItemsList->size();
+
+    int num_elements = num_elements_after;
 
     if (num_elements > 0)
     {
-        this->m_current_collection.append(this->m_dirListReader->getUrlList());
+        this->m_current_collection.unite(this->m_dirListReader->getUrlList().toSet());
+
+        int num_addedElements = num_elements_after - num_elements_before;
 
         int num_folders = 0;
         foreach (QUrl url, this->m_current_collection)
@@ -289,7 +297,13 @@ void SettingsDialog::readDirListReady()
                 num_folders++;
         }
 
-        ui->label_droppingInstruction->setText(tr("%1 Bilder hinzugefügt").arg(num_addedElements));
+        if (num_addedElements == 0)
+            ui->label_droppingInstruction->setText(tr("keine neuen Bilder hinzugefügt"));
+        else if (num_addedElements == 1)
+            ui->label_droppingInstruction->setText(tr("1 Bild hinzugefügt"));
+        else
+            ui->label_droppingInstruction->setText(tr("%1 Bilder hinzugefügt").arg(num_addedElements));
+
         ui->label_foldersDropped->setText(tr("%1 Ordner").arg(num_folders));
         ui->label_imagesDropped->setText(tr("%1 Bilder").arg(num_elements));
         ui->label_folderImage->setVisible(true);
@@ -309,7 +323,9 @@ void SettingsDialog::readDirListCanceled()
     {
         ui->label_droppingInstruction->setText(tr("Bitte warten..."));
 
-        this->m_dirListReader->setUrlList(this->m_cachedDropList);
+        QList<QUrl> dupplicates_removed = this->m_cachedDropList.toSet().subtract(this->m_current_collection).toList();
+
+        this->m_dirListReader->setUrlList(dupplicates_removed);
         this->m_dirListReader->start(QThread::NormalPriority);
         this->m_cachedDropList.clear();
     }
@@ -411,7 +427,7 @@ void SettingsDialog::setLoadingType(LoadingType type)
     ui->comboBox_loadingType->setCurrentIndex(int(type));
 }
 
-QList<QFileInfo> * SettingsDialog::getDroppedItems()
+QSet<QString> * SettingsDialog::getDroppedItems()
 {
     this->m_dropListChanged = false;
     return this->m_droppedItemsList;
@@ -595,6 +611,7 @@ void SettingsDialog::loadSettings()
     ui->comboBox_loadingType->setCurrentIndex(settings.value("loadingType", QVariant(0)).toInt());
     ui->checkBox_updateNotification->setChecked(settings.value("checkForUpdates", QVariant(true)).toBool());
     ui->comboBox_bgColor->setCurrentIndex(settings.value("bgColor", QVariant(1)).toInt());
+    ui->tabWidget_open->setCurrentIndex(settings.value("openTabIndex", QVariant(0)).toInt());
 }
 
 void SettingsDialog::saveSettings()
@@ -613,6 +630,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("loadingType", QVariant(ui->comboBox_loadingType->currentIndex()));
     settings.setValue("checkForUpdates", QVariant(ui->checkBox_updateNotification->isChecked()));
     settings.setValue("bgColor", QVariant(ui->comboBox_bgColor->currentIndex()));
+    settings.setValue("openTabIndex", QVariant(ui->tabWidget_open->currentIndex()));
 }
 
 void SettingsDialog::on_comboBox_language_currentIndexChanged(int index)

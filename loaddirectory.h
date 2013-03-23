@@ -16,7 +16,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 
 ......................................................................
 
-author: Sebastian Schäfer
+author: Sebastian Schï¿½fer
 March 2013
 
 --------------------------------------------------------------------*/
@@ -26,6 +26,7 @@ March 2013
 
 #include <QThread>
 #include <QList>
+#include <QSet>
 #include <QPair>
 #include <QDir>
 #include <QFileInfo>
@@ -35,6 +36,7 @@ March 2013
 #include "global.h"
 
 static bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPair<QFileInfo, QDateTime> &f2);
+static bool fileNameLessThan(const QFileInfo &f1, const QFileInfo &f2);
 static int LARGE_DATA = 50000;
 static int LARGE_DATA2 = 1000;
 
@@ -47,7 +49,7 @@ public:
     void setDirectory(const QString &path);
     const QString & getDirectory();
     void setDirectoryList(QList<QFileInfo> *list);
-    void setDropList(QList<QFileInfo> * d_list);
+    void setDropList(QSet<QString> *d_list);
     void setSorting(Sorting sortType);
     Sorting getSorting();
     bool getIncludeSubdirs();
@@ -63,13 +65,13 @@ signals:
     void loadDirectoryFinished(bool success);
 
 private:
-    void addItemsInDir(QList<QFileInfo> & t_list, QStringList t_filters, QDir t_directory);
+    void addItemsInDir(QList<QString> &t_list, QStringList t_filters, QDir t_directory);
 
     Sorting m_sorting;
     QString m_path;
     bool m_subdirs;
     QString m_error_msg;
-    QList<QFileInfo> * m_dropList;
+    QSet<QString> * m_dropList;
     QList<QFileInfo> * m_dirList;
 
     bool m_forcing_large_data;

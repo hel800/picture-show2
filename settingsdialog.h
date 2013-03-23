@@ -77,7 +77,7 @@ public:
     LoadingType getLoadingType();
     void setLoadingType(LoadingType type);
 
-    QList<QFileInfo> * getDroppedItems();
+    QSet<QString> *getDroppedItems();
     bool getDropListChanged();
 
     void setTimerValue(int value);
@@ -157,9 +157,9 @@ private:
 
     // Drag and Drop Support
     readDirList * m_dirListReader;
-    QList<QFileInfo> * m_droppedItemsList;
+    QSet<QString> * m_droppedItemsList;
     QList<QUrl> m_cachedDropList;
-    QList<QUrl> m_current_collection;
+    QSet<QUrl> m_current_collection;
     bool m_dropListChanged;
 
     void loadSettings();
