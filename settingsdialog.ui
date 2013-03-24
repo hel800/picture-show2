@@ -267,7 +267,7 @@
                    <item>
                     <widget class="QLabel" name="label_collection">
                      <property name="text">
-                      <string>In Sammlung: </string>
+                      <string>In Drop Zone: </string>
                      </property>
                     </widget>
                    </item>

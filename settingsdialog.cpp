@@ -32,7 +32,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);    
     this->setModal(true);
-    this->setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint );
+    this->setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     ui->groupBox_news->hide();
     ui->pushButton_load->setFocus();
     ui->label_folderImage->setVisible(false);
@@ -81,6 +81,14 @@ SettingsDialog::~SettingsDialog()
 
     delete this->m_networkManager;
     delete this->m_droppedItemsList;
+}
+
+void SettingsDialog::setOnTopHint(bool state)
+{
+    if (state)
+        this->setWindowFlags( this->windowFlags() | Qt::WindowStaysOnTopHint);
+    else
+        this->setWindowFlags( this->windowFlags() & ~Qt::WindowStaysOnTopHint);
 }
 
 SettingsDialog::OpenMode SettingsDialog::getOpenMode()

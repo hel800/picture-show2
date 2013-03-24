@@ -41,12 +41,13 @@ Item {
         opacity: 0.0
         width: parent.width
         height: parent.height
+        anchors.centerIn: parent
 
         Image {
             id: bubble_screen_image
             width: parent.width / 4
             fillMode: Image.PreserveAspectFit
-            anchors.bottom: (info_box.isVisible()) ? info_box.info_screen_content.anchors.top : parent.anchors.bottom
+            anchors.bottom: parent.bottom
             anchors.bottomMargin: height / 6
             anchors.right: parent.right
             anchors.rightMargin:  height / 6

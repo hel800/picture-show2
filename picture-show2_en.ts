@@ -160,7 +160,6 @@
         <translation>Open pictures per Drag and Drop</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="270"/>
         <location filename="settingsdialog.cpp" line="727"/>
         <source>In Sammlung: </source>
         <translation>In collection: </translation>
@@ -190,7 +189,12 @@
     <message>
         <location filename="settingsdialog.ui" line="135"/>
         <source>Unterverzeichnisse einbeziehen   </source>
-        <translation type="unfinished"></translation>
+        <translation>Include subdirectories</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="270"/>
+        <source>In Drop Zone: </source>
+        <translation>In Drop Zone: </translation>
     </message>
     <message>
         <location filename="settingsdialog.ui" line="379"/>
@@ -200,7 +204,7 @@
     <message>
         <location filename="settingsdialog.ui" line="954"/>
         <source>Hintergrundfarbe: </source>
-        <translation>Backgroundcolor: </translation>
+        <translation>Background color: </translation>
     </message>
     <message>
         <location filename="settingsdialog.ui" line="1004"/>
@@ -358,7 +362,7 @@
     <message utf8="true">
         <location filename="settingsdialog.ui" line="617"/>
         <source>Bildschirm füllen</source>
-        <translation>whole screen</translation>
+        <translation>fill  screen</translation>
     </message>
     <message utf8="true">
         <location filename="settingsdialog.ui" line="585"/>

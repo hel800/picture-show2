@@ -76,6 +76,9 @@ Supervisor::Supervisor(QObject *parent) :
     m_quickView->setTitle("picture-show 2");
     m_quickView->showExpanded(m_setDialog->getFullScreen());
 
+//    if (this->isFullscreen())
+//        m_setDialog->setOnTopHint(true);
+
     int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
     int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()))/2));
     m_setDialog->move(new_x_pos, new_y_pos);
@@ -151,9 +154,6 @@ Supervisor::Supervisor(QObject *parent) :
         QTimer::singleShot(900, this, SLOT(showHelpOverlay()));
         m_setDialog->setFirstStart(false);
     }
-
-    QString id = "jumpto_132";
-    std::cout << id.section("/", -1).section("_", 1).toStdString().c_str() << std::endl;
 
     emit refresh();
 }
@@ -868,10 +868,12 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             if (m_quickView->windowState() == Qt::WindowMaximized)
             {
                 m_quickView->showExpanded(false);
+//                m_setDialog->setOnTopHint(false);
             }
             else
             {
                 m_quickView->showExpanded(true);
+//                m_setDialog->setOnTopHint(true);
             }
             emit refresh();
         }

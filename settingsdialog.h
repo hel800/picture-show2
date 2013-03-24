@@ -61,6 +61,7 @@ public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
 
+    void setOnTopHint(bool state);
     OpenMode getOpenMode();
 
     QString getCurrentDirectory();

@@ -799,9 +799,6 @@ Rectangle {
                     jumpto_dummy.height = root.height
                     jumpto_dummy.width = root.width
                 }
-
-                console.log(jumpto_dummy.width)
-                console.log(jumpto_dummy.height)
             }
         }
 

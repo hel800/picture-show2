@@ -85,7 +85,7 @@ void QtQuick2ApplicationViewer::showExpanded(bool fullscreen)
     {
         this->positionBeforeFullscreen = this->position();
         this->sizeBeforeFullscreen = this->size();
-        this->setFlags(Qt::FramelessWindowHint | Qt::Window);
+        this->setFlags(Qt::FramelessWindowHint | Qt::Window/* | Qt::WindowStaysOnTopHint*/);
         this->showMaximized();
         this->setCursor(Qt::BlankCursor);
     }

@@ -104,39 +104,46 @@ the new picture hit ENTER. A preview of the image is shown as soon as the target
 <h2>Open Dialog / Settings</h2>
 </center>
 <p>
-Der Öffnen Dialog / Einstellungsdialog beinhaltet alle Konfigurationsmöglichkeiten für picture-show. Neben der Angabe
-eines Bilderordners können zusätzlich Präsentationsoptionen und generelle Programmoptionen auf zwei weiteren Registerkarten
-gefunden werden. Beim bestätigen des Dialogs mit OK werden alle neu getätigten Einstellungen übernommen. Im Folgenden werden
-die Einstellungen erläutert
+The open Dialog and Settings Dialog provides the configuration for picture-show. Two modes are available to open pictures. Single Folder
+mode and Drag and Drop mode. Settings are devided in presentation options and miscellaneous options on two different tabs. If the dialog
+is accepted with OK a new show is loaded or all changes are applied to the current show. In the following the functionality is described
+in detail.
 </p>
 <center>
 <table>
-<tr><td width="150">Bilderverzeichnis</td><td>Hier kann ein Ordner spezifiziert werden, der nach Bildern durchsucht wird, die
- in der picture-show gezeigt werden sollen. Alle Bilder vom Typ jpg/jpeg, tif/tiff, gif und png werden mit einbezogen. Zusätzlich
- kann festgelegt werden, ob eventuelle Unterordner auch nach Bildern durchsucht werden sollen.</td></tr>
-<tr><td>Übergangseffekt</td><td>Hier kann ein Blendeffekt ausgewählt werden, der verwendet wird, um zwischen den Bildern während der
- Show zu wechseln.</td></tr>
-<tr><td>Übergangszeit</td><td>Die Dauer der Übergangseffekte ist für jeden effekt unterschiedlich festgelegt. Es können aber stets
- zwischen sehr kurz und lang unterschiedliche Stufen gewählt werden.</td></tr>
- <tr><td>Sortierung</td><td>Die Sortierung bestimmt, in welcher Reihenfolge die Bilder in der Show gezeigt werden. Zur Auswahl
- steht die alphabetische Sortierung nach Dateiname, sowie die Sortierung nach dem Aufnahmedatum. Dazu muss das Datum der Aufnahme
- in den EXIF-Informationen des Bildes gespeichert sein.</td></tr>
-<tr><td>Skalierung</td><td>Legt fest, ob entweder das ganze Bild unter Beibehaltung des Seitenverhältnisses angezeigt werden
- soll, oder der Bildschirm gefüllt werden soll. Letzters geschieht ebenfalls unter Beibehaltung des Seitenverhältnisses, allerdings
- wird das Bild geeignet beschnitten.</td></tr>
-<tr><td>Endloswiedergabe</td><td>Wenn aktiviert, wird nach dem letzten Bild wieder mit dem ersten begonnen. Beim zurückschalten des ersten
- Bildes erscheint entsprechend das letzte Bild. Diese Einstellung wirkt sich auch bei aktivierter Timerfunktion aus.</td></tr>
-<tr><td>Maussteuerung</td><td>Bei aktivierter Maussteuerung können Bilder mit linker und rechter Maustaste zurück bzw. weiter geschaltet
- werden. Die mittlere Maustaste dient zum öffnen des Öffnen-Dialogs.</td></tr>
-<tr><td>Sprache</td><td>Dient zur Festlegung der Sprache.</td></tr>
-<tr><td>Hintergrundfarbe</td><td>Legt die Hintergrundfarbe während der Show fest.</td></tr>
-<tr><td>Bei Updates benachrichtigen</td><td>Wenn aktiviert, berichtet das Programm mit einer kleinen Meldung innerhalb des Öffnen-Dialogs über neue Programmversionen. Ein Downloadlink
- wird angezeigt.</td></tr>
-<tr><td>Cache Größe</td><td>Größe des Arbeitsspeichers, der, zusätzlich zur Speicherung des aktuellen Bildes, temporär zur Speicherung von
-Bildern genutzt werden kann. Ein Speicher zwischen 150 und 400 MB sorgt für einen flüssigeren Ablauf des Programms.</td></tr>
-<tr><td>History speichern</td><td>Legt fest, ob Ordner, die einmal in picture-show geöffnet wurden in Zukunft im Drop-down Menü Bilderverzeichnis
- angezeigt werden sollen.</td></tr>
-<tr><td>History löschen</td><td>Löscht eben jede gespeicherten Ordner aus der Drop-down Liste.</td></tr>
+<tr><td width="150">Folder mode tab</td><td>
+A folder can be specified to look for pictures to be shown in the picture show. All images of type jpg/jpeg, tif/tiff, gif and png are
+supported. Additionally, subfolders can be included in the search.</td></tr>
+<tr><td width="150">Drag and Drop mode tab</td><td>
+Pictures and folders can be dragged and dropped to the dialog. Pictures are directly added to the current selection, folders are
+recursively searched for pictures and added as well. Depending on the amount of data to be processed, this may take a few moments.
+The current Drop Zone can be cleared with Empty Drop Zone Button. It is also possible to save the current Zone (with Save collection
+button) to a collection. Dropped pictures are saved directly in the collection, dropped folders are saved as Smart Folders. That means
+that when loading the collection later (with Load collection button) the folder is read in again looking for new or also obsolete pictures.
+</td></tr>
+<tr><td>Fading effect</td><td>Choose the fading effect to be used to switch between pictures.</td></tr>
+<tr><td>Übergangszeit</td><td>Choose the fading time to be used for switching pictures. The duration is effect dependend and can be choosen
+between very fast and slow.</td></tr>
+ <tr><td>Sorting</td><td>The sorting specifies the order in which the pictures appear in the show. You can choose between alphabetical order
+ of the filenames or chronological order of the date taken. Therefore, the date taken has to be present in the EXIF information of the
+ pictures.</td></tr>
+<tr><td>Scale</td><td>The scale specifies wheather to show whole pictures or fill the screen. Whole pictures will leave blank space right
+and left or on top and bottom, respectively. The fill screen option crops the pictures maintaining aspect ratio.</td></tr>
+<tr><td>Loop slide show</td><td>If activated, advancing to the next picture from the last will end up at the first picture in the show.
+If the show is at the first picture and the previous picture is requested, it will end up showing the last picture in the show.
+This option is also effective when using the automatic timer function.
+</td></tr>
+<tr><td>Mouse control</td><td>If activated, pictures can be switched with left and right mouse button. The middle mouse button can be used
+to open the Open/Settings Dialog. The scroll whell can be used to activate the jump-function and to switch through the pictures.</td></tr>
+<tr><td>Language</td><td>Specifies the language.</td></tr>
+<tr><td>Background color</td><td>Specifies the background color to be used in the show.</td></tr>
+<tr><td>Update notification</td><td>If activated, the application shows a notice in the Open/Settings dialog about new versions. A link is
+displayed to download an installation package.</td></tr>
+<tr><td>Cache size</td><td>The size of memory to be used to temporarily cache pictures additionally to the current picture and the memory
+which is used by the application itself. Choose between 150 MB and 400 MB for smooth transition.</td></tr>
+<tr><td>Save history</td><td>If activated, folders which have been opened in the Folder mode are saved and can be chosen in the drop down
+list in later sessions.</td></tr>
+<tr><td>Delete history</td><td>Deletes all folders in the history</td></tr>
 </table>
 
 </center>
