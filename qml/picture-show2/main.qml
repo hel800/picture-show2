@@ -1,3 +1,26 @@
+/* ------------------------------------------------------------------
+main.qml is part of picture-show2.
+.....................................................................
+
+picture-show is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+picture-show2 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with picture-show. If not, see <http://www.gnu.org/licenses/>.
+
+......................................................................
+
+author: Sebastian Schäfer
+February 2013
+
+--------------------------------------------------------------------*/
+
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
@@ -384,7 +407,7 @@ Rectangle {
 
             ScriptAction { script: { start_to_first2_anim1.target.opacity = 0.01; start_to_first2_anim1.target.scale = 0.0; start_to_first2_anim1.target.rotation = 0} }
 
-            NumberAnimation { id: start_to_first2_anim1; target: image_slot1;  properties: "opacity"; to: 1.0; duration: 1500; easing.type: Easing.InExpo }
+            NumberAnimation { id: start_to_first2_anim1; target: image_slot1;  properties: "opacity"; to: 1.0; duration: 1000; easing.type: Easing.InExpo }
             NumberAnimation { target: start_to_first2_anim1.target; easing.overshoot: 2.0;  properties: "scale"; to: 1.0; duration: 1500; easing.type: Easing.InOutBack }
         }
     }

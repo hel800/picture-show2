@@ -22,6 +22,7 @@
         <file alias="pictureFolder-48.png">img/pictureFolder-48.png</file>
         <file alias="images-16.png">img/images-16.png</file>
         <file alias="picturesFolder-16.png">img/pictureFolder-16.png</file>
+        <file alias="zone_bg.png">img/zone_bg.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>

@@ -207,6 +207,7 @@ void SettingsDialog::dropEvent( QDropEvent * event )
         QList<QUrl> dupplicates_removed = url_list.toSet().subtract(this->m_current_collection).toList();
 
         ui->label_droppingInstruction->setText(tr("Bitte warten..."));
+        ui->pushButton_saveColl->setEnabled(false);
         this->m_dirListReader->setUrlList(dupplicates_removed);
         this->m_dirListReader->start(QThread::NormalPriority);
     }
@@ -316,7 +317,9 @@ void SettingsDialog::readDirListReady()
         ui->line_dropbox->setVisible(true);
         ui->pushButton_clearZone->setEnabled(true);
         ui->pushButton_saveColl->setEnabled(true);
-        this->m_dropListChanged = true;
+
+        if (num_addedElements != 0)
+            this->m_dropListChanged = true;
     }
     else
     {
@@ -715,6 +718,9 @@ void SettingsDialog::on_pushButton_load_clicked()
 
 void SettingsDialog::on_pushButton_clearZone_clicked()
 {
+    if (this->m_dirListReader->isRunning())
+        this->m_dirListReader->cancel();
+
     this->m_droppedItemsList->clear();
     this->m_current_collection.clear();
 
@@ -737,6 +743,13 @@ void SettingsDialog::on_pushButton_saveColl_clicked()
     scd_gen.setupUi(&saveCollDialog);
     if (saveCollDialog.exec() == QDialog::Accepted)
     {
+        if (scd_gen.lineEdit_collName->text().isEmpty())
+        {
+            QMessageBox::warning(this, tr("Sammlung braucht einen Namen!"), tr("Es muss ein eindeutiger Name für die Sammlung festgelegt werden!"));
+            this->on_pushButton_saveColl_clicked();
+            return;
+        }
+
         QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
         QStringList groups = settings.childGroups();
         foreach (QString gr, groups)
@@ -774,6 +787,9 @@ void SettingsDialog::on_pushButton_saveColl_clicked()
 
 void SettingsDialog::on_pushButton_loadColl_clicked()
 {
+    if (this->m_dirListReader->isRunning())
+        this->m_dirListReader->cancel();
+
     LoadCollectionDialog loadCollDialog(this);
     loadCollDialog.setSettingsOptions(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     loadCollDialog.createCollection();

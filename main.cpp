@@ -81,22 +81,6 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
-//    qmlRegisterType<SettingsDialog>("CustomComponents", 1, 0, "SettingsDialog");
-
-//    QtQuick2ApplicationViewer viewer;
-
-//    SettingsDialog s_dialog;
-
-//    int new_x_pos = viewer.position().x() + (int(viewer.size().width()/2) - int(s_dialog.size().width()/2));
-//    int new_y_pos = viewer.position().y() + (int(viewer.size().height()/2) - int(s_dialog.size().height()/2));
-
-//    s_dialog.move(new_x_pos, new_y_pos);
-
-//    //QTimer::singleShot(1000, &s_dialog, SLOT(show()));
-//    //s_dialog.show();
-
-//    QQmlContext * context = viewer.engine()->rootContext();
-//    context->setContextProperty("_settings_dialog", &s_dialog);
 
     Supervisor sup(&app);
     if (!sup.isQmlReady())
@@ -104,15 +88,6 @@ int main(int argc, char *argv[])
         app.quit();
         return -1;
     }
-//    superV->setDialog(&s_dialog);
-//    superV->setView(&viewer);
-
-//    context->setContextProperty("_supervisor", superV);
-
-//    viewer.showExpanded();
-//    viewer.setMainQmlFile(QStringLiteral("qml/picture-show2/main.qml"));
-
-//    superV->bindings();
 
     return app.exec();
 }

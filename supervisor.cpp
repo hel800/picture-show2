@@ -207,7 +207,7 @@ void Supervisor::applyNewOptions()
     m_imgProvider->setLoadingType(m_setDialog->getLoadingType());
 
     if ( (!m_showLoaded) ||
-         (m_dirLoader->getDirectory() != m_setDialog->getCurrentDirectory()) ||
+         (m_setDialog->getOpenMode() == SettingsDialog::MODE_FOLDER && m_dirLoader->getDirectory() != m_setDialog->getCurrentDirectory()) ||
          (m_setDialog->getOpenMode() == SettingsDialog::MODE_DROPLIST && m_setDialog->getDropListChanged()) )
     {
         m_wTask.clear();

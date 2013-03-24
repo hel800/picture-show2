@@ -87,27 +87,27 @@
         <translation>Open pictures  from a folder</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="707"/>
+        <location filename="settingsdialog.ui" line="714"/>
         <source>Sonstige Optionen</source>
         <translation>Miscellaneous options</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="532"/>
+        <location filename="settingsdialog.ui" line="539"/>
         <source>Maussteuerung aktivieren: </source>
         <translation>Mouse control enabled: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="960"/>
+        <location filename="settingsdialog.ui" line="967"/>
         <source>History speichern: </source>
         <translation>Save history: </translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="747"/>
+        <location filename="settingsdialog.ui" line="754"/>
         <source>History löschen</source>
         <translation>Delete History</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="465"/>
+        <location filename="settingsdialog.ui" line="472"/>
         <source>Präsentation Optionen</source>
         <translation>Presentation options</translation>
     </message>
@@ -116,32 +116,32 @@
         <translation type="obsolete">fade+slide</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="591"/>
+        <location filename="settingsdialog.ui" line="598"/>
         <source>Endloswiedergabe: </source>
         <translation>Loop slide show</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="782"/>
+        <location filename="settingsdialog.ui" line="789"/>
         <source>Speicher sparen</source>
         <translation>Save memory</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="787"/>
+        <location filename="settingsdialog.ui" line="794"/>
         <source>Leistung optimieren</source>
         <translation>Optimize performance</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="807"/>
+        <location filename="settingsdialog.ui" line="814"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Leistung optimieren&amp;quot; sollte nur verwendet werden, wenn Originalauflösung notwendig ist und ein großer Grafikspeicher zur Verfügung steht.&lt;/p&gt;&lt;p&gt;Im Zweifelsfall werden die Bilder schwarz angezeigt. &lt;/p&gt;&lt;p&gt;Bevorzugt sollte die Einstellung &amp;quot;Speicher sparen&amp;quot; verwendet werden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Optimize performance&amp;quot; should only be used, if the original resolution of the images is required and the graphics device does provide enough memory.&lt;/p&gt;&lt;p&gt;In case of a memory shortage the images are displayed black. &lt;/p&gt;&lt;p&gt;The setting &amp;quot;Save memory&amp;quot; is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="872"/>
+        <location filename="settingsdialog.ui" line="879"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Speicher, der zum cachen der Bilder verwendet wird.&lt;/p&gt;&lt;p&gt;Der Gesamtspeicherbedarf der Anwendung setzt sich zusammen aus dem Cache-Speicher und dem Grundspeicherbedarf der Anwendung.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Memory used for caching pictures.&lt;/p&gt;&lt;p&gt;Total memory consumption of the application is composed of the cache memory and the basic requirements of the base application.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="901"/>
+        <location filename="settingsdialog.ui" line="908"/>
         <source>Bei Updates benachrichtigen: </source>
         <translation>Update notification: </translation>
     </message>
@@ -150,84 +150,95 @@
         <translation type="obsolete">Picture directory</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="135"/>
+        <location filename="settingsdialog.ui" line="142"/>
         <source>Durchsuchen...</source>
         <translation>Browse...</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="166"/>
+        <location filename="settingsdialog.ui" line="173"/>
         <source>Öffne Bilder per Drag and Drop</source>
         <translation>Open pictures per Drag and Drop</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="263"/>
+        <location filename="settingsdialog.ui" line="270"/>
+        <location filename="settingsdialog.cpp" line="727"/>
         <source>In Sammlung: </source>
         <translation>In collection: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="303"/>
-        <location filename="settingsdialog.cpp" line="344"/>
-        <location filename="settingsdialog.cpp" line="726"/>
+        <location filename="settingsdialog.ui" line="310"/>
+        <location filename="settingsdialog.cpp" line="347"/>
+        <location filename="settingsdialog.cpp" line="733"/>
         <source>Hier Bilder und/oder Ordner ablegen...</source>
         <translation>Drop pictures and/or folders here...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="355"/>
+        <location filename="settingsdialog.ui" line="369"/>
         <source>Sammlung speichern...</source>
         <translation>Save collection...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="362"/>
+        <location filename="settingsdialog.ui" line="359"/>
         <source>Sammlung laden...</source>
         <translation>Load collection...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="372"/>
+        <location filename="settingsdialog.ui" line="97"/>
+        <source>Verzeichnis:</source>
+        <translation>Directory:</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="135"/>
+        <source>Unterverzeichnisse einbeziehen   </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="379"/>
         <source>Drop Zone leeren</source>
         <translation>Empty Drop Zone</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="947"/>
+        <location filename="settingsdialog.ui" line="954"/>
         <source>Hintergrundfarbe: </source>
         <translation>Backgroundcolor: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="997"/>
+        <location filename="settingsdialog.ui" line="1004"/>
         <source>schwarz</source>
         <translation>black</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1002"/>
+        <location filename="settingsdialog.ui" line="1009"/>
         <source>dunkelgrau</source>
         <translation>dark grey</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1007"/>
+        <location filename="settingsdialog.ui" line="1014"/>
         <source>hellgrau</source>
         <translation>light grey</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1085"/>
+        <location filename="settingsdialog.ui" line="1092"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="445"/>
+        <location filename="settingsdialog.ui" line="452"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:7pt; font-weight:600;&quot;&gt;&apos;H&apos; drücken für Kurzhilfe während der Präsentation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:7pt; font-weight:600;&quot;&gt;Press &apos;H&apos; for quick help during presentation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1040"/>
+        <location filename="settingsdialog.ui" line="1047"/>
         <source> Hilfe </source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="389"/>
+        <location filename="settingsdialog.ui" line="396"/>
         <source>Neuigkeiten</source>
         <translation>News</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="395"/>
+        <location filename="settingsdialog.ui" line="402"/>
         <source>Update verfügbar:  </source>
         <translation>Update is available: </translation>
     </message>
@@ -236,14 +247,13 @@
         <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Press F1 or &apos;h&apos; for help in presentation mode.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="660"/>
+        <location filename="settingsdialog.ui" line="667"/>
         <source>Drehen und Blenden</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="128"/>
         <source>Unterverzeichnisse einbeziehen</source>
-        <translation>Include subdirectories</translation>
+        <translation type="obsolete">Include subdirectories</translation>
     </message>
     <message>
         <source>Laden</source>
@@ -254,7 +264,7 @@
         <translation type="obsolete">Apply</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1092"/>
+        <location filename="settingsdialog.ui" line="1099"/>
         <source>Abbrechen</source>
         <translation>Cancel</translation>
     </message>
@@ -263,12 +273,12 @@
         <translation type="obsolete">Presentation options</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="545"/>
+        <location filename="settingsdialog.ui" line="552"/>
         <source>Sortierung: </source>
         <translation>Sort by:</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="513"/>
+        <location filename="settingsdialog.ui" line="520"/>
         <source>nach Dateiname</source>
         <translation>filename</translation>
     </message>
@@ -281,7 +291,7 @@
         <translation type="obsolete">&lt;b&gt;Press F1 or &apos;h&apos; for help in presentation mode.&lt;/b&gt;</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="483"/>
+        <location filename="settingsdialog.ui" line="490"/>
         <source>Übergangszeit: </source>
         <translation>Fading time: </translation>
     </message>
@@ -302,32 +312,32 @@
         <translation type="obsolete">3 seconds</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="496"/>
+        <location filename="settingsdialog.ui" line="503"/>
         <source>Skalierung: </source>
         <translation>Scale:</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="683"/>
+        <location filename="settingsdialog.ui" line="690"/>
         <source>sehr kurz</source>
         <translation>very fast</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="688"/>
+        <location filename="settingsdialog.ui" line="695"/>
         <source>kurz</source>
         <translation>fast</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="693"/>
+        <location filename="settingsdialog.ui" line="700"/>
         <source>normal</source>
         <translation>normal</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="698"/>
+        <location filename="settingsdialog.ui" line="705"/>
         <source>lang</source>
         <translation>slow</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="605"/>
+        <location filename="settingsdialog.ui" line="612"/>
         <source>ganzes Bild</source>
         <translation>whole image</translation>
     </message>
@@ -341,37 +351,37 @@
         <translation type="obsolete">Drop Zone</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="665"/>
+        <location filename="settingsdialog.ui" line="672"/>
         <source>Android Style</source>
         <translation>Android style</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="610"/>
+        <location filename="settingsdialog.ui" line="617"/>
         <source>Bildschirm füllen</source>
         <translation>whole screen</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="578"/>
+        <location filename="settingsdialog.ui" line="585"/>
         <source>Übergangseffekt: </source>
         <translation>Fading effect:</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="518"/>
+        <location filename="settingsdialog.ui" line="525"/>
         <source>nach Aufnahmedatum</source>
         <translation>date taken</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="973"/>
+        <location filename="settingsdialog.ui" line="980"/>
         <source>Ladeverhalten: </source>
         <translation>Loading strategy: </translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="914"/>
+        <location filename="settingsdialog.ui" line="921"/>
         <source>Cache Größe (MB): </source>
         <translation>Cache size (MD):</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="640"/>
+        <location filename="settingsdialog.ui" line="647"/>
         <source>Keiner</source>
         <translation>none</translation>
     </message>
@@ -380,32 +390,32 @@
         <translation type="obsolete">Show advanced options: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="645"/>
+        <location filename="settingsdialog.ui" line="652"/>
         <source>Blenden</source>
         <translation>blend</translation>
     </message>
     <message utf8="true">
-        <location filename="settingsdialog.ui" line="650"/>
+        <location filename="settingsdialog.ui" line="657"/>
         <source>Blenden über schwarz</source>
         <translation>blend over black</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="655"/>
+        <location filename="settingsdialog.ui" line="662"/>
         <source>Schieben</source>
         <translation>slide</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="986"/>
+        <location filename="settingsdialog.ui" line="993"/>
         <source>Sprache: </source>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="928"/>
+        <location filename="settingsdialog.ui" line="935"/>
         <source>Deutsch</source>
         <translation>Deutsch</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="933"/>
+        <location filename="settingsdialog.ui" line="940"/>
         <source>English</source>
         <translation>English</translation>
     </message>
@@ -429,83 +439,93 @@ wait...</translation>
     </message>
     <message>
         <location filename="settingsdialog.cpp" line="209"/>
-        <location filename="settingsdialog.cpp" line="331"/>
-        <location filename="settingsdialog.cpp" line="793"/>
+        <location filename="settingsdialog.cpp" line="334"/>
+        <location filename="settingsdialog.cpp" line="810"/>
         <source>Bitte warten...</source>
         <translation>Please wait...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="265"/>
+        <location filename="settingsdialog.cpp" line="266"/>
         <source>&lt;b&gt;Update verf&amp;uuml;gbar: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Update is available: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="267"/>
+        <location filename="settingsdialog.cpp" line="268"/>
         <source>Version %1</source>
         <translation>version %1</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="306"/>
+        <location filename="settingsdialog.cpp" line="307"/>
         <source>keine neuen Bilder hinzugefÃ¼gt</source>
         <translation>no new pictures added</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="308"/>
+        <location filename="settingsdialog.cpp" line="309"/>
         <source>1 Bild hinzugefÃ¼gt</source>
         <translation>1 picture added</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="310"/>
+        <location filename="settingsdialog.cpp" line="311"/>
         <source>%1 Bilder hinzugefÃ¼gt</source>
         <translation>%1 pictures added</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="312"/>
+        <location filename="settingsdialog.cpp" line="313"/>
         <source>%1 Ordner</source>
         <translation>%1 folder</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="313"/>
+        <location filename="settingsdialog.cpp" line="314"/>
         <source>%1 Bilder</source>
         <translation>%1 pictures</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="323"/>
+        <location filename="settingsdialog.cpp" line="326"/>
         <source>keine Bilder gefunden</source>
         <translation>no pictures found</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="342"/>
+        <location filename="settingsdialog.cpp" line="345"/>
         <source>Hier weitere Bilder und/oder Ordner ablegen...</source>
         <translation>Drop more pictures and/or folders here...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="708"/>
+        <location filename="settingsdialog.cpp" line="711"/>
         <source>Keine Bilder gefunden</source>
         <translation>No pictures found</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="708"/>
+        <location filename="settingsdialog.cpp" line="711"/>
         <source>Es wurden keine Bilder/Ordner abgelegt, oder keine unterstÃ¼tzten Bilder in den Ordnern gefunden!</source>
         <translation>There were no pictures/folders dropped, or no supported pictures found in the folders!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="745"/>
+        <location filename="settingsdialog.cpp" line="748"/>
+        <source>Sammlung braucht einen Namen!</source>
+        <translation>Collection needs a name!</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.cpp" line="748"/>
+        <source>Es muss ein eindeutiger Name fÃ¼r die Sammlung festgelegt werden!</source>
+        <translation>A unique name has to be chosen for the collection!</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.cpp" line="759"/>
         <source>Sammlung existiert bereits!</source>
         <translation>Collection already exists!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="745"/>
+        <location filename="settingsdialog.cpp" line="759"/>
         <source>Eine Sammlung mit dem Namen: &quot;%1&quot; existiert bereits, bitte einen anderen wÃ¤hlen!</source>
         <translation>A collection with the name %1 already exists. Please choose another name!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="792"/>
+        <location filename="settingsdialog.cpp" line="809"/>
         <source>Sammlung: %1</source>
         <translation>Collection: %1</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="799"/>
+        <location filename="settingsdialog.cpp" line="816"/>
         <source>Sammlung ungÃ¼ltig!</source>
         <translation>Collection invalid!</translation>
     </message>
@@ -522,12 +542,12 @@ dropped</translation>
 found</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="702"/>
+        <location filename="settingsdialog.cpp" line="705"/>
         <source>Abgelegte Ordner werden durchsucht!</source>
         <translation>Dropped folders processed!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="702"/>
+        <location filename="settingsdialog.cpp" line="705"/>
         <source>Die abgelegten Ordner und Bilder werden noch durchsucht. Einen Moment bitte noch.</source>
         <translation>The dropped folders and pictures are currently processed. Please wait a moment.</translation>
     </message>

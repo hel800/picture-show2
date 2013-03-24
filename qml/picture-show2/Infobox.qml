@@ -1,3 +1,26 @@
+/* ------------------------------------------------------------------
+Infobox.qml is part of picture-show2.
+.....................................................................
+
+picture-show is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+picture-show2 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with picture-show. If not, see <http://www.gnu.org/licenses/>.
+
+......................................................................
+
+author: Sebastian Schäfer
+February 2013
+
+--------------------------------------------------------------------*/
+
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import my.library 1.0
@@ -331,11 +354,11 @@ Item {
         if (info_screen_text_params.text === "") info_screen_anno_params.visible = false;
         else info_screen_anno_params.visible = true;
 
-        if (info_screen_text_description.text === "") info_screen_anno_description.visible = false;
-        else info_screen_anno_description.visible = true;
+        if (info_screen_text_description.text === "") info_screen_anno_description.opacity = 0.0;
+        else info_screen_anno_description.visible = info_screen_anno_description.opacity = 1.0;
 
-        if (info_screen_text_date.text === "") info_screen_anno_date.visible = false;
-        else info_screen_anno_date.visible = true;
+        if (info_screen_text_date.text === "") info_screen_anno_date.opacity = 0.0;
+        else info_screen_anno_date.opacity = 1.0;
     }
 
     function update_fade(duration) {

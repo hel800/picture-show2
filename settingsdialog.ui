@@ -71,7 +71,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -91,6 +91,13 @@
           <string>Öffne Bilder aus Verzeichnis</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Verzeichnis:</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QComboBox" name="comboBox_directoryPath">
             <property name="sizePolicy">
@@ -125,7 +132,7 @@
              <item>
               <widget class="QCheckBox" name="checkBox_subdirs">
                <property name="text">
-                <string>Unterverzeichnisse einbeziehen</string>
+                <string>Unterverzeichnisse einbeziehen   </string>
                </property>
               </widget>
              </item>
@@ -347,19 +354,19 @@
               <number>0</number>
              </property>
              <item>
+              <widget class="QPushButton" name="pushButton_loadColl">
+               <property name="text">
+                <string>Sammlung laden...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pushButton_saveColl">
                <property name="enabled">
                 <bool>false</bool>
                </property>
                <property name="text">
                 <string>Sammlung speichern...</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_loadColl">
-               <property name="text">
-                <string>Sammlung laden...</string>
                </property>
               </widget>
              </item>
