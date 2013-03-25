@@ -45,7 +45,6 @@ Supervisor::Supervisor(QObject *parent) :
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
     m_quickView->engine()->setImportPathList(QStringList());
-//    m_quickView->engine()->addImportPath("qrc:///qml/qml");
     m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
@@ -150,10 +149,7 @@ Supervisor::Supervisor(QObject *parent) :
     if (!m_setDialog->getFirstStart())
         QTimer::singleShot(900, m_setDialog, SLOT(show()));
     else
-    {
         QTimer::singleShot(900, this, SLOT(showHelpOverlay()));
-        m_setDialog->setFirstStart(false);
-    }
 
     emit refresh();
 }
@@ -622,6 +618,15 @@ void Supervisor::startShowFinished()
         m_overlayTransitions++;
         emit infoBox();
     }
+    else if (m_setDialog->getFirstStart())
+    {
+        m_infoActive = true;
+        m_overlayTransitions++;
+        emit infoBox();
+        QTimer::singleShot(1000, this, SLOT(showBubbleMessage_info()));
+    }
+
+//    m_setDialog->setFirstStart(false);
 
     this->processWaitingQueue();
 }
@@ -840,15 +845,29 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     case Qt::Key_M:
         this->applyNewOptions();
         break;
-    case Qt::Key_Right:
     case Qt::Key_PageDown:
         {
             this->nextImagePressed();
         }
         break;
-    case Qt::Key_Left:
+    case Qt::Key_Right:    
+        {
+            if (m_activeInputMode == MODE_JUMPTO)
+                this->upOrDownPressed(true);
+            else
+                this->nextImagePressed();
+        }
+        break;
     case Qt::Key_PageUp:
         {
+            this->prevImagePressed();
+        }
+        break;
+    case Qt::Key_Left:
+        {
+        if (m_activeInputMode == MODE_JUMPTO)
+            this->upOrDownPressed(false);
+        else
             this->prevImagePressed();
         }
         break;
@@ -1432,6 +1451,11 @@ void Supervisor::showCustomMessage(QString imageUrl, QString title, QString text
     emit showMessage(QVariant(imageUrl), QVariant(title), QVariant(text), QVariant(info));
     if (timeout != 0)
         m_messageTimeout->start(timeout);
+}
+
+void Supervisor::showBubbleMessage_info()
+{
+    emit bubbleBox(QVariant(tr("Informationsleiste mit \"I\" ein- und wieder ausblenden!")), QVariant(8000));
 }
 
 void Supervisor::hideMessage()

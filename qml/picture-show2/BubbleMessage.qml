@@ -48,12 +48,12 @@ Item {
             width: parent.width / 4
             fillMode: Image.PreserveAspectFit
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: height / 6
-            anchors.right: parent.right
-            anchors.rightMargin:  height / 6
+            anchors.bottomMargin: info_box.isVisible() ? parent.height / 7 : height / 6
+            anchors.left: parent.left
+            anchors.leftMargin:  height / 6
             source: "qrc:///img/bubble.png"
             smooth: true
-            opacity: 0.8
+            opacity: 1.0
         }
 
         Image {
@@ -66,7 +66,7 @@ Item {
             anchors.verticalCenterOffset: -(bubble_screen_image.height / 6)
             source: "qrc:///img/message_info.png"
             smooth: true
-            opacity: 0.4
+            opacity: 0.8
         }
 
         Text {
@@ -83,7 +83,7 @@ Item {
             anchors.verticalCenter: bubble_screen_image.verticalCenter
             anchors.verticalCenterOffset: -(bubble_screen_image.height / 6)
             smooth: true;
-            opacity: 0.8
+            opacity: 0.9
             text: ""
         }
     }
