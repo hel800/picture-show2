@@ -511,6 +511,18 @@ bool SettingsDialog::getFirstStart()
     return settings.value("firstStart", QVariant(true)).toBool();
 }
 
+void SettingsDialog::setInfoBarActive(bool state)
+{
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+    settings.setValue("infobarActive", QVariant(state));
+}
+
+bool SettingsDialog::getInfoBarActive()
+{
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+    return settings.value("infobarActive", QVariant(false)).toBool();
+}
+
 size_t SettingsDialog::getMaxCacheSize()
 {
     return (size_t)ui->spinBox_cacheSize->value() * 1024 * 1024;

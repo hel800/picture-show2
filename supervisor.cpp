@@ -136,7 +136,7 @@ Supervisor::Supervisor(QObject *parent) :
 
     m_helpActive = false;
     m_messageActive = false;
-    m_infoActive = false;
+    m_infoActive = m_setDialog->getInfoBarActive();
 
     m_currentlyWaiting = false;
     m_activeInputMode = NO_MODE;
@@ -176,6 +176,7 @@ Supervisor::~Supervisor()
     }
 
     m_setDialog->setTimerValue(m_timerValue);
+    m_setDialog->setInfoBarActive(m_infoActive);
 
     m_quickView->rootObject()->disconnect();
     this->disconnect();
@@ -350,6 +351,8 @@ void Supervisor::directoryLoadingFinished(bool success)
     }
     else
     {
+        emit waiting(QVariant(false));
+
         if (m_dirLoader->getErrorMsg() == "LARGE_DATA")
         {
             m_largeDataDetected = true;
@@ -364,9 +367,15 @@ void Supervisor::directoryLoadingFinished(bool success)
                                 tr("Viele Bilder für Datumssortierung"),
                                 tr("Das Laden mit Datumssortierung kann einige Zeit in Anspruch nehmen. ENTER für Forsetzen, ESC zum Abbruch."));
         }
+        else if (m_dirLoader->getErrorMsg() == "LARGE_DATA3")
+        {
+            m_largeDataDetected = true;
+            this->showCustomMessage(QString("qrc:///img/message_question.png"),
+                                tr("Viele Unterordner gefunden"),
+                                tr("Es wurden viele Unterordner gefunden. Das Laden kann einige Zeit in Anspruch nehmen. ENTER zum Fortsetzen, ESC zum Abbruch."));
+        }
         else
         {
-            emit waiting(QVariant(false));
             this->showCustomMessage(QString("qrc:///img/message_error.png"),
                                 tr("Fehler"),
                                 tr("%1: %2").arg(m_dirLoader->getErrorMsg()).arg(m_dirLoader->getDirectory()));
@@ -626,7 +635,7 @@ void Supervisor::startShowFinished()
         QTimer::singleShot(1000, this, SLOT(showBubbleMessage_info()));
     }
 
-//    m_setDialog->setFirstStart(false);
+    m_setDialog->setFirstStart(false);
 
     this->processWaitingQueue();
 }
@@ -803,10 +812,9 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             }
             else if (m_messageActive)
             {
-                if (m_waitingActive && m_largeDataDetected)
+                if (m_largeDataDetected)
                 {
                     m_largeDataDetected = false;
-                    emit waiting(QVariant(false));
                     QTimer::singleShot(500, m_setDialog, SLOT(show()));
                 }
                 this->hideMessage();
@@ -820,12 +828,12 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 m_panoramaModeActive = false;
                 emit stopPanorama();
             }
-            else if (m_infoActive)
-            {
-                m_overlayTransitions++;
-                m_infoActive = false;
-                emit infoBox();
-            }
+//            else if (m_infoActive)
+//            {
+//                m_overlayTransitions++;
+//                m_infoActive = false;
+//                emit infoBox();
+//            }
             else
             {
                 m_wTask.clear();
@@ -904,6 +912,13 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 m_overlayTransitions++;
                 emit showHelp();
                 m_helpActive = !m_helpActive;
+
+                if (m_automaticForwardActive)
+                {
+                    m_automaticForwardActive = false;
+                    m_automaticForward->stop();
+                    this->startInputMode(MODE_TIMER_OFF, 1500);
+                }
             }
         }
         break;
@@ -981,7 +996,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 this->inputModeTimeout();
             else if (m_exitRequested && m_messageActive)
                 this->hideMessage();
-            else if (m_waitingActive && m_largeDataDetected)
+            else if (m_messageActive && m_largeDataDetected)
             {
                 m_largeDataDetected = false;
                 this->hideMessage();

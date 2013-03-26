@@ -118,11 +118,12 @@ Item {
 
         Text {
             id: message_screen_text
-            font.pixelSize: message_screen.height / 6
+            font.pixelSize: text.length > 50 ? message_screen.height / 7 : message_screen.height / 6
             font.family: textFont.name
             color: "#FFFFFF"
             wrapMode: Text.Wrap
-            width: parent.width - (parent.width / 12 + 1.3 * message_screen_image.width)
+            maximumLineCount: 2
+            width: parent.width - (parent.width / 10 + 1.3 * message_screen_image.width)
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: message_screen.height / 6
             anchors.left: parent.left
@@ -159,6 +160,44 @@ Item {
 
             onStatusChanged: if (image_jumpto.status === Image.Ready) _supervisor.imageLoadingFinished(source)
         }
+
+        Rectangle {
+            id: button_first
+
+            color: "#333333"
+            border.color: "#cccccc"
+            border.width: parent.width * 0.001
+            opacity: 0.6
+            radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
+
+            width: parent.width * 0.2
+            height: parent.width * 0.65 > parent.height ? parent.height / 12 : (parent.width * 0.65)  / 12;
+
+            anchors.right: parent.right
+            anchors.rightMargin: parent.width * 0.06
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -height * 0.7
+        }
+
+        Rectangle {
+            id: button_second
+
+            color: "#333333"
+            border.color: "#cccccc"
+            border.width: 0
+            smooth: true
+
+            opacity: 0.3
+            radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
+
+            width: parent.width * 0.2
+            height: parent.width * 0.65 > parent.height ? parent.height / 12 : (parent.width * 0.65)  / 12;
+
+            anchors.right: parent.right
+            anchors.rightMargin: parent.width * 0.06
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: height * 0.7
+        }
     }
 
     function show_hide_message(image, title, text, info) {
@@ -172,6 +211,8 @@ Item {
             message_screen_title.text = title
             message_screen_text.text = text
             message_screen_image.source = image
+
+
         }
         else if (title !== "" && text === "") {
             message_screen_title.text = ""
@@ -280,6 +321,21 @@ Item {
 
     function get_jumpto_source() {
         return image_jumpto.source
+    }
+
+    function up_pressed() {
+        if (button_first.border.color === "#00000000") {
+            button_first.border.color = "#cccccc"
+            button_second.border.color = "#00000000"
+        }
+    }
+
+    function down_pressed() {
+        console.log("press down")
+        if (button_second.border.color === "#00000000") {
+            button_first.border.color = "#00000000"
+            button_second.border.color = "#cccccc"
+        }
     }
 
     ParallelAnimation {

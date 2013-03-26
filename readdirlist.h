@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QUrl>
+#include <QDirIterator>
 
 class readDirList : public QThread
 {

@@ -29,6 +29,7 @@ March 2013
 #include <QSet>
 #include <QPair>
 #include <QDir>
+#include <QDirIterator>
 #include <QFileInfo>
 #include <QDateTime>
 
@@ -39,6 +40,7 @@ static bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPai
 static bool fileNameLessThan(const QFileInfo &f1, const QFileInfo &f2);
 static int LARGE_DATA = 50000;
 static int LARGE_DATA2 = 1000;
+static int LARGE_DATA3 = 20000;
 
 class loadDirectory : public QThread
 {

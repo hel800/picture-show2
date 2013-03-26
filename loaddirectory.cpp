@@ -120,6 +120,29 @@ void loadDirectory::run()
             return;
         }
 
+        if (!m_forcing_large_data)
+        {
+            int num_dirs = 0;
+            QDirIterator iterator(current_dir.absolutePath(), QDirIterator::Subdirectories);
+            while (iterator.hasNext())
+            {
+                iterator.next();
+                if (!iterator.fileInfo().isDir())
+                    num_dirs++;
+
+                if (num_dirs > LARGE_DATA3)
+                    break;
+            }
+
+            if (num_dirs > LARGE_DATA3)
+            {
+                this->m_error_msg = tr("LARGE_DATA3");
+                emit loadDirectoryFinished(false);
+                return;
+            }
+        }
+
+
         this->m_dirList->clear();
 
         if (this->m_subdirs)

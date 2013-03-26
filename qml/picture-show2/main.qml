@@ -31,6 +31,7 @@ Rectangle {
     color: "#222222"
     focus: true;
 
+
 // =================================================================================== //
 // ----- DEFINITIONS ----- //
     FontLoader { id: titleFont; source: "qrc:///fonts/good_times.ttf" }
@@ -342,6 +343,9 @@ Rectangle {
         height: root.height
         z: 5
     }
+
+//    Keys.onUpPressed: message_box.up_pressed()
+//    Keys.onDownPressed: message_box.down_pressed()
 
     Image {
         id: image_jumpto_big

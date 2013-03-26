@@ -99,6 +99,9 @@ public:
     void setFirstStart(bool state);
     bool getFirstStart();
 
+    void setInfoBarActive(bool state);
+    bool getInfoBarActive();
+
     size_t getMaxCacheSize();
 
     void updateLanguage();

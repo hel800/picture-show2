@@ -22,7 +22,6 @@
         <file alias="pictureFolder-48.png">img/pictureFolder-48.png</file>
         <file alias="images-16.png">img/images-16.png</file>
         <file alias="picturesFolder-16.png">img/pictureFolder-16.png</file>
-        <file alias="zone_bg.png">img/zone_bg.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>
@@ -30,11 +29,6 @@
         <file alias="Messagebox.qml">qml/picture-show2/Messagebox.qml</file>
         <file alias="Infobox.qml">qml/picture-show2/Infobox.qml</file>
         <file alias="BubbleMessage.qml">qml/picture-show2/BubbleMessage.qml</file>
-        <file>qml/QtGraphicalEffects/FastBlur.qml</file>
-        <file>qml/QtGraphicalEffects/qmldir</file>
-        <file>qml/QtGraphicalEffects/private/SourceProxy.qml</file>
-        <file>qml/QtQuick.2/plugins.qmltypes</file>
-        <file>qml/QtQuick.2/qmldir</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="good_times.ttf">fonts/good_times.ttf</file>
