@@ -140,9 +140,8 @@ Supervisor::Supervisor(QObject *parent) :
 
     m_currentlyWaiting = false;
     m_activeInputMode = NO_MODE;
-    m_exitRequested = false;
+    m_questionMode = QUESTION_NONE;
     m_jumptoPreviewVisible = false;
-    m_largeDataDetected = false;
 
     this->bindings();
 
@@ -355,24 +354,27 @@ void Supervisor::directoryLoadingFinished(bool success)
 
         if (m_dirLoader->getErrorMsg() == "LARGE_DATA")
         {
-            m_largeDataDetected = true;
-            this->showCustomMessage(QString("qrc:///img/message_question.png"),
-                                tr("Große Mengen an Daten"),
-                                tr("Das Laden kann einige Zeit in Anspruch nehmen. ENTER für Forsetzen, ESC zum Abbruch."));
+            m_questionMode = QUESTION_LARGE_DATA;
+            this->showCustomQuestion(QString("qrc:///img/message_question.png"),
+                                     tr("Viele Daten"),
+                                     tr("Das Laden kann einige Zeit in Anspruch nehmen. Soll fortgesetzt werden?"),
+                                     tr("Ja"), tr("Nein"));
         }
         else if (m_dirLoader->getErrorMsg() == "LARGE_DATA2")
         {
-            m_largeDataDetected = true;
-            this->showCustomMessage(QString("qrc:///img/message_question.png"),
-                                tr("Viele Bilder für Datumssortierung"),
-                                tr("Das Laden mit Datumssortierung kann einige Zeit in Anspruch nehmen. ENTER für Forsetzen, ESC zum Abbruch."));
+            m_questionMode = QUESTION_LARGE_DATA;
+            this->showCustomQuestion(QString("qrc:///img/message_question.png"),
+                                     tr("Viele Bilder"),
+                                     tr("Das Laden von vielen Bildern mit Datumssortierung kann Zeit in Anspruch nehmen. Soll fortgesetzt werden?"),
+                                     tr("Ja"), tr("Nein"));
         }
         else if (m_dirLoader->getErrorMsg() == "LARGE_DATA3")
         {
-            m_largeDataDetected = true;
-            this->showCustomMessage(QString("qrc:///img/message_question.png"),
-                                tr("Viele Unterordner gefunden"),
-                                tr("Es wurden viele Unterordner gefunden. Das Laden kann einige Zeit in Anspruch nehmen. ENTER zum Fortsetzen, ESC zum Abbruch."));
+            m_questionMode = QUESTION_LARGE_DATA;
+            this->showCustomQuestion(QString("qrc:///img/message_question.png"),
+                                     tr("Viele Unterordner"),
+                                     tr("Es wurden viele Unterordner gefunden. Das Laden kann einige Zeit in Anspruch nehmen. Soll fortgesetzt werden?"),
+                                     tr("Ja"), tr("Nein"));
         }
         else
         {
@@ -611,7 +613,7 @@ void Supervisor::imageLoadingFinished(QVariant slot)
         if (ok)
         {
             // show jumpto image...
-            emit blendJumpToPreview();
+            this->blendJumpToPreview();
         }
     }
 
@@ -653,6 +655,35 @@ bool Supervisor::isFullscreen()
 bool Supervisor::isInfoActive()
 {
     return m_infoActive;
+}
+
+void Supervisor::answerOfQuestion(QVariant answer)
+{
+    AnswerButton answer_button = AnswerButton(answer.toInt());
+
+    switch (m_questionMode) {
+    case QUESTION_EXIT:
+        if (answer_button == ANSWER_BUTTON_1)
+            emit quit();
+        break;
+    case QUESTION_LARGE_DATA:
+        if (answer_button == ANSWER_BUTTON_1)
+        {
+            this->startDirectoryLoading(true);
+        }
+        else
+        {
+            int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
+            int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()))/2));
+            m_setDialog->move(new_x_pos, new_y_pos);
+            QTimer::singleShot(500, m_setDialog, SLOT(show()));
+        }
+        break;
+    default:
+        break;
+    }
+
+    m_questionMode = QUESTION_NONE;
 }
 
 QVariant Supervisor::getImageNumSlashTotalNumber()
@@ -772,6 +803,24 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
 {
     emit bubbleBox(QVariant(""), QVariant(8000));
 
+    if (m_messageActive && m_questionMode != QUESTION_NONE)
+    {
+        QObject * object = m_quickView->rootObject();
+        if (object)
+        {
+            QQuickItem * msgBox = object->findChild<QQuickItem *>("messageBox");
+            if (msgBox)
+                m_quickView->sendEvent(msgBox, event);
+        }
+
+        if (event->key() != Qt::Key_Return
+                && event->key() != Qt::Key_Enter
+                && event->key() != Qt::Key_Escape
+                && event->key() != Qt::Key_F
+                && event->key() != Qt::Key_F11)
+            return;
+    }
+
     // leave Panoramamode if active
     bool panoramaModeWasActive = false;
     if (m_panoramaModeActive &&
@@ -806,17 +855,8 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         break;
     case Qt::Key_Escape:
         {
-            if (m_exitRequested)
+            if (m_messageActive)
             {
-                emit quit();
-            }
-            else if (m_messageActive)
-            {
-                if (m_largeDataDetected)
-                {
-                    m_largeDataDetected = false;
-                    QTimer::singleShot(500, m_setDialog, SLOT(show()));
-                }
                 this->hideMessage();
             }
             else if (m_helpActive)
@@ -838,15 +878,18 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             {
                 m_wTask.clear();
 
-                m_exitRequested = true;
-                QString exit_message = tr("ESC zum Beenden drücken, ENTER zum Abbruch");
+                m_questionMode = QUESTION_EXIT;
+                QString exit_message;
+                bool forward_was_active = false;
+//                QString exit_message = tr("ESC zum Beenden drücken, ENTER zum Abbruch. Das ist eine sehr lange Nachricht, die nicht zu Enden schein, mal sehen, was er daraus mach.......Toll, imer noch nicht z7u ende");
                 if (m_automaticForwardActive)
                 {
                     m_automaticForwardActive = false;
                     m_automaticForward->stop();
-                    exit_message.prepend(tr("Timer beendet! "));
+                    exit_message.append(tr("Timer beendet!"));
+                    forward_was_active = true;
                 }
-                this->showCustomMessage(QString("qrc:///img/message_exit.png"), tr("Beenden?"), exit_message, 0, true);
+                this->showCustomQuestion(QString("qrc:///img/message_exit.png"), tr("Beenden?"), exit_message, tr("Ja"), tr("Nein"), forward_was_active);
             }
         }
         break;
@@ -994,14 +1037,8 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         {
             if (m_activeInputMode != NO_MODE)
                 this->inputModeTimeout();
-            else if (m_exitRequested && m_messageActive)
+            else if (m_messageActive)
                 this->hideMessage();
-            else if (m_messageActive && m_largeDataDetected)
-            {
-                m_largeDataDetected = false;
-                this->hideMessage();
-                this->startDirectoryLoading(true);
-            }
         }
         break;
     case Qt::Key_0:
@@ -1396,7 +1433,7 @@ void Supervisor::bindings()
     connect(this, SIGNAL(waiting(QVariant)), rootObject, SLOT(animate_wait(QVariant)));
     connect(this, SIGNAL(refresh()), rootObject, SLOT(refresh()));
     connect(this, SIGNAL(showHelp()), rootObject, SLOT(show_help()));
-    connect(this, SIGNAL(showMessage(QVariant,QVariant,QVariant,QVariant)), rootObject, SLOT(show_message(QVariant,QVariant,QVariant,QVariant)));
+//    connect(this, SIGNAL(showMessage(QVariant,QVariant,QVariant,QVariant)), rootObject, SLOT(show_message(QVariant,QVariant,QVariant,QVariant)));
     connect(this, SIGNAL(startTheShow(QVariant)), rootObject, SLOT(waiting_to_one(QVariant)));
     connect(this, SIGNAL(loadImage(QVariant,QVariant)), rootObject, SLOT(load_new_image(QVariant,QVariant)));
     connect(this, SIGNAL(languageChanged(QVariant)), rootObject, SLOT(refresh()));
@@ -1404,7 +1441,6 @@ void Supervisor::bindings()
     connect(this, SIGNAL(stopPanorama()), rootObject, SLOT(stop_panorama()));
     connect(this, SIGNAL(infoBox()), rootObject, SLOT(show_hide_info()));
     connect(this, SIGNAL(bubbleBox(QVariant,QVariant)), rootObject, SLOT(show_hide_bubble(QVariant,QVariant)));
-    connect(this, SIGNAL(blendJumpToPreview()), rootObject, SLOT(show_jumpto_preview()));
     connect(this, SIGNAL(fadeToJumpToPreview(QVariant)), rootObject, SLOT(fade_preview_to_screen(QVariant)));
 }
 
@@ -1459,13 +1495,56 @@ void Supervisor::hideHelpOverlay()
 
 void Supervisor::showCustomMessage(QString imageUrl, QString title, QString text, int timeout, bool info)
 {
-    m_messageTimeout->stop();
-    m_overlayTransitions++;
-    m_messageActive = true;
-    m_jumptoPreviewVisible = false;
-    emit showMessage(QVariant(imageUrl), QVariant(title), QVariant(text), QVariant(info));
-    if (timeout != 0)
-        m_messageTimeout->start(timeout);
+    QObject * object = m_quickView->rootObject();
+    if (object)
+    {
+        QObject * msgBox = object->findChild<QObject *>("messageBox");
+        if (!msgBox)
+            return;
+
+        m_messageTimeout->stop();
+        m_overlayTransitions++;
+        m_messageActive = true;
+        m_jumptoPreviewVisible = false;
+
+        QMetaObject::invokeMethod(msgBox, "show_message",
+                                  Q_ARG(QVariant, QVariant(imageUrl)),
+                                  Q_ARG(QVariant, QVariant(title)),
+                                  Q_ARG(QVariant, QVariant(text)),
+                                  Q_ARG(QVariant, QVariant(info)),
+                                  Q_ARG(QVariant, QVariant(0)),
+                                  Q_ARG(QVariant, QVariant("")),
+                                  Q_ARG(QVariant, QVariant("")));
+
+        if (timeout != 0)
+            m_messageTimeout->start(timeout);
+    }
+}
+
+void Supervisor::showCustomQuestion(QString imageUrl, QString title, QString text, QString b1_text, QString b2_text, bool info)
+{
+    QObject * object = m_quickView->rootObject();
+    if (object)
+    {
+        QObject * msgBox = object->findChild<QObject *>("messageBox");
+        if (!msgBox)
+            return;
+
+        m_messageTimeout->stop();
+        m_overlayTransitions++;
+        m_messageActive = true;
+        m_jumptoPreviewVisible = false;
+
+        QMetaObject::invokeMethod(msgBox, "show_message",
+                                  Q_ARG(QVariant, QVariant(imageUrl)),
+                                  Q_ARG(QVariant, QVariant(title)),
+                                  Q_ARG(QVariant, QVariant(text)),
+                                  Q_ARG(QVariant, QVariant(info)),
+                                  Q_ARG(QVariant, QVariant(2)),
+                                  Q_ARG(QVariant, QVariant(b1_text)),
+                                  Q_ARG(QVariant, QVariant(b2_text)));
+
+    }
 }
 
 void Supervisor::showBubbleMessage_info()
@@ -1477,15 +1556,38 @@ void Supervisor::hideMessage()
 {
     if (m_messageActive)
     {
-        m_exitRequested = false;
-        m_jumptoPreviewVisible = false;
+        QObject *object = m_quickView->rootObject();
+        if (object)
+        {
+            QObject * msgBox = object->findChild<QObject *>("messageBox");
+            if (!msgBox)
+                return;
 
-        m_messageTimeout->stop();
-        m_jumptoPreview->stop();
-        m_overlayTransitions++;
-        emit showMessage(QVariant(""), QVariant(""), QVariant(""), QVariant(false));
-        m_activeInputMode = NO_MODE;
-        m_messageActive = false;
+            m_questionMode = QUESTION_NONE;
+            m_jumptoPreviewVisible = false;
+
+            m_messageTimeout->stop();
+            m_jumptoPreview->stop();
+            m_overlayTransitions++;
+
+            QMetaObject::invokeMethod(msgBox, "hide_message");
+
+            m_activeInputMode = NO_MODE;
+            m_messageActive = false;
+        }
+    }
+}
+
+void Supervisor::blendJumpToPreview()
+{
+    QObject *object = m_quickView->rootObject();
+    if (object)
+    {
+        QObject * msgBox = object->findChild<QObject *>("messageBox");
+        if (!msgBox)
+            return;
+
+        QMetaObject::invokeMethod(msgBox, "blend_jumpto");
     }
 }
 
@@ -1509,8 +1611,8 @@ void Supervisor::startInputMode(InputMode mode, int timeout)
     // stop input Message Timeout (in case another input mode is started during another active input mode)
     m_inputMessageTimeout->stop();
 
-    // if exit has been requested, set back to false
-    m_exitRequested = false;
+    // if a question has been asked, set back to no question
+    m_questionMode = QUESTION_NONE;
 
     // start specific input mode and set a timeout
     switch (mode) {

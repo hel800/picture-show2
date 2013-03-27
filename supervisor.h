@@ -70,6 +70,17 @@ class Supervisor : public QObject
         NO_MODE
     };
 
+    enum QuestionAsked {
+        QUESTION_NONE,
+        QUESTION_EXIT,
+        QUESTION_LARGE_DATA
+    };
+
+    enum AnswerButton {
+        ANSWER_BUTTON_1,
+        ANSWER_BUTTON_2
+    };
+
 public:
     explicit Supervisor(QObject *parent = 0);
     ~Supervisor();
@@ -90,7 +101,6 @@ signals:
     void blendImage(QVariant slot_start, QVariant slot_end, QVariant forward);
     void blendOutShow(QVariant slot_current);
     void loadImage(QVariant image, QVariant slot);
-    void showMessage(QVariant image, QVariant title, QVariant text, QVariant info);
     void waiting(QVariant state);
     void showHelp();
     void startTheShow(QVariant slot_current);
@@ -99,9 +109,7 @@ signals:
     void stopPanorama();
     void infoBox();
     void bubbleBox(QVariant text, QVariant timeout);
-    void blendJumpToPreview();
     void fadeToJumpToPreview(QVariant slot_current);
-
     
 public slots:
     void applyNewOptions();
@@ -118,6 +126,7 @@ public slots:
     Q_INVOKABLE void jumtoPreviewReady();
     Q_INVOKABLE bool isFullscreen();
     Q_INVOKABLE bool isInfoActive();
+    Q_INVOKABLE void answerOfQuestion(QVariant answer);
     Q_INVOKABLE QVariant getImageNumSlashTotalNumber();
     Q_INVOKABLE QVariant getExifTagOfCurrent(QVariant tagname);
 
@@ -154,8 +163,10 @@ private slots:
     void hideHelpOverlay();
 
     void showCustomMessage(QString imageUrl, QString title, QString text, int timeout = 0, bool info = false);
+    void showCustomQuestion(QString imageUrl, QString title, QString text, QString b1_text, QString b2_text, bool info = false);
     void showBubbleMessage_info();
     void hideMessage();
+    void blendJumpToPreview();
 
     void queueTask(WaitingTask task);
 
@@ -222,10 +233,9 @@ private:
     bool m_waitingActive;
     bool m_currentlyWaiting;
     bool m_panoramaModeActive;
-    bool m_exitRequested;
     InputMode m_activeInputMode;
+    QuestionAsked m_questionMode;
     bool m_jumptoPreviewVisible;
-    bool m_largeDataDetected;
 };
 
 #endif // SUPERVISOR_H

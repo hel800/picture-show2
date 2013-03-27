@@ -29,6 +29,11 @@ Item {
     width: 640
     height: 480
 
+    Keys.onUpPressed: message_box.up_pressed()
+    Keys.onDownPressed: message_box.down_pressed()
+    Keys.onEnterPressed: message_box.enter_pressed()
+    Keys.onReturnPressed: message_box.enter_pressed()
+
     Rectangle {
         id: background
         width: parent.width
@@ -79,11 +84,15 @@ Item {
             id: message_screen_title
             font.pixelSize: message_screen.height / 5
             font.family: titleFont.name
+            elide: Text.ElideRight
             color: "#FFFFFF"
+            width: button_first.visible ? parent.width - (parent.width / 10 + 1.3 * message_screen_image.width + (parent.width * 0.06 + button_first.width)) : parent.width - (parent.width / 10 + 1.3 * message_screen_image.width)
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -message_screen.height / 5
             anchors.left: parent.left
             anchors.leftMargin: parent.width / 12 + 1.3 * message_screen_image.width
+
             smooth: true;
             text: ""
             opacity: 0.8
@@ -93,11 +102,15 @@ Item {
             id: message_screen_title2
             font.pixelSize: message_screen.height / 4
             font.family: titleFont.name
+            elide: Text.ElideRight
             color: "#FFFFFF"
+            width: button_first.visible ? parent.width - (parent.width / 10 + 1.3 * message_screen_image.width + (parent.width * 0.06 + button_first.width)) : parent.width - (parent.width / 10 + 1.3 * message_screen_image.width)
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: 0
             anchors.left: parent.left
             anchors.leftMargin: parent.width / 12 + 1.3 * message_screen_image.width
+
             smooth: true;
             text: ""
             opacity: 0.8
@@ -120,14 +133,17 @@ Item {
             id: message_screen_text
             font.pixelSize: text.length > 50 ? message_screen.height / 7 : message_screen.height / 6
             font.family: textFont.name
+            elide: Text.ElideRight
             color: "#FFFFFF"
             wrapMode: Text.Wrap
             maximumLineCount: 2
-            width: parent.width - (parent.width / 10 + 1.3 * message_screen_image.width)
+            width: button_first.visible ? parent.width - (parent.width / 10 + 1.3 * message_screen_image.width + (parent.width * 0.06 + button_first.width)) : parent.width - (parent.width / 10 + 1.3 * message_screen_image.width)
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: message_screen.height / 6
             anchors.left: parent.left
             anchors.leftMargin: message_screen_info_image.visible ? parent.width / 12 + 1.3 * message_screen_image.width + 1.3 * message_screen_info_image.width : parent.width / 12 + 1.3 * message_screen_image.width
+
             smooth: true;
             opacity: 0.8
             text: ""
@@ -163,11 +179,13 @@ Item {
 
         Rectangle {
             id: button_first
+            focus: false
+            visible: false
 
             color: "#333333"
-            border.color: "#cccccc"
+            border.color: focus ? "#cccccc" : "#00000000"
             border.width: parent.width * 0.001
-            opacity: 0.6
+            opacity: focus ? 0.7 : 0.4
             radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
 
             width: parent.width * 0.2
@@ -177,17 +195,31 @@ Item {
             anchors.rightMargin: parent.width * 0.06
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -height * 0.7
+
+            Text {
+                id: button_first_text
+                font.pixelSize: parent.height / 2;
+                font.family: textFont.name
+                elide: Text.ElideRight
+                color: parent.focus ? "#EEEEEE" : "#AAAAAA"
+
+                anchors.centerIn: parent
+
+                text: ""
+            }
         }
 
         Rectangle {
             id: button_second
+            focus: false
+            visible: false
 
             color: "#333333"
-            border.color: "#cccccc"
-            border.width: 0
+            border.color: focus ? "#cccccc" : "#00000000"
+            border.width: parent.width * 0.001
             smooth: true
 
-            opacity: 0.3
+            opacity: focus ? 0.7 : 0.4
             radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
 
             width: parent.width * 0.2
@@ -197,10 +229,40 @@ Item {
             anchors.rightMargin: parent.width * 0.06
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: height * 0.7
+
+            Text {
+                id: button_second_text
+                font.pixelSize: parent.height / 2;
+                font.family: textFont.name
+                elide: Text.ElideRight
+                color: parent.focus ? "#EEEEEE" : "#AAAAAA"
+
+                anchors.centerIn: parent
+
+                text: ""
+            }
         }
     }
 
-    function show_hide_message(image, title, text, info) {
+    function hide_message() {
+        if (image_jumpto.opacity !== 0.0) {
+            fade_jumpto_preview.stop()
+            fade_jumpto_preview_out.start()
+        }
+
+        if (message_screen.opacity === 0.0) {
+            _supervisor.overlayTransitionFinished()
+        }
+        else if (message_screen.opacity === 0.7) {
+            fade_message_out.start()
+        }
+        else if (fade_message.running) {
+            fade_message.stop()
+            fade_message_out.start()
+        }
+    }
+
+    function show_message(image, title, text, info, numButtons, text_b1, text_b2) {
         if (image_jumpto.opacity !== 0.0 && message_screen_title.text !== title) {
             fade_jumpto_preview.stop()
             fade_jumpto_preview_out.start()
@@ -212,13 +274,25 @@ Item {
             message_screen_text.text = text
             message_screen_image.source = image
 
-
         }
         else if (title !== "" && text === "") {
             message_screen_title.text = ""
             message_screen_title2.text = title
             message_screen_text.text = text
             message_screen_image.source = image
+        }
+
+        // question dialog?
+        if (numButtons > 0) {
+            button_first.visible = true
+            button_second.visible = true
+            button_first.focus = true
+            button_first_text.text = text_b1
+            button_second_text.text = text_b2
+        }
+        else {
+            button_first.visible = false
+            button_second.visible = false
         }
 
         if (hp_screen.get_opacity() > 0.0 || _supervisor.blendingCount() > 0 || _supervisor.overlayTransitionCount() > 1 || !_supervisor.showLoaded()) {
@@ -234,40 +308,24 @@ Item {
             background.visible = true;
         }
 
-        // show
-        if (title !== "" || text !== "") {
-            if (info)
-                message_screen_info_image.visible = true
-            else
-                message_screen_info_image.visible = false
+        if (info)
+            message_screen_info_image.visible = true
+        else
+            message_screen_info_image.visible = false
 
-            if (message_screen.opacity === 0.0) {
-                message_screen_smoother.opacity = 0.01;
-                fade_message.start()
-            }
-            else if (message_screen.opacity === 0.7) {
-                _supervisor.overlayTransitionFinished()
-            }
-            else if (fade_message_out.running) {
-                fade_message_out.stop()
-                fade_message.start()
-            }
-            else if (fade_message.running) {
-                _supervisor.overlayTransitionFinished()
-            }
+        if (message_screen.opacity === 0.0) {
+            message_screen_smoother.opacity = 0.01;
+            fade_message.start()
         }
-        // hide
-        else {
-            if (message_screen.opacity === 0.0) {
-                _supervisor.overlayTransitionFinished()
-            }
-            else if (message_screen.opacity === 0.7) {
-                fade_message_out.start()
-            }
-            else if (fade_message.running) {
-                fade_message.stop()
-                fade_message_out.start()
-            }
+        else if (message_screen.opacity === 0.7) {
+            _supervisor.overlayTransitionFinished()
+        }
+        else if (fade_message_out.running) {
+            fade_message_out.stop()
+            fade_message.start()
+        }
+        else if (fade_message.running) {
+            _supervisor.overlayTransitionFinished()
         }
     }
 
@@ -276,14 +334,14 @@ Item {
         image_jumpto.fillMode = _settings_dialog.getScaleTypeQml() === 2 ? Image.PreserveAspectCrop : Image.PreserveAspectFit
     }
 
-    function hide_instantly() {
-        background.opacity = 0.0
-        message_screen.opacity = 0.0
-        message_screen_content.opacity = 0.0
-        message_screen_image.scale = 0.8
-        message_screen_smoother.radius = 0
-        message_screen_smoother.opacity = 0.0
-    }
+//    function hide_instantly() {
+//        background.opacity = 0.0
+//        message_screen.opacity = 0.0
+//        message_screen_content.opacity = 0.0
+//        message_screen_image.scale = 0.8
+//        message_screen_smoother.radius = 0
+//        message_screen_smoother.opacity = 0.0
+//    }
 
     function load_jumpto_image(image) {
         if ((image_jumpto.source == "image://pictures/" + image) && (image_jumpto.status === Image.Ready)) {
@@ -324,18 +382,22 @@ Item {
     }
 
     function up_pressed() {
-        if (button_first.border.color === "#00000000") {
-            button_first.border.color = "#cccccc"
-            button_second.border.color = "#00000000"
+        if (!button_first.focus) {
+            button_first.focus = true
         }
     }
 
     function down_pressed() {
-        console.log("press down")
-        if (button_second.border.color === "#00000000") {
-            button_first.border.color = "#00000000"
-            button_second.border.color = "#cccccc"
+        if (!button_second.focus) {
+            button_second.focus = true
         }
+    }
+
+    function enter_pressed() {
+        if (button_first.focus)
+            _supervisor.answerOfQuestion(0)
+        else
+            _supervisor.answerOfQuestion(1)
     }
 
     ParallelAnimation {

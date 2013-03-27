@@ -29,7 +29,6 @@ Rectangle {
     width: 1000
     height: 600
     color: "#222222"
-    focus: true;
 
 
 // =================================================================================== //
@@ -156,10 +155,6 @@ Rectangle {
             info_box.update_fade(0)
         }
 
-    }
-
-    function show_message(image, title, text, info) {
-        message_box.show_hide_message(image, title, text, info)
     }
 
     function show_help() {
@@ -339,13 +334,11 @@ Rectangle {
 
     Messagebox {
         id: message_box
+        objectName: "messageBox"
         width: root.width
         height: root.height
         z: 5
     }
-
-//    Keys.onUpPressed: message_box.up_pressed()
-//    Keys.onDownPressed: message_box.down_pressed()
 
     Image {
         id: image_jumpto_big
