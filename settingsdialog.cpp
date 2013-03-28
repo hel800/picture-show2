@@ -214,6 +214,7 @@ void SettingsDialog::dropEvent( QDropEvent * event )
     {
         QList<QUrl> dupplicates_removed = url_list.toSet().subtract(this->m_current_collection).toList();
 
+        ui->label_collection->setText(tr("In Drop Zone: "));
         ui->label_droppingInstruction->setText(tr("Bitte warten..."));
         ui->pushButton_saveColl->setEnabled(false);
         this->m_dirListReader->setUrlList(dupplicates_removed);
@@ -286,7 +287,6 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
 
 void SettingsDialog::readDirListReady()
 {
-//    this->m_droppedItemsList->clear();
     int num_elements_before = this->m_droppedItemsList->size();
     QList<QFileInfo> newItems = this->m_dirListReader->getItemList();
 
@@ -610,7 +610,7 @@ void SettingsDialog::loadSettings()
 {
     QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
     ui->comboBox_effect->setCurrentIndex(settings.value("effect", QVariant(1)).toInt());
-    ui->comboBox_fadeTime->setCurrentIndex(settings.value("fadeTime", QVariant(2)).toInt());
+    ui->comboBox_fadeTime->setCurrentIndex(settings.value("fadeTime", QVariant(1)).toInt());
     ui->comboBox_sort->setCurrentIndex(settings.value("sortOrder", QVariant(0)).toInt());
     ui->comboBox_scaling->setCurrentIndex(settings.value("scaleType", QVariant(0)).toInt());
 
@@ -744,7 +744,7 @@ void SettingsDialog::on_pushButton_clearZone_clicked()
     this->m_droppedItemsList->clear();
     this->m_current_collection.clear();
 
-    ui->label_collection->setText(tr("In Sammlung: "));
+    ui->label_collection->setText(tr("In Drop Zone: "));
     ui->label_folderImage->setVisible(false);
     ui->line_dropbox->setVisible(false);
     ui->label_collection->setVisible(false);
@@ -776,9 +776,23 @@ void SettingsDialog::on_pushButton_saveColl_clicked()
         {
             if (gr.section("_", 1) == scd_gen.lineEdit_collName->text())
             {
-                QMessageBox::warning(this, tr("Sammlung existiert bereits!"), tr("Eine Sammlung mit dem Namen: \"%1\" existiert bereits, bitte einen anderen wählen!").arg(scd_gen.lineEdit_collName->text()));
-                this->on_pushButton_saveColl_clicked();
-                return;
+                QMessageBox::StandardButton btn = QMessageBox::question(this, tr("Sammlung existiert bereits!"), tr("Eine Sammlung mit dem Namen: \"%1\" existiert bereits! Soll die Sammlung überschrieben werden?").arg(scd_gen.lineEdit_collName->text()));
+
+                if (btn == QMessageBox::Yes)
+                {
+                    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+
+                    settings.beginGroup(gr);
+                    settings.remove("");
+                    settings.endGroup();
+                    break;
+                }
+                else
+                {
+                    this->on_pushButton_saveColl_clicked();
+                    return;
+                }
+
             }
         }
 

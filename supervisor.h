@@ -59,6 +59,7 @@ class Supervisor : public QObject
         STOP_TIMER,
         JUMP_FADE_OUT,
         DIR_LOAD,
+        OPEN_DIALOG,
         NO_TASK
     };
 
@@ -182,6 +183,7 @@ private:
     bool isLastImage();
     bool isFirstImage();
     bool anyBlendingsActive();
+    void moveOpenDialogToMiddle();
     void printState();
 
     // HELPER CLASSES

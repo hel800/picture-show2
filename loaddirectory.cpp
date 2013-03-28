@@ -120,7 +120,7 @@ void loadDirectory::run()
             return;
         }
 
-        if (!m_forcing_large_data)
+        if (!m_forcing_large_data && this->m_subdirs)
         {
             int num_dirs = 0;
             QDirIterator iterator(current_dir.absolutePath(), QDirIterator::Subdirectories);
@@ -252,5 +252,10 @@ bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPair<QFile
 
 bool fileNameLessThan(const QFileInfo &f1, const QFileInfo &f2)
 {
-    return f1.fileName() < f2.fileName();
+    int cmp = qstricmp(f1.fileName().toLatin1(), f2.fileName().toLatin1());
+
+    if (cmp < 0)
+        return true;
+    else
+        return false;
 }

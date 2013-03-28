@@ -62,9 +62,15 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
 
             // still null --> error
             if (pixmap.isNull())
+            {
                 *this->m_loadingCur = IMAGE_ERROR;
+                pixmap = QPixmap(1,1);
+                pixmap.fill(QColor(0, 0, 0, 0));
+            }
             else
+            {
                 *this->m_loadingCur = IMAGE_READY;
+            }
         }
     }
     else if (id == "next")
@@ -84,9 +90,15 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
 
             // still null --> error
             if (pixmap.isNull())
+            {
                 *this->m_loadingNext = IMAGE_ERROR;
+                pixmap = QPixmap(1,1);
+                pixmap.fill(QColor(0, 0, 0, 0));
+            }
             else
+            {
                 *this->m_loadingNext = IMAGE_READY;
+            }
         }
     }
     else if (id == "prev")
@@ -106,9 +118,15 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
 
             // still null --> error
             if (pixmap.isNull())
+            {
                 *this->m_loadingPrev = IMAGE_ERROR;
+                pixmap = QPixmap(1,1);
+                pixmap.fill(QColor(0, 0, 0, 0));
+            }
             else
+            {
                 *this->m_loadingPrev = IMAGE_READY;
+            }
         }
     }
     else if (id.section("/", -1).section("_", 0, 0) == "jumpto")
@@ -129,9 +147,15 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
 
             // still null --> error
             if (pixmap.isNull())
+            {
                 *this->m_loadingJumpto = IMAGE_ERROR;
+                pixmap = QPixmap(1,1);
+                pixmap.fill(QColor(0, 0, 0, 0));
+            }
             else
+            {
                 *this->m_loadingJumpto = IMAGE_READY;
+            }
         }
     }
 

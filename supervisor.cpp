@@ -78,9 +78,7 @@ Supervisor::Supervisor(QObject *parent) :
 //    if (this->isFullscreen())
 //        m_setDialog->setOnTopHint(true);
 
-    int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
-    int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()))/2));
-    m_setDialog->move(new_x_pos, new_y_pos);
+    this->moveOpenDialogToMiddle();
 
     ///------   ------///
     m_dirLoader = new loadDirectory();
@@ -381,6 +379,8 @@ void Supervisor::directoryLoadingFinished(bool success)
             this->showCustomMessage(QString("qrc:///img/message_error.png"),
                                 tr("Fehler"),
                                 tr("%1: %2").arg(m_dirLoader->getErrorMsg()).arg(m_dirLoader->getDirectory()));
+            if (m_wTask.isEmpty())
+                this->queueTask(OPEN_DIALOG);
         }
     }
 }
@@ -403,15 +403,7 @@ void Supervisor::nextImagePressed()
         return;
     }
 
-    if (m_loadingStateNext == IMAGE_ERROR)
-    {
-        this->showCustomMessage(QString("qrc:///img/message_error.png"),
-                                tr("Fehler"),
-                                tr("Das nächste Bild existiert nicht: \"%1\". Die Show sollte neugestartet werden.").arg(m_current_directory_list.at(m_currentIndex+1).fileName()));
-        return;
-    }
-
-    if (this->anyBlendingsActive() || m_loadingStateNext != IMAGE_READY)
+    if (this->anyBlendingsActive() || m_loadingStateNext == IMAGE_LOADING)
     {
         this->queueTask(NEXT_TASK);
         return;
@@ -424,7 +416,7 @@ void Supervisor::nextImagePressed()
         return;
     }
 
-    // increase index or start from new it looping is active
+    // increase index or start from new if looping is active
     if (m_setDialog->getLoopSlideShow() && m_current_directory_list.size() <= m_currentIndex + 1)
         m_currentIndex = 0;
     else
@@ -434,6 +426,14 @@ void Supervisor::nextImagePressed()
     emit blendImage(QVariant(m_cur), QVariant(m_next), QVariant(true));
     int tmp_next = this->giveFreeSlot(m_cur, m_next);
     m_cur = m_next;
+
+    if (m_loadingStateNext == IMAGE_ERROR)
+    {
+        this->showCustomMessage(QString("qrc:///img/message_error.png"),
+                                tr("Fehler"),
+                                tr("Es gab ein Problem beim Laden des Bildes: \"%1\".").arg(m_current_directory_list.at(m_currentIndex+1).fileName()));
+//        return;
+    }
 
     m_next = tmp_next;
     m_loadingStateNext = IMAGE_LOADING;
@@ -449,15 +449,7 @@ void Supervisor::prevImagePressed()
 
     m_automaticForward->stop();
 
-    if (m_loadingStatePrev == IMAGE_ERROR)
-    {
-        this->showCustomMessage(QString("qrc:///img/message_error.png"),
-                                tr("Fehler"),
-                                tr("Das vorherige Bild existiert nicht: \"%1\". Die Show sollte neugestartet werden.").arg(m_current_directory_list.at(m_currentIndex-1).fileName()));
-        return;
-    }
-
-    if (this->anyBlendingsActive() || m_loadingStatePrev != IMAGE_READY)
+    if (this->anyBlendingsActive() || m_loadingStatePrev == IMAGE_LOADING)
     {
         this->queueTask(PREV_TASK);
         return;
@@ -480,6 +472,13 @@ void Supervisor::prevImagePressed()
     emit blendImage(QVariant(m_cur), QVariant(m_prev), QVariant(false));
     int tmp_next = this->giveFreeSlot(m_cur, m_prev);
     m_cur = m_prev;
+
+    if (m_loadingStatePrev == IMAGE_ERROR)
+    {
+        this->showCustomMessage(QString("qrc:///img/message_error.png"),
+                                tr("Fehler"),
+                                tr("Es gab ein Problem beim Laden des Bildes: \"%1\".").arg(m_current_directory_list.at(m_currentIndex+1).fileName()));
+    }
 
     m_next = tmp_next;
     m_loadingStateNext = IMAGE_LOADING;
@@ -610,7 +609,7 @@ void Supervisor::imageLoadingFinished(QVariant slot)
         bool ok = false;
         int nr = jumpto_number.toInt(&ok) - 1;
 
-        if (ok)
+        if (ok && m_loadingStateJumpto == IMAGE_READY)
         {
             // show jumpto image...
             this->blendJumpToPreview();
@@ -673,9 +672,7 @@ void Supervisor::answerOfQuestion(QVariant answer)
         }
         else
         {
-            int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
-            int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()))/2));
-            m_setDialog->move(new_x_pos, new_y_pos);
+            this->moveOpenDialogToMiddle();
             QTimer::singleShot(500, m_setDialog, SLOT(show()));
         }
         break;
@@ -846,9 +843,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             else if (m_automaticForwardActive)
                 this->queueTask(STOP_TIMER);
 
-            int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
-            int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()))/2));
-            m_setDialog->move(new_x_pos, new_y_pos);
+            this->moveOpenDialogToMiddle();
             m_quickView->unsetCursor();
             m_setDialog->show();
         }
@@ -1112,9 +1107,7 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
             if (m_automaticForwardActive)
                 this->queueTask(STOP_TIMER);
 
-            int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
-            int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()) * 1.3)/2));
-            m_setDialog->move(new_x_pos, new_y_pos);
+            this->moveOpenDialogToMiddle();
             m_quickView->unsetCursor();
             m_setDialog->show();
         }
@@ -1189,20 +1182,30 @@ void Supervisor::processWaitingQueue()
             emit waiting(QVariant(false));
         }
 
-        // ERROR on Loading
-        if (m_loadingStateCurrent == IMAGE_ERROR)
+        if (m_loadingStateCurrent == IMAGE_ERROR && m_current_directory_list.size() == 1)
         {
             showCustomMessage(QString("qrc:///img/message_error.png"),
                               tr("Fehler"),
-                              tr("Das Bild \"%1\" konnte nicht geladen werden!").arg(m_current_directory_list.at(m_currentIndex).fileName()));
-            m_wTask.dequeue();
+                              tr("Die Show beinhaltet nur ein Bild, welches nicht geladen werden konnte: \"%1\"!").arg(m_current_directory_list.at(m_currentIndex).fileName()));
+            m_wTask.clear();
+            this->queueTask(OPEN_DIALOG);
+            return;
         }
-        else if (m_loadingStateCurrent != IMAGE_LOADING && !this->anyBlendingsActive() && !m_waitingActive && !m_showLoaded)
+
+        if (m_loadingStateCurrent != IMAGE_LOADING && !this->anyBlendingsActive() && !m_waitingActive && !m_showLoaded)
         {
             m_wTask.dequeue();
             m_blendingsActive++;
             m_currentlyLoading = false;
             emit startTheShow(m_cur);
+
+            // ERROR on Loading
+            if (m_loadingStateCurrent == IMAGE_ERROR)
+            {
+                showCustomMessage(QString("qrc:///img/message_error.png"),
+                                  tr("Fehler"),
+                                  tr("Es gab ein Problem beim Laden des Bildes: \"%1\"! Es befinden sich weitere Bilder in ther Show!").arg(m_current_directory_list.at(m_currentIndex).fileName()));
+            }
         }
     }
     else if (m_wTask.head() == NEXT_TASK)
@@ -1270,6 +1273,16 @@ void Supervisor::processWaitingQueue()
         {
             m_wTask.dequeue();
             this->startDirectoryLoading();
+        }
+    }
+    else if (m_wTask.head() == OPEN_DIALOG)
+    {
+        if (!this->anyBlendingsActive() && !m_messageActive)
+        {
+            m_wTask.dequeue();
+            this->moveOpenDialogToMiddle();
+            m_quickView->unsetCursor();
+            m_setDialog->show();
         }
     }
 }
@@ -1788,6 +1801,16 @@ bool Supervisor::anyBlendingsActive()
         return true;
     else
         return false;
+}
+
+void Supervisor::moveOpenDialogToMiddle()
+{
+    if (m_setDialog != NULL)
+    {
+        int new_x_pos = m_quickView->position().x() + (int(m_quickView->size().width()/2) - int(m_setDialog->size().width()/2));
+        int new_y_pos = m_quickView->position().y() + (int(m_quickView->size().height()/2) - int((double(m_setDialog->size().height()))/2));
+        m_setDialog->move(new_x_pos, new_y_pos);
+    }
 }
 
 void Supervisor::printState()

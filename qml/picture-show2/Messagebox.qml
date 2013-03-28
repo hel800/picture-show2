@@ -131,12 +131,12 @@ Item {
 
         Text {
             id: message_screen_text
-            font.pixelSize: text.length > 50 ? message_screen.height / 7 : message_screen.height / 6
+            font.pixelSize: text.length > 50 ? message_screen.height / 8 : message_screen.height / 6
             font.family: textFont.name
-            elide: Text.ElideRight
+            elide: Text.ElideLeft
             color: "#FFFFFF"
             wrapMode: Text.Wrap
-            maximumLineCount: 2
+            maximumLineCount: 3
             width: button_first.visible ? parent.width - (parent.width / 10 + 1.3 * message_screen_image.width + (parent.width * 0.06 + button_first.width)) : parent.width - (parent.width / 10 + 1.3 * message_screen_image.width)
 
             anchors.verticalCenter: parent.verticalCenter
@@ -182,10 +182,10 @@ Item {
             focus: false
             visible: false
 
-            color: "#333333"
+            color: focus ? "#666666" : "#333333"
             border.color: focus ? "#cccccc" : "#00000000"
-            border.width: parent.width * 0.001
-            opacity: focus ? 0.7 : 0.4
+            border.width: parent.width * 0.002
+            opacity: focus ? 0.8 : 0.6
             radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
 
             width: parent.width * 0.2
@@ -195,6 +195,10 @@ Item {
             anchors.rightMargin: parent.width * 0.06
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -height * 0.7
+
+            Behavior on color {
+               ColorAnimation { duration: 500 }
+            }
 
             Text {
                 id: button_first_text
@@ -214,12 +218,12 @@ Item {
             focus: false
             visible: false
 
-            color: "#333333"
+            color: focus ? "#666666" : "#333333"
             border.color: focus ? "#cccccc" : "#00000000"
-            border.width: parent.width * 0.001
+            border.width: parent.width * 0.002
             smooth: true
 
-            opacity: focus ? 0.7 : 0.4
+            opacity: focus ? 0.8 : 0.6
             radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
 
             width: parent.width * 0.2
@@ -229,6 +233,10 @@ Item {
             anchors.rightMargin: parent.width * 0.06
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: height * 0.7
+
+            Behavior on color {
+               ColorAnimation { duration: 500 }
+            }
 
             Text {
                 id: button_second_text
