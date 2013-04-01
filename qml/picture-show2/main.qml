@@ -545,6 +545,53 @@ Rectangle {
 }
     // ^----- SLIDE TRANSITION -----^ //
 
+    // v----- SLIDE + FADE TRANSITION -----v //
+
+    SequentialAnimation {
+        id: transition_anim_slide2_forward
+        running: false
+
+        onRunningChanged: {
+            if (!transition_anim_slide2_forward.running) {
+                _supervisor.blendingFinished()
+            }
+        }
+
+        ScriptAction { script: { transition_stop.target.scale = 0.8; transition_stop.target.opacity = 0.7; transition_start.target.z = 1; transition_stop.target.z = 0 } }
+
+        ParallelAnimation {
+            NumberAnimation { target: transition_start.target;  properties: "opacity"; to: 0.0; duration: transition_start.duration; easing.type: Easing.InQuad }
+            NumberAnimation { target: transition_start.target;  properties: "anchors.horizontalCenterOffset"; to: -root.width / 10; duration: transition_start.duration; easing.type: Easing.InQuad }
+            NumberAnimation { target: transition_stop.target; properties: "opacity"; to: 1.0; duration: transition_stop.duration; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: transition_stop.target; properties: "scale"; to: 1.0; duration: transition_stop.duration; easing.type: Easing.OutQuad }
+        }
+
+        ScriptAction { script: { transition_start.target.anchors.horizontalCenterOffset = 0; transition_start.target.scale = 1.0; transition_start.target.opacity = 0.0; transition_start.target.z = 0; transition_stop.target.z = 0 } }
+    }
+
+    SequentialAnimation {
+        id: transition_anim_slide2_backward
+        running: false
+
+        onRunningChanged: {
+            if (!transition_anim_slide2_backward.running) {
+                _supervisor.blendingFinished()
+            }
+        }
+
+        ScriptAction { script: { transition_stop.target.scale = 0.8; transition_stop.target.opacity = 0.7; transition_start.target.z = 1; transition_stop.target.z = 0  } }
+
+        ParallelAnimation {
+            NumberAnimation { target: transition_start.target;  properties: "opacity"; to: 0.0; duration: transition_start.duration; easing.type: Easing.InQuad }
+            NumberAnimation { target: transition_start.target;  properties: "anchors.horizontalCenterOffset"; to: root.width / 10; duration: transition_start.duration; easing.type: Easing.InQuad }
+            NumberAnimation { target: transition_stop.target; properties: "opacity"; to: 1.0; duration: transition_stop.duration; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: transition_stop.target; properties: "scale"; to: 1.0; duration: transition_stop.duration; easing.type: Easing.OutQuad }
+        }
+
+        ScriptAction { script: { transition_start.target.anchors.horizontalCenterOffset = 0; transition_start.target.scale = 1.0; transition_start.target.opacity = 0.0; ; transition_start.target.z = 0; transition_stop.target.z = 0 } }
+}
+    // ^----- SLIDE + FADE TRANSITION -----^ //
+
 // DREHEN UND BLENDEN VOR
     SequentialAnimation {
         id: transition_anim_twist_forward

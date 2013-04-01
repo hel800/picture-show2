@@ -117,6 +117,7 @@ public slots:
     Q_INVOKABLE QVariant getLanguageForQml();
     Q_INVOKABLE QVariant getBackgroundColorQml();
 
+    void showHelpDialog();
     void resizeDialog();
 
 signals:

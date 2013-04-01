@@ -60,7 +60,8 @@ Item {
                 help_screen_commands.source = "qrc:///img/commands_keyboard_de.png"
 
             help_screen_title_text.text = "Kurzhilfe"
-            help_screen_info_text1.text = "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version 5). \n\n2012 by Sebastian Schäfer / web: http://code.google.com/p/picture-show/"
+            help_screen_handbook.text = "Handbuch anzeigen"
+            help_screen_info_text1.text = "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version 5). \n\n2013 by Sebastian Schäfer / web: http://code.google.com/p/picture-show/"
 
         }
         else {
@@ -70,7 +71,8 @@ Item {
                 help_screen_commands.source = "qrc:///img/commands_keyboard_en.png"
 
             help_screen_title_text.text = "Quick Help"
-            help_screen_info_text1.text = "This application is published under the GPL v3 licence. It can be used and modified freely, but has to be remain published under the GPL at all times. The Qt Framework (version 5) is used. \n\n2012 by Sebastian Schäfer / web: http://code.google.com/p/picture-show/"
+            help_screen_handbook.text = "Show Handbook"
+            help_screen_info_text1.text = "This application is published under the GPL v3 licence. It can be used and modified freely, but has to be remain published under the GPL at all times. The Qt Framework (version 5) is used. \n\n2013 by Sebastian Schäfer / web: http://code.google.com/p/picture-show/"
         }
     }
 
@@ -134,7 +136,7 @@ Item {
         Rectangle {
             color: "white"
             anchors.fill: help_screen_commands
-            anchors.topMargin: -help_screen_commands.height / 10
+            anchors.topMargin: -help_screen_commands.height / 7
             anchors.bottomMargin: -help_screen_commands.height / 4
             anchors.margins: -help_screen_commands.height / 30
             radius: 10
@@ -147,8 +149,9 @@ Item {
             font.family: titleFont.name
             color: "#FFFFFF"
             anchors.bottom: help_screen_commands.top
-            anchors.bottomMargin: help_screen_commands.height / 40
-            anchors.horizontalCenter: help_screen_commands.horizontalCenter
+            anchors.bottomMargin: help_screen_commands.height / 25
+            anchors.left: help_screen_commands.left
+            anchors.leftMargin: help_screen_commands.width / 32
             smooth: true;
             text: "Kurzhilfe"
         }
@@ -162,6 +165,44 @@ Item {
             smooth: true
         }
 
+        Rectangle {
+            id: help_screen_rec_handbook
+            width: help_screen_commands.width / 5
+            height: help_screen_commands.height / 15
+            color: "white"
+            anchors.right: help_screen_commands.right
+            anchors.bottom: help_screen_commands.top
+            anchors.bottomMargin: (help_screen_commands.height / 7 - help_screen_commands.height / 15) / 2
+            radius: 10
+            opacity: 0.06
+        }
+
+        Image {
+            id: help_screen_handbook_image
+            height: help_screen_rec_handbook.height * 1.3
+            fillMode: Image.PreserveAspectFit
+            anchors.verticalCenter: help_screen_rec_handbook.verticalCenter
+            anchors.right: help_screen_rec_handbook.right
+            anchors.rightMargin: help_screen_rec_handbook.height * 0.1
+            source: "qrc:///img/F2_key.png"
+            opacity: 0.7
+        }
+
+        Text {
+            id: help_screen_handbook
+            color: "#FFFFFF"
+            font.pixelSize: help_screen_rec_handbook.height / 3
+            font.family: textFont.name
+            text: "Handbuch anzeigen"
+            anchors.horizontalCenter: help_screen_rec_handbook.horizontalCenter
+            anchors.verticalCenter: help_screen_rec_handbook.verticalCenter
+            anchors.horizontalCenterOffset: -help_screen_rec_handbook.width / 7
+
+            opacity: 0.8
+        }
+
+
+
         Item {
             width: help_screen_commands.width
             height: help_screen_commands.height / 5
@@ -169,6 +210,7 @@ Item {
             anchors.top: help_screen_commands.bottom
             anchors.topMargin: help_screen_commands.height / 20
             anchors.left: help_screen_commands.left
+            anchors.leftMargin: help_screen_commands.width / 32
 //            anchors.topMargin: parent.height - parent.height / 10
 
             Image {
@@ -194,7 +236,6 @@ Item {
                 wrapMode: Text.Wrap
                 text: "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version %1). \n\n2012 by Sebastian Schäfer / web: http://code.google.com/p/picture-show/"
             }
-
         }
     }
 

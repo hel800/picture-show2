@@ -275,11 +275,17 @@ void Supervisor::startDirectoryLoading(bool forceLargeData)
         return;
 
     m_currentlyLoading = true;
+
     if (m_setDialog->getOpenMode() == SettingsDialog::MODE_FOLDER)
+    {
         m_dirLoader->setDirectory(m_setDialog->getCurrentDirectory());
+    }
     else
+    {
         m_dirLoader->setDirectory("");
-    m_dirLoader->setDropList(m_setDialog->getDroppedItems());
+        m_dirLoader->setDropList(m_setDialog->getDroppedItems());
+    }
+
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
     m_dirLoader->setIncludeSubdirs(m_setDialog->getIncludeSubdirs());
     if (forceLargeData)
@@ -838,10 +844,10 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
 
             m_wTask.clear();
 
-            if (m_blendingsActive == 0 && m_automaticForwardActive)
+            if (/*m_blendingsActive == 0 && */m_automaticForwardActive)
                 this->startInputMode(MODE_TIMER_OFF, 2500);
-            else if (m_automaticForwardActive)
-                this->queueTask(STOP_TIMER);
+//            else if (m_automaticForwardActive)
+//                this->queueTask(STOP_TIMER);
 
             this->moveOpenDialogToMiddle();
             m_quickView->unsetCursor();
@@ -944,6 +950,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         }
         break;
     case Qt::Key_H:
+    case Qt::Key_F1:
         {
             if (!this->anyBlendingsActive() && !m_messageActive)
             {
@@ -958,6 +965,12 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                     this->startInputMode(MODE_TIMER_OFF, 1500);
                 }
             }
+        }
+        break;
+    case Qt::Key_F2:
+        {
+            if (m_helpActive)
+                m_setDialog->showHelpDialog();
         }
         break;
     case Qt::Key_J:
@@ -1013,7 +1026,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         break;
     case Qt::Key_Space:
         {
-            if (m_showLoaded && m_blendingsActive == 0 && ((m_overlayTransitions == 0) || (m_overlayTransitions == 1 && panoramaModeWasActive)))
+            if (m_showLoaded && /*m_blendingsActive == 0 && */ ((m_overlayTransitions == 0) || (m_overlayTransitions == 1 && panoramaModeWasActive)))
             {
                 if (m_automaticForwardActive || m_activeInputMode == MODE_TIMER_ON)
                 {
@@ -1332,8 +1345,11 @@ void Supervisor::numberPressed(const QString & number)
             else
                 temp_jump = number;
 
-            if (temp_jump.startsWith("0") || temp_jump.toInt() > m_current_directory_list.size())
+            if (temp_jump.startsWith("0"))
                 return;
+
+//            if (temp_jump.toInt() > m_current_directory_list.size())
+//                temp_jump.toInt
         }
 
         m_inputTimeout->stop();
@@ -1342,7 +1358,7 @@ void Supervisor::numberPressed(const QString & number)
         {
             m_jumpToImageValue = m_jumpToImageValue.replace("_", "").trimmed() + number;
             if (m_jumpToImageValue.toInt() > m_current_directory_list.size())
-                m_jumpToImageValue = number;
+                m_jumpToImageValue = QString::number(m_current_directory_list.size());
         }
         else
         {
@@ -1378,7 +1394,7 @@ void Supervisor::upOrDownPressed(bool up)
 
         if (up && cur_val != 0 && cur_val + 1 < 100)
             m_timerInputValue = QString::number(cur_val + 1);
-        else if (!up && cur_val != 0 && cur_val - 1 > 3)
+        else if (!up && cur_val != 0 && cur_val - 1 > 0)
             m_timerInputValue = QString::number(cur_val - 1);
 
         this->startInputMode(MODE_TIMER_ON);

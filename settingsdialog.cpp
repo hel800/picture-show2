@@ -173,6 +173,11 @@ QVariant SettingsDialog::getBackgroundColorQml()
     return QVariant(ui->comboBox_bgColor->currentIndex());
 }
 
+void SettingsDialog::showHelpDialog()
+{
+    this->on_pushButton_help_clicked();
+}
+
 void SettingsDialog::resizeDialog()
 {
     this->adjustSize();
@@ -229,6 +234,9 @@ void SettingsDialog::hideEvent(QHideEvent * event)
         this->m_dirListReader->cancel();
         this->m_cachedDropList.clear();
     }
+
+    if (this->getOpenMode() == MODE_FOLDER)
+        m_dropListChanged = true;
 
     event->accept();
 }
