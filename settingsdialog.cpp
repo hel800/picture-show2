@@ -824,6 +824,8 @@ void SettingsDialog::on_pushButton_saveColl_clicked()
         settings.setValue("num_folders", QVariant(num_folders));
         settings.setValue("num_images", QVariant(num_images));
         settings.endGroup();
+
+        ui->label_collection->setText(tr("Sammlung: %1").arg(scd_gen.lineEdit_collName->text()));
     }
 }
 

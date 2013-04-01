@@ -970,7 +970,10 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     case Qt::Key_F2:
         {
             if (m_helpActive)
+            {
+                this->moveOpenDialogToMiddle();
                 m_setDialog->showHelpDialog();
+            }
         }
         break;
     case Qt::Key_J:
