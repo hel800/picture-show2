@@ -201,8 +201,6 @@ Item {
             opacity: 0.8
         }
 
-
-
         Item {
             width: help_screen_commands.width
             height: help_screen_commands.height / 5
@@ -210,7 +208,6 @@ Item {
             anchors.top: help_screen_commands.bottom
             anchors.topMargin: help_screen_commands.height / 20
             anchors.left: help_screen_commands.left
-            anchors.leftMargin: help_screen_commands.width / 32
 //            anchors.topMargin: parent.height - parent.height / 10
 
             Image {

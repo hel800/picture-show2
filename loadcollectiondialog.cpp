@@ -90,6 +90,8 @@ QList<QUrl> LoadCollectionDialog::getSelectedCollection(QString & col_name)
 
         c++;
     }
+
+    return QList<QUrl>();
 }
 
 void LoadCollectionDialog::on_listWidget_doubleClicked(const QModelIndex &index)

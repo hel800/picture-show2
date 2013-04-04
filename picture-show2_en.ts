@@ -445,7 +445,7 @@ wait...</translation>
     <message>
         <location filename="settingsdialog.cpp" line="223"/>
         <location filename="settingsdialog.cpp" line="350"/>
-        <location filename="settingsdialog.cpp" line="852"/>
+        <location filename="settingsdialog.cpp" line="854"/>
         <source>Bitte warten...</source>
         <translation>Please wait...</translation>
     </message>
@@ -529,12 +529,13 @@ wait...</translation>
         <translation type="obsolete">A collection with the name %1 already exists. Please choose another name!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="851"/>
+        <location filename="settingsdialog.cpp" line="828"/>
+        <location filename="settingsdialog.cpp" line="853"/>
         <source>Sammlung: %1</source>
         <translation>Collection: %1</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="858"/>
+        <location filename="settingsdialog.cpp" line="860"/>
         <source>Sammlung ungÃ¼ltig!</source>
         <translation>Collection invalid!</translation>
     </message>
@@ -574,106 +575,106 @@ found</translation>
         <translation>QML Error: %1</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="223"/>
+        <location filename="supervisor.cpp" line="225"/>
         <source>Frage</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="229"/>
+        <location filename="supervisor.cpp" line="231"/>
         <source>Das Bilderverzeichnis wurde geÃ¤ndert. Damit die Bilder aus dem neuen Verzeichnis angezeigt werden, muss eine neue Show geladen werden.</source>
         <translation>The picture directory has been changed. To show pictures from the new directory the show has to be restarted.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="230"/>
+        <location filename="supervisor.cpp" line="232"/>
         <source>&quot;Ja&quot; klicken, um neus Verzeichnis zu laden, &quot;Nein&quot; um altes Verzeichnis weiter anzuzeigen.</source>
         <translation>Click &quot;Yes&quot; to load a new show, click &quot;No&quot; to keep the images from the old directory.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="235"/>
+        <location filename="supervisor.cpp" line="237"/>
         <source>Der Sortierungsmodus wurde geÃ¤ndert. Damit die neue Sortierung angewendet wird, muss die Show neu geladen werden. Sie startet neu von Beginn.</source>
         <translation>The sort mode has been changed. The show must be restarted for the new sort mode to take effect.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="236"/>
+        <location filename="supervisor.cpp" line="238"/>
         <source>&quot;Ja&quot; klicken, zum neustarten, &quot;Nein&quot; um alte Sortierung weiter zu verwenden.</source>
         <translation>Click &quot;Yes&quot; to restart the show, &quot;No&quot; to continue with the old sorting order.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="241"/>
+        <location filename="supervisor.cpp" line="243"/>
         <source>Einstellungen wurden geÃ¤ndert. Damit sie wirksam werden, muss die Show neu geladen werden. Sie startet neu von Beginn.</source>
         <translation>Options have been changed. The show has to be restarted so changed options take effect.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="242"/>
+        <location filename="supervisor.cpp" line="244"/>
         <source>&quot;Ja&quot; klicken, zum neustarten, &quot;Nein&quot; um die alte Einstellung weiter zu verwenden.</source>
         <translation>Click &quot;Yes&quot; to restart the show, &quot;No&quot; to continue with the previous settings.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="245"/>
-        <location filename="supervisor.cpp" line="365"/>
-        <location filename="supervisor.cpp" line="373"/>
-        <location filename="supervisor.cpp" line="381"/>
-        <location filename="supervisor.cpp" line="893"/>
+        <location filename="supervisor.cpp" line="247"/>
+        <location filename="supervisor.cpp" line="367"/>
+        <location filename="supervisor.cpp" line="375"/>
+        <location filename="supervisor.cpp" line="383"/>
+        <location filename="supervisor.cpp" line="892"/>
         <source>Ja</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="246"/>
-        <location filename="supervisor.cpp" line="365"/>
-        <location filename="supervisor.cpp" line="373"/>
-        <location filename="supervisor.cpp" line="381"/>
-        <location filename="supervisor.cpp" line="893"/>
+        <location filename="supervisor.cpp" line="248"/>
+        <location filename="supervisor.cpp" line="367"/>
+        <location filename="supervisor.cpp" line="375"/>
+        <location filename="supervisor.cpp" line="383"/>
+        <location filename="supervisor.cpp" line="892"/>
         <source>Nein</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="363"/>
+        <location filename="supervisor.cpp" line="365"/>
         <source>Viele Daten</source>
         <translation>Large amount of data</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="364"/>
+        <location filename="supervisor.cpp" line="366"/>
         <source>Das Laden kann einige Zeit in Anspruch nehmen. Soll fortgesetzt werden?</source>
         <translation>Loading can take a while. Do you want to proceed?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="371"/>
+        <location filename="supervisor.cpp" line="373"/>
         <source>Viele Bilder</source>
         <translation>Large amount of pictures</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="372"/>
+        <location filename="supervisor.cpp" line="374"/>
         <source>Das Laden von vielen Bildern mit Datumssortierung kann Zeit in Anspruch nehmen. Soll fortgesetzt werden?</source>
         <translation>Loading of large amount of pictures with date taken sorting can take a while. Do you want to proceed?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="379"/>
+        <location filename="supervisor.cpp" line="381"/>
         <source>Viele Unterordner</source>
         <translation>Many subfolders</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="380"/>
+        <location filename="supervisor.cpp" line="382"/>
         <source>Es wurden viele Unterordner gefunden. Das Laden kann einige Zeit in Anspruch nehmen. Soll fortgesetzt werden?</source>
         <translation>A large amount of subfolders has been found. Loading can take a while. Do you want to proceed?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="440"/>
-        <location filename="supervisor.cpp" line="486"/>
+        <location filename="supervisor.cpp" line="442"/>
+        <location filename="supervisor.cpp" line="488"/>
         <source>Es gab ein Problem beim Laden des Bildes: &quot;%1&quot;.</source>
         <translation>There was a problem while loading the picture: &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="890"/>
+        <location filename="supervisor.cpp" line="889"/>
         <source>Timer beendet!</source>
         <translation>Timer stopped!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1202"/>
+        <location filename="supervisor.cpp" line="1214"/>
         <source>Die Show beinhaltet nur ein Bild, welches nicht geladen werden konnte: &quot;%1&quot;!</source>
         <translation>The show only contains a single picture, which could not be loaded: &quot;%1&quot;!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1220"/>
+        <location filename="supervisor.cpp" line="1232"/>
         <source>Es gab ein Problem beim Laden des Bildes: &quot;%1&quot;! Es befinden sich weitere Bilder in ther Show!</source>
         <translation>There was a problem loading the picture: &quot;%1&quot;! There are more pictures in the show!</translation>
     </message>
@@ -694,26 +695,26 @@ found</translation>
         <translation type="obsolete">Loading pictures and sorting them according to date taken may take a little while. Press ENTER to continue, ESC to cancel.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="386"/>
-        <location filename="supervisor.cpp" line="439"/>
-        <location filename="supervisor.cpp" line="485"/>
-        <location filename="supervisor.cpp" line="1201"/>
-        <location filename="supervisor.cpp" line="1219"/>
+        <location filename="supervisor.cpp" line="388"/>
+        <location filename="supervisor.cpp" line="441"/>
+        <location filename="supervisor.cpp" line="487"/>
+        <location filename="supervisor.cpp" line="1213"/>
+        <location filename="supervisor.cpp" line="1231"/>
         <source>Fehler</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="387"/>
+        <location filename="supervisor.cpp" line="389"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="403"/>
+        <location filename="supervisor.cpp" line="405"/>
         <source>Timer beendet</source>
         <translation>Timer stopped</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="404"/>
+        <location filename="supervisor.cpp" line="406"/>
         <source>Das letzte Bild der Show wurde erreicht</source>
         <translation>The last picture of the show has been reached</translation>
     </message>
@@ -726,22 +727,22 @@ found</translation>
         <translation type="obsolete">The previous picture does not exist: \&quot;%1\&quot;. The show should be restarted.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="694"/>
+        <location filename="supervisor.cpp" line="699"/>
         <source>%1/%2</source>
         <translation>%1/%2</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="738"/>
+        <location filename="supervisor.cpp" line="743"/>
         <source>%1  (%2 kB)</source>
         <translation>%1  (%2 kB)</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="760"/>
+        <location filename="supervisor.cpp" line="765"/>
         <source>%1 Sek  </source>
         <translation>%1 sec</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="766"/>
+        <location filename="supervisor.cpp" line="771"/>
         <source>1/%1  Sek</source>
         <translation>1/%1  sec</translation>
     </message>
@@ -750,12 +751,12 @@ found</translation>
         <translation type="obsolete">%1  sec</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="773"/>
+        <location filename="supervisor.cpp" line="778"/>
         <source>f/%1</source>
         <translation>f/%1</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="780"/>
+        <location filename="supervisor.cpp" line="785"/>
         <source>%1  mm</source>
         <translation>%1  mm</translation>
     </message>
@@ -768,7 +769,7 @@ found</translation>
         <translation type="obsolete">Timer stopped! </translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="893"/>
+        <location filename="supervisor.cpp" line="892"/>
         <source>Beenden?</source>
         <translation>Exit?</translation>
     </message>
@@ -781,39 +782,39 @@ found</translation>
         <translation type="obsolete">The picture \&quot;%1\&quot; could not be loaded!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1504"/>
+        <location filename="supervisor.cpp" line="1535"/>
         <source>Willkommen in picture-show 2!
 &quot;O&quot; drÃ¼cken, um Bilder zu Ã¶ffnen!</source>
         <translation>Welcome to picture-show2!
 Press &quot;O&quot; to open pictures!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1581"/>
+        <location filename="supervisor.cpp" line="1612"/>
         <source>Informationsleiste mit &quot;I&quot; ein- und wieder ausblenden!</source>
         <translation>Show and hide info bar with &quot;I&quot;!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1651"/>
+        <location filename="supervisor.cpp" line="1685"/>
         <source>Starte Timer:  %1 Sekunden</source>
         <translation>Start Timer: %1 seconds</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1659"/>
+        <location filename="supervisor.cpp" line="1693"/>
         <source>Stoppe Timer</source>
         <translation>Stopping Timer</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1665"/>
+        <location filename="supervisor.cpp" line="1699"/>
         <source>Bildnummer eingeben und ENTER drÃ¼cken</source>
         <translation>Enter number of picture and press ENTER</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1667"/>
+        <location filename="supervisor.cpp" line="1701"/>
         <source>Timer gestoppt. </source>
         <translation>Timer stopped.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1673"/>
+        <location filename="supervisor.cpp" line="1707"/>
         <source>Springe zu: %1 / %2</source>
         <translation>Jump to: %1 / %2</translation>
     </message>

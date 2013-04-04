@@ -149,6 +149,47 @@ Item {
             text: ""
         }
 
+//        Rectangle {
+//            id: image_jumpto_wait_rect
+//            color: "black"
+//            height: message_screen.height * 1.3
+//            width: height * 1.5
+//            anchors.verticalCenter: parent.verticalCenter
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.horizontalCenterOffset: parent.width * 0.3
+//            opacity: 0.0
+//            radius: 10.0
+//            smooth: true
+//        }
+
+        Image {
+            id: image_jumpto_wait
+            width: message_screen.height / 2
+            fillMode: Image.PreserveAspectFit
+            source: "qrc:///img/wait.png"
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: image_jumpto_rect.horizontalCenter
+
+            opacity: 0.0
+        }
+
+        Image {
+            id: image_jumpto_preview_error
+            height: message_screen.height / 3
+            fillMode: Image.PreserveAspectFit
+            source: "qrc:///img/error_small.png"
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: image_jumpto_rect.horizontalCenter
+
+            opacity: 0.0
+
+            Behavior on opacity {
+               NumberAnimation { duration: 300 }
+            }
+        }
+
         Rectangle {
             id: image_jumpto_rect
             color: "black"
@@ -258,6 +299,13 @@ Item {
             fade_jumpto_preview_out.start()
         }
 
+        if (image_jumpto_wait.opacity !== 0.0) {
+            fade_jumpto_preview_wait1.stop();
+            fade_jumpto_preview_wait2.start();
+        }
+
+        image_jumpto_preview_error.opacity = 0.0
+
         if (message_screen.opacity === 0.0) {
             _supervisor.overlayTransitionFinished()
         }
@@ -275,6 +323,13 @@ Item {
             fade_jumpto_preview.stop()
             fade_jumpto_preview_out.start()
         }
+
+        if (image_jumpto_wait.opacity !== 0.0) {
+            fade_jumpto_preview_wait1.stop();
+            fade_jumpto_preview_wait2.start();
+        }
+
+        image_jumpto_preview_error.opacity = 0.0
 
         if (title !== "" && text !== "") {
             message_screen_title2.text = ""
@@ -352,10 +407,16 @@ Item {
 //    }
 
     function load_jumpto_image(image) {
+        image_jumpto_preview_error.opacity = 0.0
+
         if ((image_jumpto.source == "image://pictures/" + image) && (image_jumpto.status === Image.Ready)) {
             _supervisor.imageLoadingFinished(image_jumpto.source)
             return
         }
+
+        if (fade_jumpto_preview_wait2.running)
+            fade_jumpto_preview_wait2.stop();
+        fade_jumpto_preview_wait1.start();
 
         image_jumpto.source = "image://pictures/" + image
     }
@@ -381,8 +442,24 @@ Item {
 //            }
 //        }
 
+        if (fade_jumpto_preview_wait1.running)
+            fade_jumpto_preview_wait1.stop();
+
+        if (!fade_jumpto_preview_wait2.running)
+            fade_jumpto_preview_wait2.start();
+
         fade_jumpto_preview_out.stop()
         fade_jumpto_preview.start()
+    }
+
+    function blend_jumpto_preview_error() {
+        if (fade_jumpto_preview_wait1.running)
+            fade_jumpto_preview_wait1.stop();
+
+        if (!fade_jumpto_preview_wait2.running)
+            fade_jumpto_preview_wait2.start();
+
+        image_jumpto_preview_error.opacity = 0.4
     }
 
     function get_jumpto_source() {
@@ -489,4 +566,30 @@ Item {
 //            }
 //        }
     }
+
+    ParallelAnimation {
+        id: fade_jumpto_preview_wait1
+        running: false
+
+        ScriptAction { script:  { fade_jumpto_preview_wait3.start() } }
+
+        NumberAnimation { target: image_jumpto_wait; properties: "opacity"; to: 0.6; duration: 300; easing.type: Easing.InOutQuad }
+}
+
+    SequentialAnimation {
+        id: fade_jumpto_preview_wait2
+        running: false
+
+        NumberAnimation { target: image_jumpto_wait; properties: "opacity"; to: 0.0; duration: 200; easing.type: Easing.OutCubic }
+
+        ScriptAction { script:  { fade_jumpto_preview_wait3.stop() } }
+    }
+
+    ParallelAnimation {
+        id: fade_jumpto_preview_wait3
+        running: false
+
+        RotationAnimation { target: image_jumpto_wait; property: "rotation"; from: 0; to: 360; duration: 2500; loops: Animation.Infinite }
+    }
+
 }

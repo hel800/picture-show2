@@ -23,6 +23,8 @@
         <file alias="images-16.png">img/images-16.png</file>
         <file alias="picturesFolder-16.png">img/pictureFolder-16.png</file>
         <file alias="F2_key.png">img/F2_key.png</file>
+        <file alias="wait.png">img/wait.png</file>
+        <file alias="error_small.png">img/error_small.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>

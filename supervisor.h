@@ -60,6 +60,7 @@ class Supervisor : public QObject
         JUMP_FADE_OUT,
         DIR_LOAD,
         OPEN_DIALOG,
+        JUMP_TO_DIALOG,
         NO_TASK
     };
 
@@ -167,7 +168,7 @@ private slots:
     void showCustomQuestion(QString imageUrl, QString title, QString text, QString b1_text, QString b2_text, bool info = false);
     void showBubbleMessage_info();
     void hideMessage();
-    void blendJumpToPreview();
+    void blendJumpToPreview(bool state = true);
 
     void queueTask(WaitingTask task);
 
@@ -228,6 +229,7 @@ private:
     bool m_qml_ready;
     int m_currentIndex;
     int m_timerValue;
+    bool m_timerFirstStart;
     QString m_timerInputValue;
     QString m_jumpToImageValue;
     int m_blendingsActive;

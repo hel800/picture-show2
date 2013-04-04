@@ -118,7 +118,7 @@ Supervisor::Supervisor(QObject *parent) :
 
     m_jumptoPreview = new QTimer(this);
     m_jumptoPreview->setSingleShot(true);
-    m_jumptoPreview->setInterval(1000);
+    m_jumptoPreview->setInterval(400);
     connect(m_jumptoPreview, SIGNAL(timeout()), this, SLOT(showJumpToPreview()));
 
     m_showLoaded = false;
@@ -140,6 +140,8 @@ Supervisor::Supervisor(QObject *parent) :
     m_activeInputMode = NO_MODE;
     m_questionMode = QUESTION_NONE;
     m_jumptoPreviewVisible = false;
+
+    m_timerFirstStart = true;
 
     this->bindings();
 
@@ -437,7 +439,7 @@ void Supervisor::nextImagePressed()
     {
         this->showCustomMessage(QString("qrc:///img/message_error.png"),
                                 tr("Fehler"),
-                                tr("Es gab ein Problem beim Laden des Bildes: \"%1\".").arg(m_current_directory_list.at(m_currentIndex+1).fileName()));
+                                tr("Es gab ein Problem beim Laden des Bildes: \"%1\".").arg(m_current_directory_list.at(m_currentIndex).fileName()));
 //        return;
     }
 
@@ -611,14 +613,17 @@ void Supervisor::imageLoadingFinished(QVariant slot)
          (m_jumpToImageValue.trimmed() == slot_string.section("/", -1).section("_", 1).trimmed()) )
     {
         QString jumpto_number = slot_string.section("/", -1).section("_", 1);
-
         bool ok = false;
-        int nr = jumpto_number.toInt(&ok) - 1;
+        jumpto_number.toInt(&ok);
 
         if (ok && m_loadingStateJumpto == IMAGE_READY)
         {
             // show jumpto image...
             this->blendJumpToPreview();
+        }
+        else if (ok && m_loadingStateJumpto == IMAGE_ERROR)
+        {
+            this->blendJumpToPreview(false);
         }
     }
 
@@ -845,7 +850,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             m_wTask.clear();
 
             if (/*m_blendingsActive == 0 && */m_automaticForwardActive)
-                this->startInputMode(MODE_TIMER_OFF, 2500);
+                this->startInputMode(MODE_TIMER_OFF, 2000);
 //            else if (m_automaticForwardActive)
 //                this->queueTask(STOP_TIMER);
 
@@ -869,12 +874,6 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 m_panoramaModeActive = false;
                 emit stopPanorama();
             }
-//            else if (m_infoActive)
-//            {
-//                m_overlayTransitions++;
-//                m_infoActive = false;
-//                emit infoBox();
-//            }
             else
             {
                 m_wTask.clear();
@@ -990,6 +989,11 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                     this->startInputMode(MODE_JUMPTO, -1);
                 }
             }
+            else if (m_blendingsActive > 0)
+            {
+                m_wTask.clear();
+                this->queueTask(JUMP_TO_DIALOG);
+            }
         }
         break;
     case Qt::Key_P:
@@ -1031,14 +1035,19 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         {
             if (m_showLoaded && /*m_blendingsActive == 0 && */ ((m_overlayTransitions == 0) || (m_overlayTransitions == 1 && panoramaModeWasActive)))
             {
+                m_wTask.clear();
+
                 if (m_automaticForwardActive || m_activeInputMode == MODE_TIMER_ON)
                 {
-                    this->startInputMode(MODE_TIMER_OFF, 2500);
+                    this->startInputMode(MODE_TIMER_OFF, 2000);
                 }
                 else
                 {
                     m_timerInputValue = QString::number(m_timerValue);
-                    this->startInputMode(MODE_TIMER_ON);
+                    if (m_timerFirstStart)
+                        this->startInputMode(MODE_TIMER_ON);
+                    else
+                        this->startInputMode(MODE_TIMER_ON, 2000);
                 }
             }
         }
@@ -1119,7 +1128,7 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
                 return;
 
             if (m_blendingsActive == 0 && m_automaticForwardActive)
-                this->startInputMode(MODE_TIMER_OFF, 2500);
+                this->startInputMode(MODE_TIMER_OFF, 2000);
             if (m_automaticForwardActive)
                 this->queueTask(STOP_TIMER);
 
@@ -1261,7 +1270,7 @@ void Supervisor::processWaitingQueue()
         if (!this->anyBlendingsActive() && m_automaticForwardActive)
         {
             m_wTask.dequeue();
-            this->startInputMode(MODE_TIMER_OFF, 2500);
+            this->startInputMode(MODE_TIMER_OFF, 2000);
         }
     }
     else if (m_wTask.head() == JUMP_FADE_OUT)
@@ -1301,6 +1310,22 @@ void Supervisor::processWaitingQueue()
             m_setDialog->show();
         }
     }
+    else if (m_wTask.head() == JUMP_TO_DIALOG)
+    {
+        if (!this->anyBlendingsActive() && !m_helpActive)
+        {
+            m_wTask.dequeue();
+            if (m_activeInputMode == MODE_JUMPTO)
+            {
+                this->hideMessage();
+            }
+            else
+            {
+                m_jumpToImageValue = QString::number(m_currentIndex + 1);
+                this->startInputMode(MODE_JUMPTO, -1);
+            }
+        }
+    }
 }
 
 void Supervisor::changeLanguage(QVariant language)
@@ -1327,14 +1352,14 @@ void Supervisor::numberPressed(const QString & number)
         if (m_timerInputValue.count("_") == 0 && number != "0")
         {
             m_timerInputValue = number + QString("_");
-            m_inputTimeout->start(2000);
+            m_inputTimeout->start(1500);
+            this->startInputMode(MODE_TIMER_ON);
         }
         else if (m_timerInputValue.count("_") == 1)
         {
             m_timerInputValue.replace("_", number);
-        }
-
-        this->startInputMode(MODE_TIMER_ON);
+            this->startInputMode(MODE_TIMER_ON, 2000);
+        }        
     }
     else if (m_activeInputMode == MODE_JUMPTO)
     {
@@ -1375,7 +1400,7 @@ void Supervisor::numberPressed(const QString & number)
             m_jumpToImageValue.prepend("_ ");
 
         if (m_jumpToImageValue.contains("_"))
-            m_inputTimeout->start(2000);
+            m_inputTimeout->start(1500);
         else
             m_jumptoPreview->start();
 
@@ -1400,7 +1425,10 @@ void Supervisor::upOrDownPressed(bool up)
         else if (!up && cur_val != 0 && cur_val - 1 > 0)
             m_timerInputValue = QString::number(cur_val - 1);
 
-        this->startInputMode(MODE_TIMER_ON);
+        if (m_timerFirstStart)
+            this->startInputMode(MODE_TIMER_ON);
+        else
+            this->startInputMode(MODE_TIMER_ON, 2000);
     }
     else if (m_activeInputMode == MODE_JUMPTO)
     {
@@ -1610,7 +1638,7 @@ void Supervisor::hideMessage()
     }
 }
 
-void Supervisor::blendJumpToPreview()
+void Supervisor::blendJumpToPreview(bool state)
 {
     QObject *object = m_quickView->rootObject();
     if (object)
@@ -1619,7 +1647,10 @@ void Supervisor::blendJumpToPreview()
         if (!msgBox)
             return;
 
-        QMetaObject::invokeMethod(msgBox, "blend_jumpto");
+        if (state)
+            QMetaObject::invokeMethod(msgBox, "blend_jumpto");
+        else
+            QMetaObject::invokeMethod(msgBox, "blend_jumpto_preview_error");
     }
 }
 
@@ -1708,6 +1739,7 @@ void Supervisor::inputModeTimeout()
 
             m_automaticForwardActive = true;
             m_automaticForward->start(m_timerValue * 1000);
+            m_timerFirstStart = false;
         }
 
         m_activeInputMode = NO_MODE;
@@ -1739,7 +1771,11 @@ void Supervisor::timerInputValueTimeout()
         m_timerInputValue.replace("_", QString(""));
         if (m_timerInputValue.toInt() < 1)
             m_timerInputValue = QString("1");
-        this->startInputMode(MODE_TIMER_ON);
+
+        if (m_timerFirstStart)
+            this->startInputMode(MODE_TIMER_ON);
+        else
+            this->startInputMode(MODE_TIMER_ON, 1000);
     }
     else if (m_activeInputMode == MODE_JUMPTO)
     {
