@@ -21,7 +21,7 @@ public:
     void setSettingsOptions(QSettings::Format f, QSettings::Scope s, QString org, QString app);
     void createCollection();
 
-    QList<QUrl> getSelectedCollection(QString &col_name = QString());
+    QList<QUrl> getSelectedCollection(QString &col_name);
 
 private slots:
     void on_listWidget_doubleClicked(const QModelIndex &index);

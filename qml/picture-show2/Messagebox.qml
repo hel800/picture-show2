@@ -279,6 +279,21 @@ Item {
                ColorAnimation { duration: 500 }
             }
 
+//            MouseArea {
+//                id: mouseArea2
+//                anchors.fill: parent
+//                hoverEnabled: true
+
+//                acceptedButtons: Qt.AllButtons
+
+//                onPressed: {
+//                    console.log("entered")
+
+//                    if (mouse.button == Qt.LeftButton)
+//                        _supervisor.answerOfQuestion(1)
+//                }
+//            }
+
             Text {
                 id: button_second_text
                 font.pixelSize: parent.height / 2;

@@ -39,6 +39,9 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->line_dropbox->setVisible(false);
     ui->label_collection->setVisible(false);
 
+    ui->label_12->setVisible(false);
+    ui->frame_4->setVisible(false);
+
     this->resizeDialog();
     this->setAcceptDrops(true);
 
@@ -641,7 +644,7 @@ void SettingsDialog::loadSettings()
         ui->comboBox_directoryPath->addItem(dir);
 
     ui->comboBox_language->setCurrentIndex(languageID);
-    ui->checkBox_mouseControl->setChecked(settings.value("mouseControl", QVariant(false)).toBool());
+    ui->checkBox_mouseControl->setChecked(settings.value("mouseControl", QVariant(true)).toBool());
     ui->checkBox_historySave->setChecked(settings.value("saveHistory", QVariant(true)).toBool());
     ui->checkBox_subdirs->setChecked(settings.value("includeSubdirs", QVariant(false)).toBool());
     ui->checkBox_loop->setChecked(settings.value("loopSlideShow", QVariant(false)).toBool());

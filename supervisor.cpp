@@ -1532,7 +1532,7 @@ void Supervisor::showHelpOverlay()
     {
         m_overlayTransitions++;
         emit showHelp();
-        emit bubbleBox(QVariant(tr("Willkommen in picture-show 2!\n\"O\" drücken, um Bilder zu öffnen!")), QVariant(8000));
+        emit bubbleBox(QVariant(tr("Willkommen in picture-show 2!\n\"O\" drücken, um Bilder zu öffnen!")), QVariant(60000));
         m_helpActive = true;
     }
 }
