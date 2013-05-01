@@ -1014,6 +1014,11 @@
            <string>hellgrau</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>weiß</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>

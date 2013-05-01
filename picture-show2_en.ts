@@ -165,8 +165,8 @@
     </message>
     <message>
         <location filename="settingsdialog.ui" line="310"/>
-        <location filename="settingsdialog.cpp" line="363"/>
-        <location filename="settingsdialog.cpp" line="761"/>
+        <location filename="settingsdialog.cpp" line="366"/>
+        <location filename="settingsdialog.cpp" line="764"/>
         <source>Hier Bilder und/oder Ordner ablegen...</source>
         <translation>Drop pictures and/or folders here...</translation>
     </message>
@@ -192,8 +192,8 @@
     </message>
     <message>
         <location filename="settingsdialog.ui" line="270"/>
-        <location filename="settingsdialog.cpp" line="222"/>
-        <location filename="settingsdialog.cpp" line="755"/>
+        <location filename="settingsdialog.cpp" line="225"/>
+        <location filename="settingsdialog.cpp" line="758"/>
         <source>In Drop Zone: </source>
         <translation>In Drop Zone: </translation>
     </message>
@@ -222,8 +222,13 @@
         <source>hellgrau</source>
         <translation>light grey</translation>
     </message>
+    <message utf8="true">
+        <location filename="settingsdialog.ui" line="1019"/>
+        <source>weiß</source>
+        <translation>white</translation>
+    </message>
     <message>
-        <location filename="settingsdialog.ui" line="1092"/>
+        <location filename="settingsdialog.ui" line="1097"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -233,7 +238,7 @@
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:7pt; font-weight:600;&quot;&gt;Press &apos;H&apos; for quick help during presentation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1047"/>
+        <location filename="settingsdialog.ui" line="1052"/>
         <source> Hilfe </source>
         <translation>Help</translation>
     </message>
@@ -269,7 +274,7 @@
         <translation type="obsolete">Apply</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1099"/>
+        <location filename="settingsdialog.ui" line="1104"/>
         <source>Abbrechen</source>
         <translation>Cancel</translation>
     </message>
@@ -443,84 +448,84 @@
 wait...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="223"/>
-        <location filename="settingsdialog.cpp" line="350"/>
-        <location filename="settingsdialog.cpp" line="854"/>
+        <location filename="settingsdialog.cpp" line="226"/>
+        <location filename="settingsdialog.cpp" line="353"/>
+        <location filename="settingsdialog.cpp" line="857"/>
         <source>Bitte warten...</source>
         <translation>Please wait...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="283"/>
+        <location filename="settingsdialog.cpp" line="286"/>
         <source>&lt;b&gt;Update verf&amp;uuml;gbar: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Update is available: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="285"/>
+        <location filename="settingsdialog.cpp" line="288"/>
         <source>Version %1</source>
         <translation>version %1</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="323"/>
+        <location filename="settingsdialog.cpp" line="326"/>
         <source>keine neuen Bilder hinzugefÃ¼gt</source>
         <translation>no new pictures added</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="325"/>
+        <location filename="settingsdialog.cpp" line="328"/>
         <source>1 Bild hinzugefÃ¼gt</source>
         <translation>1 picture added</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="327"/>
+        <location filename="settingsdialog.cpp" line="330"/>
         <source>%1 Bilder hinzugefÃ¼gt</source>
         <translation>%1 pictures added</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="329"/>
+        <location filename="settingsdialog.cpp" line="332"/>
         <source>%1 Ordner</source>
         <translation>%1 folder</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="330"/>
+        <location filename="settingsdialog.cpp" line="333"/>
         <source>%1 Bilder</source>
         <translation>%1 pictures</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="342"/>
+        <location filename="settingsdialog.cpp" line="345"/>
         <source>keine Bilder gefunden</source>
         <translation>no pictures found</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="361"/>
+        <location filename="settingsdialog.cpp" line="364"/>
         <source>Hier weitere Bilder und/oder Ordner ablegen...</source>
         <translation>Drop more pictures and/or folders here...</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="739"/>
+        <location filename="settingsdialog.cpp" line="742"/>
         <source>Keine Bilder gefunden</source>
         <translation>No pictures found</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="739"/>
+        <location filename="settingsdialog.cpp" line="742"/>
         <source>Es wurden keine Bilder/Ordner abgelegt, oder keine unterstÃ¼tzten Bilder in den Ordnern gefunden!</source>
         <translation>There were no pictures/folders dropped, or no supported pictures found in the folders!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="776"/>
+        <location filename="settingsdialog.cpp" line="779"/>
         <source>Sammlung braucht einen Namen!</source>
         <translation>Collection needs a name!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="776"/>
+        <location filename="settingsdialog.cpp" line="779"/>
         <source>Es muss ein eindeutiger Name fÃ¼r die Sammlung festgelegt werden!</source>
         <translation>A unique name has to be chosen for the collection!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="787"/>
+        <location filename="settingsdialog.cpp" line="790"/>
         <source>Sammlung existiert bereits!</source>
         <translation>Collection already exists!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="787"/>
+        <location filename="settingsdialog.cpp" line="790"/>
         <source>Eine Sammlung mit dem Namen: &quot;%1&quot; existiert bereits! Soll die Sammlung Ã¼berschrieben werden?</source>
         <translation>A collection named &quot;%1&quot; already exists! Overwrite?</translation>
     </message>
@@ -529,13 +534,13 @@ wait...</translation>
         <translation type="obsolete">A collection with the name %1 already exists. Please choose another name!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="828"/>
-        <location filename="settingsdialog.cpp" line="853"/>
+        <location filename="settingsdialog.cpp" line="831"/>
+        <location filename="settingsdialog.cpp" line="856"/>
         <source>Sammlung: %1</source>
         <translation>Collection: %1</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="860"/>
+        <location filename="settingsdialog.cpp" line="863"/>
         <source>Sammlung ungÃ¼ltig!</source>
         <translation>Collection invalid!</translation>
     </message>
@@ -552,12 +557,12 @@ dropped</translation>
 found</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="733"/>
+        <location filename="settingsdialog.cpp" line="736"/>
         <source>Abgelegte Ordner werden durchsucht!</source>
         <translation>Dropped folders processed!</translation>
     </message>
     <message>
-        <location filename="settingsdialog.cpp" line="733"/>
+        <location filename="settingsdialog.cpp" line="736"/>
         <source>Die abgelegten Ordner und Bilder werden noch durchsucht. Einen Moment bitte noch.</source>
         <translation>The dropped folders and pictures are currently processed. Please wait a moment.</translation>
     </message>

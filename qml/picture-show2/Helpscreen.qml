@@ -48,6 +48,10 @@ Item {
         }
     }
 
+    function set_background_color(color) {
+        background.color = color;
+    }
+
     function get_opacity() {
         return help_screen.opacity
     }
