@@ -27,6 +27,7 @@ public:
 public slots:
     void hideCursorOnFullscreen();
     void showExpanded(bool fullscreen = false);
+    bool isExpanded();
     void setWindowProps(QPoint pos, QSize size);
     QPoint getLastWindowPosBeforeFullscreen();
     QSize getLastWindowSizeBeforeFullscreen();

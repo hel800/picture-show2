@@ -44,7 +44,7 @@ Supervisor::Supervisor(QObject *parent) :
 
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
-    m_quickView->engine()->setImportPathList(QStringList());
+//    m_quickView->engine()->setImportPathList(QStringList());
     m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
@@ -935,7 +935,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     case Qt::Key_F:
     case Qt::Key_F11:
         {
-            if (m_quickView->windowState() == Qt::WindowMaximized)
+        if (m_quickView->isExpanded())
             {
                 m_quickView->showExpanded(false);
 //                m_setDialog->setOnTopHint(false);
@@ -1097,7 +1097,7 @@ void Supervisor::mouseDoubleClickEvent ( QMouseEvent * event )
 
     m_mousePressTimer->stop();
 
-    if (m_quickView->windowState() == Qt::WindowMaximized)
+    if (m_quickView->isExpanded())
         m_quickView->showExpanded(false);
     else
         m_quickView->showExpanded(true);
