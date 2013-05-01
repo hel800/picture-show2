@@ -68,7 +68,7 @@ void QtQuick2ApplicationViewer::addImportPath(const QString &path)
 
 void QtQuick2ApplicationViewer::hideCursorOnFullscreen()
 {
-#if defined(_WIN32)
+#if defined(Q_OS_WIN32)
     if (this->windowState() == Qt::WindowMaximized)
         setCursor(Qt::BlankCursor);
 #else
@@ -79,7 +79,7 @@ void QtQuick2ApplicationViewer::hideCursorOnFullscreen()
 
 void QtQuick2ApplicationViewer::showExpanded(bool fullscreen)
 {
-#if defined(_WIN32)
+#if defined(Q_OS_WIN32)
     if (fullscreen)
     {
         this->positionBeforeFullscreen = this->position();
@@ -108,19 +108,19 @@ void QtQuick2ApplicationViewer::showExpanded(bool fullscreen)
     }
     else
     {
-//        this->setFlags(Qt::Window);
+        this->setFlags(Qt::Window);
         this->unsetCursor();
         this->showNormal();
 //        this->setIcon(QIcon(":/img/picture-show.ico"));
-        this->setPosition(this->positionBeforeFullscreen);
-        this->resize(this->sizeBeforeFullscreen);
+        //this->setPosition(this->positionBeforeFullscreen);
+        //this->resize(this->sizeBeforeFullscreen);
     }
 #endif
 }
 
 bool QtQuick2ApplicationViewer::isExpanded()
 {
-#if defined(_WIN32)
+#if defined(Q_OS_WIN32)
     return this->windowState() == Qt::WindowMaximized;
 #else
     return this->windowState() == Qt::WindowFullScreen;
@@ -158,7 +158,7 @@ void QtQuick2ApplicationViewer::mousePressEvent( QMouseEvent * event)
 
 void QtQuick2ApplicationViewer::mouseMoveEvent( QMouseEvent * event)
 {
-    if ((this->windowState() != Qt::WindowMaximized) && (event->buttons() & Qt::LeftButton))
+    if ((!this->isExpanded()) && (event->buttons() & Qt::LeftButton))
     {
         QPoint distance = this->lastMousePos - event->globalPos();
         this->setPosition(this->position() - distance);

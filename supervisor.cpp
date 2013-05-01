@@ -72,6 +72,9 @@ Supervisor::Supervisor(QObject *parent) :
     m_qml_ready = true;
 
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
+
+    std::cout << "fullScreen: " << m_setDialog->getFullScreen() << std::endl;
+
     m_quickView->setTitle("picture-show 2");
     m_quickView->showExpanded(m_setDialog->getFullScreen());
 
@@ -161,7 +164,7 @@ Supervisor::~Supervisor()
         return;
     }
 
-    if (m_quickView->windowState() == Qt::WindowMaximized)
+    if (m_quickView->isExpanded())
     {
         m_setDialog->setFullScreen(true);
         m_setDialog->setWindowPosition(m_quickView->getLastWindowPosBeforeFullscreen());
@@ -659,7 +662,7 @@ void Supervisor::jumtoPreviewReady()
 
 bool Supervisor::isFullscreen()
 {
-    return m_quickView->windowState() == Qt::WindowMaximized;
+    return m_quickView->isExpanded();
 }
 
 bool Supervisor::isInfoActive()
