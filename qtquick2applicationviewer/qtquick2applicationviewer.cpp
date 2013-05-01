@@ -111,7 +111,7 @@ void QtQuick2ApplicationViewer::showExpanded(bool fullscreen)
         this->setFlags(Qt::Window);
         this->unsetCursor();
         this->showNormal();
-//        this->setIcon(QIcon(":/img/picture-show.ico"));
+        this->setIcon(QIcon(":/img/picture-show.ico"));
         //this->setPosition(this->positionBeforeFullscreen);
         //this->resize(this->sizeBeforeFullscreen);
     }

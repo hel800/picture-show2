@@ -569,7 +569,8 @@ void SettingsDialog::updateLanguage()
     ui->retranslateUi(this);
     int currentIndex = ui->comboBox_directoryPath->currentIndex();
     this->loadSettings();
-    ui->comboBox_directoryPath->setCurrentIndex(currentIndex);
+    if (currentIndex != -1)
+        ui->comboBox_directoryPath->setCurrentIndex(currentIndex);
     this->languageChangeSignalOff = false;
 }
 

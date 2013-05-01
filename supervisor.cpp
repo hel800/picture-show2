@@ -72,9 +72,6 @@ Supervisor::Supervisor(QObject *parent) :
     m_qml_ready = true;
 
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
-
-    std::cout << "fullScreen: " << m_setDialog->getFullScreen() << std::endl;
-
     m_quickView->setTitle("picture-show 2");
     m_quickView->showExpanded(m_setDialog->getFullScreen());
 
@@ -284,11 +281,13 @@ void Supervisor::startDirectoryLoading(bool forceLargeData)
     if (m_setDialog->getOpenMode() == SettingsDialog::MODE_FOLDER)
     {
         m_dirLoader->setDirectory(m_setDialog->getCurrentDirectory());
+        m_dirLoader->setOpenModeToFolder();
     }
     else
     {
         m_dirLoader->setDirectory("");
         m_dirLoader->setDropList(m_setDialog->getDroppedItems());
+        m_dirLoader->setOpenModeToDropList();
     }
 
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());

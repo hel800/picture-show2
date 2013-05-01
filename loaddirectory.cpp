@@ -31,6 +31,8 @@ loadDirectory::loadDirectory() : QThread()
     this->m_subdirs = false;
     this->m_dropList = NULL;
     this->m_forcing_large_data = false;
+
+    this->m_openMode_drop = false;
 }
 
 void loadDirectory::setDirectory(const QString &path)
@@ -73,6 +75,16 @@ void loadDirectory::setIncludeSubdirs(bool sd)
     this->m_subdirs = sd;
 }
 
+void loadDirectory::setOpenModeToDropList()
+{
+    this->m_openMode_drop = true;
+}
+
+void loadDirectory::setOpenModeToFolder()
+{
+    this->m_openMode_drop = false;
+}
+
 void loadDirectory::setForceLargeData(bool state)
 {
     this->m_forcing_large_data = state;
@@ -97,7 +109,7 @@ void loadDirectory::run()
 
     QList<QString> tempList;
 
-    if (this->m_path == "")
+    if (this->m_openMode_drop)
     {
         if (this->m_dropList != NULL && this->m_dropList->isEmpty())
         {
