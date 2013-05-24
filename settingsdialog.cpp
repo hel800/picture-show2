@@ -224,6 +224,8 @@ void SettingsDialog::dropEvent( QDropEvent * event )
         return;
     }
 
+
+
     // empty
     if (url_list.size() == 0)
     {
