@@ -72,7 +72,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_qml_ready = true;
 
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
-    m_quickView->setTitle("picture-show 2");
+    m_quickView->setTitle("picture show 2");
     m_quickView->showExpanded(m_setDialog->getFullScreen());
 
 //    if (this->isFullscreen())

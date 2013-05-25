@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>picture-show2 - Hilfe</string>
+   <string>picture show 2 - Hilfe</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

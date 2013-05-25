@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     #endif
 
     QApplication app(argc, argv);
-    app.setApplicationName(QString("picture-show 2"));
+    app.setApplicationName(QString("picture show 2"));
     app.setApplicationVersion(appVersion);
 
     if (!QGLFormat::hasOpenGL())
