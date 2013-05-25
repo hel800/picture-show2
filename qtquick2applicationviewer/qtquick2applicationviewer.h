@@ -52,6 +52,9 @@ protected:
     void wheelEvent( QWheelEvent * event ) { emit mouseWheelTurned(event); }
     void resizeEvent(QResizeEvent *event);
 
+protected slots:
+    void windowStateEvent(Qt::WindowState windowState);
+
 private:
     class QtQuick2ApplicationViewerPrivate *d;
 
