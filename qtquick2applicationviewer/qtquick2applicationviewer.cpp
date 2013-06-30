@@ -179,7 +179,8 @@ void QtQuick2ApplicationViewer::mouseReleaseEvent( QMouseEvent * event)
 
 void QtQuick2ApplicationViewer::resizeEvent(QResizeEvent *event)
 {
-    emit windowResized(event); QQuickView::resizeEvent(event);
+    emit windowResized(event);
+    QQuickView::resizeEvent(event);
 }
 
 void QtQuick2ApplicationViewer::windowStateEvent(Qt::WindowState windowState)
