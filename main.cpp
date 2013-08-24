@@ -39,7 +39,11 @@ int main(int argc, char *argv[])
     QString appVersion = QString("2.03 beta ");
 
     #if defined (_MSC_VER)
-        #if _MSC_VER >= 1600
+        #if _MSC_VER >= 1800
+            appVersion += QString("(MSVC v12.0 ");
+        #elif _MSC_VER >= 1700
+            appVersion += QString("(MSVC v11.0 ");
+        #elif _MSC_VER >= 1600
             appVersion += QString("(MSVC v10.0 ");
         #elif _MSC_VER >= 1500
             appVersion += QString("(MSVC v9.0 ");
@@ -59,10 +63,12 @@ int main(int argc, char *argv[])
     #endif
 
     #if defined (_M_X64) || defined (__x86_64__)
-        appVersion += QString("x64)");
+        appVersion += QString("x64 ");
     #else
-        appVersion += QString("x86)");
+        appVersion += QString("x86 ");
     #endif
+
+    appVersion += QString("| Qt ") + QT_VERSION_STR + QString(")");
 
     QApplication app(argc, argv);
     app.setApplicationName(QString("picture show 2"));
