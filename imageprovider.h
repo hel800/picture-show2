@@ -37,6 +37,7 @@ class ImageProvider : public QQuickImageProvider
 
 public:
     explicit ImageProvider(QList<QFileInfo> * list, int * ind);
+    virtual ~ImageProvider();
 
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 

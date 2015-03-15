@@ -46,6 +46,11 @@ ImageProvider::ImageProvider(QList<QFileInfo> *list, int *ind)
     this->m_optimalScreenSize = QSize(2304, 1296);
 }
 
+ImageProvider::~ImageProvider()
+{
+
+}
+
 QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
     QPixmap pixmap;
@@ -236,6 +241,8 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
     QPixmap image(fname);
     QPixmap * new_pixmap;
 
+    double panorama_downscale = 0.7;  // his is necessary for older graphics cards because of limited video memory
+
     if (this->m_currentLoadingType == PERFORMANCE_OPTIMIZED)
     {
         new_pixmap = new QPixmap(image);
@@ -243,8 +250,8 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
     else
     {
         // panorama
-        if (image.width() > image.height() * 3 && image.height() > this->m_optimalScreenSize.height() * 0.8)
-            new_pixmap = new QPixmap(image.scaledToHeight(this->m_optimalScreenSize.height() * 0.8, Qt::SmoothTransformation));
+        if (image.width() > image.height() * 3 && image.height() > this->m_optimalScreenSize.height() * panorama_downscale)
+            new_pixmap = new QPixmap(image.scaledToHeight(this->m_optimalScreenSize.height() * panorama_downscale, Qt::SmoothTransformation));
         else if (image.height() > image.width() * 3 && image.width() > this->m_optimalScreenSize.width() * 0.8)
             new_pixmap = new QPixmap(image.scaledToWidth(this->m_optimalScreenSize.width() * 0.8, Qt::SmoothTransformation));
         else if (image.width() > image.height() && image.height() > this->m_optimalScreenSize.height())
@@ -257,6 +264,8 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
 
     if (new_pixmap->isNull())
         return;
+
+    //std::cout << new_pixmap->width() << " x " << new_pixmap->height() << " = " << new_pixmap->width() * new_pixmap->height() << std::endl;
 
     // read exif to cache and to get orientation information
     EXIFInfo exif = readExifHeader(fname);
