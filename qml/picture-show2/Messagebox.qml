@@ -21,8 +21,9 @@ February 2013
 
 --------------------------------------------------------------------*/
 
-import QtQuick 2.0
+import QtQuick 2.2
 import QtGraphicalEffects 1.0
+import QtQuick.Controls 1.2
 
 Item {
     id: message_screen_root
@@ -218,41 +219,70 @@ Item {
             onStatusChanged: if (image_jumpto.status === Image.Ready) _supervisor.imageLoadingFinished(source)
         }
 
-        Rectangle {
+        Button {
             id: button_first
             focus: false
             visible: false
 
-            color: focus ? "#666666" : "#333333"
-            border.color: focus ? "#cccccc" : "#00000000"
-            border.width: parent.width * 0.002
-            opacity: focus ? 0.8 : 0.6
-            radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
-
             width: parent.width * 0.2
             height: parent.width * 0.65 > parent.height ? parent.height / 12 : (parent.width * 0.65)  / 12;
+
 
             anchors.right: parent.right
             anchors.rightMargin: parent.width * 0.06
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -height * 0.7
 
-            Behavior on color {
-               ColorAnimation { duration: 500 }
-            }
-
-            Text {
-                id: button_first_text
-                font.pixelSize: parent.height / 2;
-                font.family: textFont.name
-                elide: Text.ElideRight
-                color: parent.focus ? "#EEEEEE" : "#AAAAAA"
-
-                anchors.centerIn: parent
-
-                text: ""
-            }
         }
+
+        Text {
+            id: button_first_text
+            font.pixelSize: parent.height / 2;
+            font.family: textFont.name
+            elide: Text.ElideRight
+            color: parent.focus ? "#EEEEEE" : "#AAAAAA"
+
+            anchors.centerIn: parent
+            visible: false
+
+            text: ""
+        }
+
+//        Rectangle {
+//            id: button_first
+//            focus: false
+//            visible: false
+
+//            color: focus ? "#666666" : "#333333"
+//            border.color: focus ? "#cccccc" : "#00000000"
+//            border.width: parent.width * 0.002
+//            opacity: focus ? 0.8 : 0.6
+//            radius: parent.width * 0.65 > parent.height ? parent.height / 24 : (parent.width * 0.65)  / 24;
+
+//            width: parent.width * 0.2
+//            height: parent.width * 0.65 > parent.height ? parent.height / 12 : (parent.width * 0.65)  / 12;
+
+//            anchors.right: parent.right
+//            anchors.rightMargin: parent.width * 0.06
+//            anchors.verticalCenter: parent.verticalCenter
+//            anchors.verticalCenterOffset: -height * 0.7
+
+//            Behavior on color {
+//               ColorAnimation { duration: 500 }
+//            }
+
+//            Text {
+//                id: button_first_text
+//                font.pixelSize: parent.height / 2;
+//                font.family: textFont.name
+//                elide: Text.ElideRight
+//                color: parent.focus ? "#EEEEEE" : "#AAAAAA"
+
+//                anchors.centerIn: parent
+
+//                text: ""
+//            }
+//        }
 
         Rectangle {
             id: button_second
@@ -279,20 +309,21 @@ Item {
                ColorAnimation { duration: 500 }
             }
 
-//            MouseArea {
-//                id: mouseArea2
-//                anchors.fill: parent
-//                hoverEnabled: true
+            MouseArea {
+                id: mouseArea2
+                anchors.fill: parent
+                hoverEnabled: true
+                enabled: parent.enabled
 
-//                acceptedButtons: Qt.AllButtons
+                acceptedButtons: Qt.AllButtons
 
-//                onPressed: {
-//                    console.log("entered")
+                onClicked: {
+                    console.log("toll")
 
 //                    if (mouse.button == Qt.LeftButton)
 //                        _supervisor.answerOfQuestion(1)
-//                }
-//            }
+                }
+            }
 
             Text {
                 id: button_second_text
