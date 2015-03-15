@@ -308,6 +308,10 @@ Item {
         }
     }
 
+    function set_background_color(color) {
+        background.color = color;
+    }
+
     function hide_message() {
         if (image_jumpto.opacity !== 0.0) {
             fade_jumpto_preview.stop()

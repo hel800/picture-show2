@@ -71,8 +71,19 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     ui->comboBox_directoryPath->setCurrentIndex(0);
 
+    // QSettings configuration for OS
+#if defined(Q_OS_WIN32)
     m_qSet_format = QSettings::IniFormat;
+#else
+    m_qSet_format = QSettings::NativeFormat;
+#endif
+
+#if defined(Q_OS_WIN32)
     m_qSet_scope = QSettings::SystemScope;
+#else
+    m_qSet_scope = QSettings::UserScope;
+#endif
+
     m_qSet_organization = "bsSoft";
     m_qSet_application = "picture-show2";
 }
@@ -212,6 +223,8 @@ void SettingsDialog::dropEvent( QDropEvent * event )
         this->m_dirListReader->cancel();
         return;
     }
+
+
 
     // empty
     if (url_list.size() == 0)
@@ -469,13 +482,13 @@ bool SettingsDialog::getDropListChanged()
 
 void SettingsDialog::setTimerValue(int value)
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("automaticTimerValue", QVariant(value));
 }
 
 int SettingsDialog::getTimerValue()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     int val = settings.value("automaticTimerValue", QVariant(false)).toInt();
 
     if (val < 4)
@@ -488,37 +501,37 @@ int SettingsDialog::getTimerValue()
 
 void SettingsDialog::setFullScreen(bool fullscreen)
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("fullscreenState", QVariant(fullscreen));
 }
 
 bool SettingsDialog::getFullScreen()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     return settings.value("fullscreenState", QVariant(false)).toBool();
 }
 
 void SettingsDialog::setWindowPosition(QPoint pos)
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("windowPos", QVariant(pos));
 }
 
 QPoint SettingsDialog::getWindowPosition()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     return settings.value("windowPos", QVariant(QPoint(50, 50))).toPoint();
 }
 
 void SettingsDialog::setFirstStart(bool state)
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("firstStart", QVariant(state));
 }
 
 bool SettingsDialog::getFirstStart()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     return settings.value("firstStart", QVariant(true)).toBool();
 }
 
@@ -541,13 +554,13 @@ size_t SettingsDialog::getMaxCacheSize()
 
 void SettingsDialog::setWindowSize(QSize size)
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("windowSize", QVariant(size));
 }
 
 QSize SettingsDialog::getWindowSize()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     return settings.value("windowSize", QVariant(QSize(850, 550))).toSize();
 }
 
@@ -558,13 +571,14 @@ void SettingsDialog::updateLanguage()
     ui->retranslateUi(this);
     int currentIndex = ui->comboBox_directoryPath->currentIndex();
     this->loadSettings();
-    ui->comboBox_directoryPath->setCurrentIndex(currentIndex);
+    if (currentIndex != -1)
+        ui->comboBox_directoryPath->setCurrentIndex(currentIndex);
     this->languageChangeSignalOff = false;
 }
 
 void SettingsDialog::updateHistory()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     QStringList history = settings.value("historyOfDirectories").toStringList();
 
     ui->comboBox_directoryPath->clear();
@@ -587,7 +601,7 @@ void SettingsDialog::addDirectoryToHistory(const QString & dir)
     if (!directory.isAbsolute() && !directory.exists())
         return;
 
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     QStringList history = settings.value("historyOfDirectories").toStringList();
 
     history.removeAll(newDir);
@@ -619,7 +633,7 @@ void SettingsDialog::on_pushButton_browse_clicked()
 
 void SettingsDialog::loadSettings()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     ui->comboBox_effect->setCurrentIndex(settings.value("effect", QVariant(1)).toInt());
     ui->comboBox_fadeTime->setCurrentIndex(settings.value("fadeTime", QVariant(1)).toInt());
     ui->comboBox_sort->setCurrentIndex(settings.value("sortOrder", QVariant(0)).toInt());
@@ -657,7 +671,7 @@ void SettingsDialog::loadSettings()
 
 void SettingsDialog::saveSettings()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("effect", QVariant(ui->comboBox_effect->currentIndex()));
     settings.setValue("fadeTime", QVariant(ui->comboBox_fadeTime->currentIndex()));
     settings.setValue("sortOrder", QVariant(ui->comboBox_sort->currentIndex()));
@@ -685,7 +699,7 @@ void SettingsDialog::on_comboBox_language_currentIndexChanged(int index)
 
 void SettingsDialog::on_pushButton_deleteHistory_clicked()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::SystemScope, "bsSoft", "picture-show2");
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     QStringList emptyHistory;
 
     settings.setValue("historyOfDirectories", QVariant(emptyHistory));

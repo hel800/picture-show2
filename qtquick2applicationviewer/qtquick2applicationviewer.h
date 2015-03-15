@@ -27,6 +27,7 @@ public:
 public slots:
     void hideCursorOnFullscreen();
     void showExpanded(bool fullscreen = false);
+    bool isExpanded();
     void setWindowProps(QPoint pos, QSize size);
     QPoint getLastWindowPosBeforeFullscreen();
     QSize getLastWindowSizeBeforeFullscreen();
@@ -49,7 +50,10 @@ protected:
     void mouseReleaseEvent( QMouseEvent * event);
     void mouseDoubleClickEvent( QMouseEvent * event) { emit mouseDoubleClicked(event); }
     void wheelEvent( QWheelEvent * event ) { emit mouseWheelTurned(event); }
-    void resizeEvent(QResizeEvent *event) { emit windowResized(event); QQuickView::resizeEvent(event); }
+    void resizeEvent(QResizeEvent *event);
+
+protected slots:
+    void windowStateEvent(Qt::WindowState windowState);
 
 private:
     class QtQuick2ApplicationViewerPrivate *d;

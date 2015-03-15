@@ -57,6 +57,9 @@ public:
     bool getIncludeSubdirs();
     void setIncludeSubdirs(bool sd);
 
+    void setOpenModeToDropList();
+    void setOpenModeToFolder();
+
     void setForceLargeData(bool state);
 
     QString& getErrorMsg();
@@ -76,6 +79,7 @@ private:
     QSet<QString> * m_dropList;
     QList<QFileInfo> * m_dirList;
 
+    bool m_openMode_drop;
     bool m_forcing_large_data;
     
 };

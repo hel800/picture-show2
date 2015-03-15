@@ -53,12 +53,27 @@ Rectangle {
 
         if (_settings_dialog.getBackgroundColorQml() === 0) {
             root.color = "#000000"
+            hp_screen.set_background_color("#000000")
+            message_box.set_background_color("#000000")
+            start_text.source = "qrc:///img/logoText.png"
         }
         else if (_settings_dialog.getBackgroundColorQml() === 1) {
             root.color = "#222222"
+            hp_screen.set_background_color("#222222")
+            message_box.set_background_color("#222222")
+            start_text.source = "qrc:///img/logoText.png"
+        }
+        else if (_settings_dialog.getBackgroundColorQml() === 2) {
+            root.color = "#555555"
+            hp_screen.set_background_color("#555555")
+            message_box.set_background_color("#555555")
+            start_text.source = "qrc:///img/logoText.png"
         }
         else {
-            root.color = "#555555"
+            root.color = "#FFFFFF"
+            hp_screen.set_background_color("#FFFFFF")
+            message_box.set_background_color("#FFFFFF")
+            start_text.source = "qrc:///img/logoText_black.png"
         }
     }
 
@@ -264,7 +279,7 @@ Rectangle {
         smooth: true
         scale: 0.0
 
-        NumberAnimation on opacity { to: 0.8; duration: 1000; easing.type: Easing.OutCubic }
+        NumberAnimation on opacity { to: 0.7; duration: 1000; easing.type: Easing.OutCubic }
         NumberAnimation on scale { to: 1.0; duration: 1000; easing.type: Easing.OutCubic }
         NumberAnimation on anchors.verticalCenterOffset { to: 200; duration: 1000; easing.type: Easing.OutCubic }
     }

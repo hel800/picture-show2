@@ -44,7 +44,7 @@ Supervisor::Supervisor(QObject *parent) :
 
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
-    m_quickView->engine()->setImportPathList(QStringList());
+//    m_quickView->engine()->setImportPathList(QStringList());
     m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
@@ -72,7 +72,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_qml_ready = true;
 
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
-    m_quickView->setTitle("picture-show 2");
+    m_quickView->setTitle("picture show 2");
     m_quickView->showExpanded(m_setDialog->getFullScreen());
 
 //    if (this->isFullscreen())
@@ -161,7 +161,7 @@ Supervisor::~Supervisor()
         return;
     }
 
-    if (m_quickView->windowState() == Qt::WindowMaximized)
+    if (m_quickView->isExpanded())
     {
         m_setDialog->setFullScreen(true);
         m_setDialog->setWindowPosition(m_quickView->getLastWindowPosBeforeFullscreen());
@@ -281,11 +281,13 @@ void Supervisor::startDirectoryLoading(bool forceLargeData)
     if (m_setDialog->getOpenMode() == SettingsDialog::MODE_FOLDER)
     {
         m_dirLoader->setDirectory(m_setDialog->getCurrentDirectory());
+        m_dirLoader->setOpenModeToFolder();
     }
     else
     {
         m_dirLoader->setDirectory("");
         m_dirLoader->setDropList(m_setDialog->getDroppedItems());
+        m_dirLoader->setOpenModeToDropList();
     }
 
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
@@ -659,7 +661,7 @@ void Supervisor::jumtoPreviewReady()
 
 bool Supervisor::isFullscreen()
 {
-    return m_quickView->windowState() == Qt::WindowMaximized;
+    return m_quickView->isExpanded();
 }
 
 bool Supervisor::isInfoActive()
@@ -935,7 +937,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     case Qt::Key_F:
     case Qt::Key_F11:
         {
-            if (m_quickView->windowState() == Qt::WindowMaximized)
+        if (m_quickView->isExpanded())
             {
                 m_quickView->showExpanded(false);
 //                m_setDialog->setOnTopHint(false);
@@ -1097,7 +1099,7 @@ void Supervisor::mouseDoubleClickEvent ( QMouseEvent * event )
 
     m_mousePressTimer->stop();
 
-    if (m_quickView->windowState() == Qt::WindowMaximized)
+    if (m_quickView->isExpanded())
         m_quickView->showExpanded(false);
     else
         m_quickView->showExpanded(true);

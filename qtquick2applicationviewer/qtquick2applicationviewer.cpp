@@ -45,6 +45,9 @@ QtQuick2ApplicationViewer::QtQuick2ApplicationViewer(QWindow *parent)
     connect(engine(), SIGNAL(quit()), SLOT(close()));
     setResizeMode(QQuickView::SizeRootObjectToView);
 
+    connect(this, SIGNAL(windowStateChanged(Qt::WindowState)), this, SLOT(windowStateEvent(Qt::WindowState)));
+    setFlags(Qt::WindowFullscreenButtonHint|Qt::Window);
+
     this->positionBeforeFullscreen = QPoint(50, 50);
     this->sizeBeforeFullscreen = QSize(850, 550);
 }
@@ -68,19 +71,18 @@ void QtQuick2ApplicationViewer::addImportPath(const QString &path)
 
 void QtQuick2ApplicationViewer::hideCursorOnFullscreen()
 {
-#if defined(Q_WS_SIMULATOR)
-
-#else
+#if defined(Q_OS_WIN32)
     if (this->windowState() == Qt::WindowMaximized)
+        setCursor(Qt::BlankCursor);
+#else
+    if (this->windowState() == Qt::WindowFullScreen)
         setCursor(Qt::BlankCursor);
 #endif
 }
 
 void QtQuick2ApplicationViewer::showExpanded(bool fullscreen)
 {
-#if defined(Q_WS_SIMULATOR)
-    showFullScreen();
-#else
+#if defined(Q_OS_WIN32)
     if (fullscreen)
     {
         this->positionBeforeFullscreen = this->position();
@@ -98,6 +100,33 @@ void QtQuick2ApplicationViewer::showExpanded(bool fullscreen)
         this->setPosition(this->positionBeforeFullscreen);
         this->resize(this->sizeBeforeFullscreen);
     }
+#else
+    if (fullscreen)
+    {
+        this->positionBeforeFullscreen = this->position();
+        this->sizeBeforeFullscreen = this->size();
+// this->setFlags(Qt::FramelessWindowHint | Qt::Window/* | Qt::WindowStaysOnTopHint*/);
+        this->showFullScreen();
+//        this->setCursor(Qt::BlankCursor);
+    }
+    else
+    {
+        //this->setFlags(Qt::Window);
+//        this->unsetCursor();
+        this->showNormal();
+        //this->setIcon(QIcon(":/img/picture-show.ico"));
+        //this->setPosition(this->positionBeforeFullscreen);
+        //this->resize(this->sizeBeforeFullscreen);
+    }
+#endif
+}
+
+bool QtQuick2ApplicationViewer::isExpanded()
+{
+#if defined(Q_OS_WIN32)
+    return this->windowState() == Qt::WindowMaximized;
+#else
+    return this->windowState() == Qt::WindowFullScreen;
 #endif
 }
 
@@ -132,7 +161,7 @@ void QtQuick2ApplicationViewer::mousePressEvent( QMouseEvent * event)
 
 void QtQuick2ApplicationViewer::mouseMoveEvent( QMouseEvent * event)
 {
-    if ((this->windowState() != Qt::WindowMaximized) && (event->buttons() & Qt::LeftButton))
+    if ((!this->isExpanded()) && (event->buttons() & Qt::LeftButton))
     {
         QPoint distance = this->lastMousePos - event->globalPos();
         this->setPosition(this->position() - distance);
@@ -148,5 +177,20 @@ void QtQuick2ApplicationViewer::mouseReleaseEvent( QMouseEvent * event)
     emit mouseReleased(event);
 }
 
+void QtQuick2ApplicationViewer::resizeEvent(QResizeEvent *event)
+{
+    emit windowResized(event);
+    QQuickView::resizeEvent(event);
+}
+
+void QtQuick2ApplicationViewer::windowStateEvent(Qt::WindowState windowState)
+{
+#if !defined(Q_OS_WIN32)
+    if (windowState == Qt::WindowFullScreen)
+        this->setCursor(Qt::BlankCursor);
+    else
+        this->unsetCursor();
+#endif
+}
 
 

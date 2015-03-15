@@ -42,55 +42,55 @@ void readDirList::run()
     filters2 << "*.tif" << "*.tiff" << "*.TIF" << "*.TIFF";
 
 
-    foreach(QUrl url, this->m_urlList)
-    {
-        QFileInfo url_path(url.toLocalFile());
-        if (url_path.isDir())
-        {
-            QDirIterator iterator(url_path.absoluteFilePath(), QDirIterator::Subdirectories);
-            while (iterator.hasNext())
-            {
-                iterator.next();
-                if (!iterator.fileInfo().isDir())
-                {
-                    if (filters.contains(iterator.fileInfo().suffix()))
-                        this->m_itemList.append(iterator.fileInfo());
-                }
-
-                if (this->cancel_operations)
-                {
-                    this->cancel_operations = false;
-                    this->success = false;
-                    return;
-                }
-            }
-        }
-    }
-
 //    foreach(QUrl url, this->m_urlList)
 //    {
 //        QFileInfo url_path(url.toLocalFile());
 //        if (url_path.isDir())
 //        {
-
-//            QDir current_dir(url_path.absoluteFilePath());
-//            this->addItemsInDir(&this->m_itemList, filters2, current_dir);
-//        }
-//        else if (url_path.isFile())
-//        {
-//            if (url_path.exists() && filters.contains(url_path.suffix()))
+//            QDirIterator iterator(url_path.absoluteFilePath(), QDirIterator::Subdirectories);
+//            while (iterator.hasNext())
 //            {
-//                this->m_itemList.append(url_path);
+//                iterator.next();
+//                if (!iterator.fileInfo().isDir())
+//                {
+//                    if (filters.contains(iterator.fileInfo().suffix()))
+//                        this->m_itemList.append(iterator.fileInfo());
+//                }
+
+//                if (this->cancel_operations)
+//                {
+//                    this->cancel_operations = false;
+//                    this->success = false;
+//                    return;
+//                }
 //            }
 //        }
 //    }
 
-//    if (this->cancel_operations)
-//    {
-//        this->cancel_operations = false;
-//        this->success = false;
-//        return;
-//    }
+    foreach(QUrl url, this->m_urlList)
+    {
+        QFileInfo url_path(url.toLocalFile());
+        if (url_path.isDir())
+        {
+
+            QDir current_dir(url_path.absoluteFilePath());
+            this->addItemsInDir(&this->m_itemList, filters2, current_dir);
+        }
+        else if (url_path.isFile())
+        {
+            if (url_path.exists() && filters.contains(url_path.suffix()))
+            {
+                this->m_itemList.append(url_path);
+            }
+        }
+    }
+
+    if (this->cancel_operations)
+    {
+        this->cancel_operations = false;
+        this->success = false;
+        return;
+    }
 
     this->success = true;
     emit listready();
