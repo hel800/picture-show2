@@ -181,7 +181,7 @@ Supervisor::~Supervisor()
     this->disconnect();
 
     delete m_inputMessageTimeout;
-    delete m_imgProvider;
+//    delete m_imgProvider;
     delete m_dirLoader;
     delete m_setDialog;
 }
@@ -1017,7 +1017,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                     {
                         m_automaticForwardActive = false;
                         m_automaticForward->stop();
-                        this->startInputMode(MODE_TIMER_OFF, 1500);
+                        //this->startInputMode(MODE_TIMER_OFF, 1500);
                     }
                 }
             }
