@@ -712,16 +712,16 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
     QString tag_string = tagname.toString();
 
     if (tag_string == "cameraMake")
-        return QVariant(exif.cameraMake_st);
+        return QVariant(QString::fromStdString(exif.Make));
     else if (tag_string == "fileName")
         return QVariant(m_current_directory_list.at(m_currentIndex).fileName());
     else if (tag_string == "cameraModel")
-        return QVariant(exif.cameraModel_st);
+        return QVariant(QString::fromStdString(exif.Model));
     else if (tag_string == "dateTimeModified")
-        return QVariant(exif.dateTimeModified_st);
+        return QVariant(QString::fromStdString(exif.DateTime));
     else if (tag_string == "dateTimeOriginal")
     {
-        QString dateTime = exif.dateTimeOriginal_st.trimmed();
+        QString dateTime = QString::fromStdString(exif.DateTimeOriginal).trimmed();
         QRegExp exp("^[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$");
         if (exp.exactMatch(dateTime))
         {
@@ -735,25 +735,29 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
     }
     else if (tag_string == "imgDescription")
     {
-        return QVariant(exif.imgDescription_st.trimmed());
+        return QVariant(QString::fromStdString(exif.ImageDescription).trimmed());
     }
     else if (tag_string == "exposureTime")
-        return QVariant(exif.exposureTime_st);
+        return QVariant(exif.ExposureTime);
     else if (tag_string == "resolutionAndSize")
     {
         QFileInfo info(current_file_name);
-        return QVariant(tr("%1  (%2 kB)").arg(exif.resolution_st).arg(info.size() / 1024));
+        QString res = QString::fromStdString(exif.Resolution);
+        return QVariant(tr("%1  (%2 kB)").arg(res).arg(info.size() / 1024));
     }
     else if (tag_string == "cameraModelMake")
     {
         QString cam = "";
-        if (!exif.cameraModel_st.isEmpty())
-            cam += exif.cameraModel_st;
-        else if (!exif.cameraMake_st.isEmpty())
-            cam += exif.cameraMake_st;
+        QString model = QString::fromStdString(exif.Model);
+        QString make = QString::fromStdString(exif.Make);
 
-        if (!exif.cameraModel_st.isEmpty() && !exif.cameraMake_st.isEmpty())
-            cam += " (" + exif.cameraMake_st + ")";
+        if (!model.isEmpty())
+            cam += model;
+        else if (!make.isEmpty())
+            cam += make;
+
+        if (!model.isEmpty() && !make.isEmpty())
+            cam += " (" + make + ")";
 
         return QVariant(cam);
     }
@@ -762,29 +766,29 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
         QString params = "";
         bool sep_needed = false;
 
-        if (exif.exposureTime > 0.5 && exif.exposureTime != 0.0)
+        if (exif.ExposureTime > 0.5 && exif.ExposureTime != 0.0)
         {
-            params += tr("%1 Sek  ").arg(QString::number(exif.exposureTime, 'f', 1));
+            params += tr("%1 Sek  ").arg(QString::number(exif.ExposureTime, 'f', 1));
             sep_needed = true;
         }
-        else if (exif.exposureTime <= 0.5 && exif.exposureTime != 0.0)
+        else if (exif.ExposureTime <= 0.5 && exif.ExposureTime != 0.0)
         {
-            double den = 1.0 / exif.exposureTime;
+            double den = 1.0 / exif.ExposureTime;
             params += tr("1/%1  Sek").arg(QString::number(int(den + .5)));
             sep_needed = true;
         }
 
-        if (exif.FStop != 0.0)
+        if (exif.FNumber != 0.0)
         {
             if (sep_needed) params += "   |   ";
-            params += tr("f/%1").arg(QString::number(exif.FStop, 'f', 1));
+            params += tr("f/%1").arg(QString::number(exif.FNumber, 'f', 1));
             sep_needed = true;
         }
 
-        if (exif.focalLength >= 1.0)
+        if (exif.FocalLength >= 1.0)
         {
             if (sep_needed) params += "   |   ";
-            params += tr("%1  mm").arg(QString::number(exif.focalLength, 'f', 0));
+            params += tr("%1  mm").arg(QString::number(exif.FocalLength, 'f', 0));
         }
 
         return QVariant(params);

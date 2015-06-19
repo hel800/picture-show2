@@ -62,15 +62,6 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     this->m_droppedItemsList = new QSet<QString>();
 
-    this->languageChangeSignalOff = true;
-    this->loadSettings();
-    this->languageChangeSignalOff = false;
-
-    if (ui->checkBox_updateNotification->isChecked())
-        this->m_networkManager->get(QNetworkRequest(QUrl("http://code.google.com/p/picture-show/")));
-
-    ui->comboBox_directoryPath->setCurrentIndex(0);
-
     // QSettings configuration for OS
 #if defined(Q_OS_WIN32)
     m_qSet_format = QSettings::IniFormat;
@@ -86,6 +77,16 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     m_qSet_organization = "bsSoft";
     m_qSet_application = "picture-show2";
+
+    this->languageChangeSignalOff = true;
+    this->loadSettings();
+    this->languageChangeSignalOff = false;
+
+    if (ui->checkBox_updateNotification->isChecked())
+        this->m_networkManager->get(QNetworkRequest(QUrl("http://code.google.com/p/picture-show/")));
+
+    ui->comboBox_directoryPath->setCurrentIndex(0);
+
 }
 
 SettingsDialog::~SettingsDialog()
@@ -714,7 +715,6 @@ void SettingsDialog::on_comboBox_effect_currentIndexChanged(int index)
     else
         ui->comboBox_fadeTime->setEnabled(true);
 }
-
 
 void SettingsDialog::on_pushButton_help_clicked()
 {
