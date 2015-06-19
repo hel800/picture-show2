@@ -319,7 +319,7 @@ Item {
         info_screen_info_image.scale = 1.0
         info_screen_leftGrid.opacity = 0.9
         info_screen_rightGrid.opacity = 0.9
-        info_screen_leftGrid_annotations = 0.9
+        info_screen_leftGrid_annotations.opacity = 0.9
     }
 
     function update_lang() {
