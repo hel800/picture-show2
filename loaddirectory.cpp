@@ -194,10 +194,13 @@ void loadDirectory::run()
     {
         QList< QPair<QFileInfo, QDateTime> > temp2list;
 
-        foreach(QString file, tempList)
+        for(const auto& file : tempList)
         {
             QFileInfo info(file);
             QDateTime date = readOriginalDate(info.absoluteFilePath());
+
+//            qDebug(date.toString("dd.MM.yyyy hh:mm").toStdString().c_str());
+
             QPair<QFileInfo, QDateTime> pair;
             pair.first = info;
             pair.second = date;

@@ -31,6 +31,7 @@ February 2013
 #include "exif.h"
 
 #include <iostream>
+#include <stdio.h>
 
 #include "iptcinfo.h"
 
@@ -41,69 +42,28 @@ static QDateTime readOriginalDate(const QString &fname)
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug("Can't read file");
-        qDebug(fname.toStdString().c_str());
         return originalDate;
     }
 
-    qint64 fsize = file.size();
-    qint64 cappedSize = 1500;
+    QByteArray rawBuffer = file.readAll();
+    const unsigned char * buf = (const unsigned char *) rawBuffer.constData();
+    size_t fsize = file.size();
+    file.close();
 
-    if (fsize < cappedSize)
-        cappedSize = fsize;
+    EXIFInfo result;
+    int code = result.parseFrom(buf, fsize);
 
-    unsigned char *buf = new unsigned char[cappedSize];
-
-    if (file.read((char*)buf, cappedSize) != cappedSize)
+    if (code)
     {
-        qDebug("Can't read file");
-        delete[] buf;
-        file.close();
+        qDebug("Error parsing EXIF!");
         return originalDate;
     }
 
-    QString date;
-    ExtractDateTime(buf, cappedSize, date);
-
+    QString date = QString::fromStdString(result.DateTimeOriginal);
     if(!date.isEmpty())
     {
         originalDate = QDateTime::fromString(date, QString("yyyy:MM:dd HH:mm:ss"));
     }
-    else
-    {
-       qDebug("CANNOT READ DATE!!!");
-       delete[] buf;
-
-       qint64 newCappedSize = 6000;
-
-       if (fsize < newCappedSize)
-           newCappedSize = fsize;
-
-       buf = new unsigned char[newCappedSize];
-
-       file.seek(0);
-       qint64 newSize = file.read((char*)buf, newCappedSize);
-        if (newSize != newCappedSize)
-        {
-            qDebug("Can't read file");
-            delete[] buf;
-            file.close();
-            return originalDate;
-        }
-
-        qDebug("Try to read Date with larger crop value!");
-
-        ExtractDateTime(buf, newCappedSize, date);
-        qDebug(fname.toStdString().c_str());
-
-        if(!date.isEmpty())
-            originalDate = QDateTime::fromString(date, QString("yyyy:MM:dd HH:mm:ss"));
-        else
-            qDebug("CANNOT READ DATE!!!");
-    }
-
-    delete[] buf;
-    file.close();
 
     return originalDate;
 }
@@ -115,56 +75,24 @@ static EXIFInfo readExifHeader(const QString &fname)
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug("Can't read file");
-        qDebug(fname.toStdString().c_str());
         return headerData;
     }
 
-    qint64 fsize = file.size();
-    qint64 cappedSize = 3000;
-    unsigned char * buf = new unsigned char[cappedSize];
+    QByteArray rawBuffer = file.readAll();
+    const unsigned char * buf = (const unsigned char *) rawBuffer.constData();
+    size_t fsize = file.size();
+    file.close();
 
-    file.seek(0);
-    qint64 newSize = file.read((char*)buf, cappedSize);
-    if (newSize != cappedSize)
+    int code = headerData.parseFrom(buf, fsize);
+
+    if (code)
     {
-        qDebug("Can't read file");
-        delete[] buf;
-        file.close();
-        return headerData;
+        qDebug("Error parsing EXIF!");
     }
 
-    int ret = ParseEXIF(buf, cappedSize, headerData);
-    QDateTime test = QDateTime::fromString(headerData.dateTimeOriginal_st, QString("yyyy:MM:dd HH:mm:ss"));
-
-    if (ret != 0 || !test.isValid())
-    {
-        qDebug("CANNOT READ EXIF --> second try");
-        delete[] buf;
-
-        buf = new unsigned char[fsize];
-
-        file.seek(0);
-        qint64 newSize = file.read((char*)buf, fsize);
-         if (newSize != fsize)
-         {
-             qDebug("Can't read file");
-             delete[] buf;
-             file.close();
-             return headerData;
-         }
-
-         qDebug("Try to read EXIF from whole file!");
-
-         int ret2 = ParseEXIF(buf, fsize, headerData);
-
-         if(ret2 != 0)
-             qDebug("CANNOT READ EXIF - final!!!");
-    }
-
-    headerData.cameraMake_st = headerData.cameraMake_st.trimmed();
-    headerData.cameraModel_st = headerData.cameraModel_st.trimmed();
-    headerData.imgDescription_st = headerData.imgDescription_st.trimmed();
+    headerData.Make = QString::fromStdString(headerData.Make).trimmed().toStdString();
+    headerData.Model = QString::fromStdString(headerData.Model).trimmed().toStdString();
+    headerData.ImageDescription = QString::fromStdString(headerData.ImageDescription).trimmed().toStdString();
 
     // If IPTC caption is not empty, copy it to exif class
     IPTCInfo iptc_class;
@@ -175,7 +103,7 @@ static EXIFInfo readExifHeader(const QString &fname)
         new_cap = QString::fromLatin1(iptc_class.m_Caption.c_str());
 
     if (!new_cap.isEmpty())
-        headerData.imgDescription_st = new_cap.trimmed();
+        headerData.ImageDescription = new_cap.trimmed().toStdString();
 
     return headerData;
 }

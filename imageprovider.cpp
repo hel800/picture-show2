@@ -260,17 +260,17 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
 
     // read exif to cache and to get orientation information
     EXIFInfo exif = readExifHeader(fname);
-    exif.resolution_st = QObject::tr("%1 x %2").arg(image.width()).arg(image.height());
+    exif.Resolution = QObject::tr("%1 x %2").arg(image.width()).arg(image.height()).toStdString();
 
     this->m_exifMap.insert(fname, exif);
 
     // adjust orientation and rotation of image
-    if (exif.orientation != 1)
+    if (exif.Orientation != 1)
     {
         QTransform trans;
         QImage newImage = new_pixmap->toImage();
 
-        switch (exif.orientation)
+        switch (exif.Orientation)
         {
         case 2:
             newImage = newImage.mirrored(true, false);
