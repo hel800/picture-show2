@@ -102,6 +102,9 @@ public:
     void setInfoBarActive(bool state);
     bool getInfoBarActive();
 
+    void setRatingFilterValue(QString rating);
+    QString getRatingFilterValue();
+
     size_t getMaxCacheSize();
 
     void updateLanguage();
@@ -146,6 +149,7 @@ private slots:
     void on_comboBox_scaling_currentIndexChanged(int index);
     void on_comboBox_bgColor_currentIndexChanged(int index);
     void on_comboBox_directoryPath_currentIndexChanged(int index);
+    void on_comboBox_rating_currentTextChanged(const QString & text);
     void on_pushButton_load_clicked();
     void on_pushButton_clearZone_clicked();
     void on_pushButton_saveColl_clicked();

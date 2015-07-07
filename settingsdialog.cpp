@@ -548,6 +548,19 @@ bool SettingsDialog::getInfoBarActive()
     return settings.value("infobarActive", QVariant(false)).toBool();
 }
 
+void SettingsDialog::setRatingFilterValue(QString rating)
+{
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+    settings.setValue("ratingFilter", QVariant(rating));
+
+    ui->comboBox_rating->setCurrentText(rating);
+}
+
+QString SettingsDialog::getRatingFilterValue()
+{
+    return ui->comboBox_rating->currentText();
+}
+
 size_t SettingsDialog::getMaxCacheSize()
 {
     return (size_t)ui->spinBox_cacheSize->value() * 1024 * 1024;
@@ -639,6 +652,7 @@ void SettingsDialog::loadSettings()
     ui->comboBox_fadeTime->setCurrentIndex(settings.value("fadeTime", QVariant(1)).toInt());
     ui->comboBox_sort->setCurrentIndex(settings.value("sortOrder", QVariant(0)).toInt());
     ui->comboBox_scaling->setCurrentIndex(settings.value("scaleType", QVariant(0)).toInt());
+    ui->comboBox_rating->setCurrentText(settings.value("ratingFilter", QVariant("alle")).toString());
 
     int languageID = settings.value("languageID", QVariant(-1)).toInt();
     if (languageID == -1)
@@ -677,6 +691,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("fadeTime", QVariant(ui->comboBox_fadeTime->currentIndex()));
     settings.setValue("sortOrder", QVariant(ui->comboBox_sort->currentIndex()));
     settings.setValue("scaleType", QVariant(ui->comboBox_scaling->currentIndex()));
+    settings.setValue("ratingFilter", QVariant(ui->comboBox_rating->currentText()));
     settings.setValue("languageID", QVariant(ui->comboBox_language->currentIndex()));
     settings.setValue("mouseControl", QVariant(ui->checkBox_mouseControl->isChecked()));
     settings.setValue("saveHistory", QVariant(ui->checkBox_historySave->isChecked()));
@@ -737,6 +752,11 @@ void SettingsDialog::on_comboBox_bgColor_currentIndexChanged(int index)
 }
 
 void SettingsDialog::on_comboBox_directoryPath_currentIndexChanged(int index)
+{
+
+}
+
+void SettingsDialog::on_comboBox_rating_currentTextChanged(const QString & text)
 {
 
 }

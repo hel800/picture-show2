@@ -217,8 +217,15 @@ void Supervisor::applyNewOptions()
         return;
     }
 
+    QString currentRatingFilter = QString::number(m_dirLoader->getRatingFilter());
+    if (currentRatingFilter == "-1")
+    {
+        currentRatingFilter = tr("alle");
+    }
+
     if ( (m_dirLoader->getSorting() != m_setDialog->getDirectorySorting()) ||
-         (m_dirLoader->getIncludeSubdirs() != m_setDialog->getIncludeSubdirs()) )
+         (m_dirLoader->getIncludeSubdirs() != m_setDialog->getIncludeSubdirs()) ||
+         (currentRatingFilter != m_setDialog->getRatingFilterValue()) )
     {
         // MESSAGE!!!
         QMessageBox msgBox(m_setDialog);
@@ -236,6 +243,12 @@ void Supervisor::applyNewOptions()
             // MESSAGE
             msgBox.setText(tr("Der Sortierungsmodus wurde geändert. Damit die neue Sortierung angewendet wird, muss die Show neu geladen werden. Sie startet neu von Beginn."));
             msgBox.setInformativeText(tr("\"Ja\" klicken, zum neustarten, \"Nein\" um alte Sortierung weiter zu verwenden."));
+        }
+        else if (currentRatingFilter != m_setDialog->getRatingFilterValue())
+        {
+            // MESSAGE
+            msgBox.setText(tr("Die Filterung nach Bewertung wurde geändert. Damit die neue Filterung angewendet wird, muss die Show neu geladen werden. Sie startet neu von Beginn."));
+            msgBox.setInformativeText(tr("\"Ja\" klicken, zum neustarten, \"Nein\" um alte Filterung weiter zu verwenden."));
         }
         else
         {
@@ -267,6 +280,7 @@ void Supervisor::applyNewOptions()
             m_setDialog->setDirectorySorting(m_dirLoader->getSorting());
             m_setDialog->setCurrentDirectory(m_dirLoader->getDirectory());
             m_setDialog->setIncludeSubdirs(m_dirLoader->getIncludeSubdirs());
+            m_setDialog->setRatingFilterValue(currentRatingFilter);
         }
     }
 }
@@ -292,6 +306,8 @@ void Supervisor::startDirectoryLoading(bool forceLargeData)
 
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
     m_dirLoader->setIncludeSubdirs(m_setDialog->getIncludeSubdirs());
+    m_dirLoader->setRatingFilter(m_setDialog->getRatingFilterValue().toShort());
+
     if (forceLargeData)
         m_dirLoader->setForceLargeData(true);
     else
