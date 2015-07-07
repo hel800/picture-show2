@@ -57,6 +57,9 @@ public:
     bool getIncludeSubdirs();
     void setIncludeSubdirs(bool sd);
 
+    void setRatingFilter(short rating);
+    short getRatingFilter();
+
     void setOpenModeToDropList();
     void setOpenModeToFolder();
 
@@ -75,6 +78,7 @@ private:
     Sorting m_sorting;
     QString m_path;
     bool m_subdirs;
+    short m_RatingFilter;
     QString m_error_msg;
     QSet<QString> * m_dropList;
     QList<QFileInfo> * m_dirList;

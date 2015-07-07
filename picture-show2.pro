@@ -46,7 +46,9 @@ SOURCES += main.cpp \
     exif.cpp \
     helpwindow.cpp \
     readdirlist.cpp \
-    loadcollectiondialog.cpp
+    loadcollectiondialog.cpp \
+    threadeddatereader.cpp \
+    xmpinfo.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
@@ -70,7 +72,9 @@ HEADERS += \
     exif.h \
     helpwindow.h \
     readdirlist.h \
-    loadcollectiondialog.h
+    loadcollectiondialog.h \
+    threadeddatereader.h \
+    xmpinfo.h
 
 FORMS += \
     settingsdialog.ui \

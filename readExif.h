@@ -45,18 +45,32 @@ static QDateTime readOriginalDate(const QString &fname)
         return originalDate;
     }
 
-    QByteArray rawBuffer = file.readAll();
+    QByteArray rawBuffer = file.read(100000);
     const unsigned char * buf = (const unsigned char *) rawBuffer.constData();
-    size_t fsize = file.size();
-    file.close();
+    unsigned fsize = rawBuffer.size();
 
     EXIFInfo result;
     int code = result.parseFrom(buf, fsize);
 
     if (code)
     {
-        qDebug("Error parsing EXIF!");
-        return originalDate;
+        qDebug("Exif parsing second try!");
+
+        file.reset();
+        rawBuffer = file.readAll();
+        buf = (const unsigned char *) rawBuffer.constData();
+        fsize = file.size();
+        file.close();
+
+        if (code)
+        {
+            qDebug("Exif parsing failed!");
+            return originalDate;
+        }
+    }
+    else
+    {
+        file.close();
     }
 
     QString date = QString::fromStdString(result.DateTimeOriginal);

@@ -22,13 +22,18 @@ March 2013
 --------------------------------------------------------------------*/
 
 #include "loaddirectory.h"
+#include "threadeddatereader.h"
+
+#include "xmpinfo.h"
 
 #include <time.h>
+#include <QThreadPool>
 
 loadDirectory::loadDirectory() : QThread()
 {
     this->m_dirList = NULL;
     this->m_subdirs = false;
+    this->m_RatingFilter = -1;
     this->m_dropList = NULL;
     this->m_forcing_large_data = false;
 
@@ -73,6 +78,16 @@ bool loadDirectory::getIncludeSubdirs()
 void loadDirectory::setIncludeSubdirs(bool sd)
 {
     this->m_subdirs = sd;
+}
+
+void loadDirectory::setRatingFilter(short rating)
+{
+    m_RatingFilter = rating;
+}
+
+short loadDirectory::getRatingFilter()
+{
+    return m_RatingFilter;
 }
 
 void loadDirectory::setOpenModeToDropList()
@@ -169,13 +184,36 @@ void loadDirectory::run()
         }
     }
 
+
+    // CHECK FOR RATING FILTER
+    if (m_RatingFilter > 1)
+    {
+        tempList.erase(
+            std::remove_if(tempList.begin(), tempList.end(),
+                [&](const QString & filename) {
+                    XMPInfo xmp;
+                    xmp.ParseImage(filename);
+                    return xmp.m_Rating < m_RatingFilter; }),
+            tempList.end());
+    }
+
+
+    // CHECK FOR ZERO IMAGES
     if (tempList.size() == 0)
     {
-        this->m_error_msg = tr("Das angegebene Verzeichnis enthält keine unterstützten Bilder");
+        QString ratingFilterAddon = "";
+        if (m_RatingFilter > 1)
+        {
+            ratingFilterAddon = tr(", eventuell muss die Einstellung des Bewertungsfilters überprüft werden");
+        }
+
+        this->m_error_msg = tr("Das angegebene Verzeichnis enthält keine unterstützten Bilder") + ratingFilterAddon;
         emit loadDirectoryFinished(false);
         return;
     }
 
+
+    // CHECK FOR TOO LARGE IMAGE LISTS
     if (!m_forcing_large_data && tempList.size() > LARGE_DATA)
     {
         this->m_error_msg = tr("LARGE_DATA");
@@ -190,6 +228,8 @@ void loadDirectory::run()
         return;
     }
 
+
+    // SORTING
     if (this->m_sorting == DATE_CREATED)
     {
         QList< QPair<QFileInfo, QDateTime> > temp2list;
@@ -198,14 +238,21 @@ void loadDirectory::run()
         {
             QFileInfo info(file);
             QDateTime date = readOriginalDate(info.absoluteFilePath());
-
 //            qDebug(date.toString("dd.MM.yyyy hh:mm").toStdString().c_str());
+
+//            QDateTime emptyDate;
 
             QPair<QFileInfo, QDateTime> pair;
             pair.first = info;
             pair.second = date;
             temp2list << pair;
+
+//            threadedDateReader *reader = new threadedDateReader();
+//            reader->setResultContainer(&temp2list.last());
+//            QThreadPool::globalInstance()->start(reader);
         }
+
+//        QThreadPool::globalInstance()->waitForDone();
 
         qSort(temp2list.begin(), temp2list.end(), fileCreateLessThan);
 
