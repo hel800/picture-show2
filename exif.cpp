@@ -454,8 +454,8 @@ int EXIFInfo::parseFrom(const unsigned char *buf, unsigned len) {
     return PARSE_EXIF_ERROR_NO_EXIF;
   if (buf[0] != 0xFF || buf[1] != 0xD8)
     return PARSE_EXIF_ERROR_NO_JPEG;
-  if (buf[len-2] != 0xFF || buf[len-1] != 0xD9)
-    return PARSE_EXIF_ERROR_NO_JPEG;
+//  if (buf[len-2] != 0xFF || buf[len-1] != 0xD9)
+//    return PARSE_EXIF_ERROR_NO_JPEG;
   clear();
 
   // Scan for EXIF header (bytes 0xFF 0xE1) and do a sanity check by
@@ -583,6 +583,12 @@ int EXIFInfo::parseFromEXIFSegment(const unsigned char *buf, unsigned len) {
         // Orientation of image
         if (result.format() == 3)
           this->Orientation = result.val_short().front();
+        break;
+
+      case 0x4746:
+        // Rating of image
+        if (result.format() == 3)
+          this->Rating = result.val_short().front();
         break;
 
       case 0x131:
@@ -846,6 +852,7 @@ void EXIFInfo::clear() {
   // Shorts / unsigned / double
   ByteAlign         = 0;
   Orientation       = 0;
+  Rating            = 0;
 
   BitsPerSample     = 0;
   ExposureTime      = 0;

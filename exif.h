@@ -82,6 +82,7 @@ class EXIFInfo {
                                     // 6: upper right of image
                                     // 8: lower left of image
                                     // 9: undefined
+  unsigned short Rating;            // Rating of image
   unsigned short BitsPerSample;     // Number of bits per component
   std::string Software;             // Software used
   std::string DateTime;             // File change date and time
