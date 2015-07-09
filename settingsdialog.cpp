@@ -83,7 +83,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->languageChangeSignalOff = false;
 
     if (ui->checkBox_updateNotification->isChecked())
-        this->m_networkManager->get(QNetworkRequest(QUrl("http://code.google.com/p/picture-show/")));
+        this->m_networkManager->get(QNetworkRequest(QUrl("http://hel800.github.io/picture-show2/")));
 
     ui->comboBox_directoryPath->setCurrentIndex(0);
 
@@ -298,7 +298,7 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
                 {
                     QString updateText = QString("<html><head/><body><p>");
                     updateText += tr("<b>Update verf&uuml;gbar: </b>");
-                    updateText += QString("<a href=\"https://code.google.com/p/picture-show/downloads/list\"><span style=\" text-decoration: underline; color:#0000ff;\">");
+                    updateText += QString("<a href=\"https://github.com/hel800/picture-show2/releases\"><span style=\" text-decoration: underline; color:#0000ff;\">");
                     updateText += tr("Version %1").arg(available_version);
                     updateText += QString("</span></a></p></body></html>");
 
@@ -548,17 +548,20 @@ bool SettingsDialog::getInfoBarActive()
     return settings.value("infobarActive", QVariant(false)).toBool();
 }
 
-void SettingsDialog::setRatingFilterValue(QString rating)
+void SettingsDialog::setRatingFilterValue(short rating)
 {
     QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     settings.setValue("ratingFilter", QVariant(rating));
 
-    ui->comboBox_rating->setCurrentText(rating);
+    if (rating < 0)
+        rating = 0;
+
+    ui->comboBox_rating->setCurrentIndex(rating);
 }
 
-QString SettingsDialog::getRatingFilterValue()
+short SettingsDialog::getRatingFilterValue()
 {
-    return ui->comboBox_rating->currentText();
+    return (short)ui->comboBox_rating->currentIndex();
 }
 
 size_t SettingsDialog::getMaxCacheSize()
@@ -652,7 +655,7 @@ void SettingsDialog::loadSettings()
     ui->comboBox_fadeTime->setCurrentIndex(settings.value("fadeTime", QVariant(1)).toInt());
     ui->comboBox_sort->setCurrentIndex(settings.value("sortOrder", QVariant(0)).toInt());
     ui->comboBox_scaling->setCurrentIndex(settings.value("scaleType", QVariant(0)).toInt());
-    ui->comboBox_rating->setCurrentText(settings.value("ratingFilter", QVariant("alle")).toString());
+    ui->comboBox_rating->setCurrentIndex(settings.value("ratingFilter", QVariant(0)).toInt());
 
     int languageID = settings.value("languageID", QVariant(-1)).toInt();
     if (languageID == -1)
@@ -691,7 +694,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("fadeTime", QVariant(ui->comboBox_fadeTime->currentIndex()));
     settings.setValue("sortOrder", QVariant(ui->comboBox_sort->currentIndex()));
     settings.setValue("scaleType", QVariant(ui->comboBox_scaling->currentIndex()));
-    settings.setValue("ratingFilter", QVariant(ui->comboBox_rating->currentText()));
+    settings.setValue("ratingFilter", QVariant(ui->comboBox_rating->currentIndex()));
     settings.setValue("languageID", QVariant(ui->comboBox_language->currentIndex()));
     settings.setValue("mouseControl", QVariant(ui->checkBox_mouseControl->isChecked()));
     settings.setValue("saveHistory", QVariant(ui->checkBox_historySave->isChecked()));

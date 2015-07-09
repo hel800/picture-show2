@@ -102,8 +102,8 @@ public:
     void setInfoBarActive(bool state);
     bool getInfoBarActive();
 
-    void setRatingFilterValue(QString rating);
-    QString getRatingFilterValue();
+    void setRatingFilterValue(short rating);
+    short getRatingFilterValue();
 
     size_t getMaxCacheSize();
 
