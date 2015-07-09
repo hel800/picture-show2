@@ -22,6 +22,7 @@ February 2013
 --------------------------------------------------------------------*/
 
 #include "supervisor.h"
+#include "xmpinfo.h"
 
 Supervisor::Supervisor(QObject *parent) :
     QObject(parent)
@@ -73,10 +74,11 @@ Supervisor::Supervisor(QObject *parent) :
 
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
     m_quickView->setTitle("picture show 2");
-    m_quickView->showExpanded(m_setDialog->getFullScreen());
 
-//    if (this->isFullscreen())
-//        m_setDialog->setOnTopHint(true);
+    m_quickView->showExpanded(false);
+
+    if (m_setDialog->getFullScreen())
+        m_quickView->showExpanded(true);
 
     this->moveOpenDialogToMiddle();
 
@@ -146,7 +148,7 @@ Supervisor::Supervisor(QObject *parent) :
     this->bindings();
 
     if (!m_setDialog->getFirstStart())
-        QTimer::singleShot(900, m_setDialog, SLOT(show()));
+        QTimer::singleShot(1000, m_setDialog, SLOT(show()));
     else
         QTimer::singleShot(900, this, SLOT(showHelpOverlay()));
 
@@ -217,11 +219,7 @@ void Supervisor::applyNewOptions()
         return;
     }
 
-    QString currentRatingFilter = QString::number(m_dirLoader->getRatingFilter());
-    if (currentRatingFilter == "-1")
-    {
-        currentRatingFilter = tr("alle");
-    }
+    short currentRatingFilter = m_dirLoader->getRatingFilter();
 
     if ( (m_dirLoader->getSorting() != m_setDialog->getDirectorySorting()) ||
          (m_dirLoader->getIncludeSubdirs() != m_setDialog->getIncludeSubdirs()) ||
@@ -306,7 +304,7 @@ void Supervisor::startDirectoryLoading(bool forceLargeData)
 
     m_dirLoader->setSorting(m_setDialog->getDirectorySorting());
     m_dirLoader->setIncludeSubdirs(m_setDialog->getIncludeSubdirs());
-    m_dirLoader->setRatingFilter(m_setDialog->getRatingFilterValue().toShort());
+    m_dirLoader->setRatingFilter(m_setDialog->getRatingFilterValue());
 
     if (forceLargeData)
         m_dirLoader->setForceLargeData(true);
@@ -809,6 +807,25 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
 
         return QVariant(params);
     }
+    else if (tag_string == "imgRating")
+    {
+        QString ratingStr = QString::number(exif.Rating);
+        if (ratingStr.isEmpty() || ratingStr == "0")
+        {
+            XMPInfo xmp;
+            xmp.ParseImage(current_file_name);
+            return QVariant(xmp.m_Rating);
+        }
+
+        bool ok = false;
+        short rating = ratingStr.toShort(&ok);
+
+        if (ok)
+            return QVariant(rating);
+        else
+            return QVariant(-1);
+
+    }
     else
         return QVariant("");
 }
@@ -855,7 +872,8 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     bool panoramaModeWasActive = false;
     if (m_panoramaModeActive &&
         event->key() != Qt::Key_Escape &&
-        event->key() != Qt::Key_I)
+        event->key() != Qt::Key_I  &&
+        event->key() != Qt::Key_P)
     {
         m_panoramaModeActive = false;
         emit stopPanorama();
@@ -895,6 +913,10 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             {
                 m_panoramaModeActive = false;
                 emit stopPanorama();
+                if (m_automaticForwardActive)
+                {
+                    m_automaticForward->start(m_timerValue * 1000);
+                }
             }
             else
             {
@@ -1026,6 +1048,10 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
                 {
                     m_panoramaModeActive = false;
                     emit stopPanorama();
+                    if (m_automaticForwardActive)
+                    {
+                        m_automaticForward->start(m_timerValue * 1000);
+                    }
                 }
                 else if (!this->anyBlendingsActive())
                 {
@@ -1035,9 +1061,9 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
 
                     if (m_automaticForwardActive)
                     {
-                        m_automaticForwardActive = false;
+                        //m_automaticForwardActive = false;
                         m_automaticForward->stop();
-                        this->startInputMode(MODE_TIMER_OFF, 1500);
+                        //this->startInputMode(MODE_TIMER_OFF, 1500);
                     }
                 }
             }
