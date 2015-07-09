@@ -212,15 +212,16 @@ Item {
         }
 
         Grid {
-            id: info_screen_rightGrid
+            id: info_screen_middleGrid
             height: parent.height - parent.height / 3
+            width: parent.width / 5
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: info_screen_leftGrid_annotations.anchors.verticalCenterOffset
             anchors.left: info_screen_info_image.right
             anchors.leftMargin: parent.width / 30
-            anchors.right: parent.right
-            anchors.rightMargin: parent.width / 30
-            columns: 2
+//            anchors.right: info_screen_rightGrid.right
+//            anchors.rightMargin: parent.width / 60
+            columns: 1
             rows: 2
             opacity: 0.9
             spacing: height / 15
@@ -233,15 +234,6 @@ Item {
                 color: "#888888"
                 opacity: 1.0
                 text: "Beschreibung:"
-            }
-            Text {
-                id: info_screen_anno_date
-                font.pixelSize: parent.height / 5.5
-                font.family: textFont.name
-                width: parent.width / 3
-                color: "#888888"
-                opacity: 1.0
-                text: "Datum:"
             }
 
             Text {
@@ -257,17 +249,99 @@ Item {
                 maximumLineCount: 2
             }
 
+
+        }
+
+        Grid {
+            id: info_screen_rightGrid
+            height: parent.height - parent.height / 3
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: info_screen_leftGrid_annotations.anchors.verticalCenterOffset
+            anchors.left: info_screen_middleGrid.right
+            anchors.leftMargin: parent.width / 60
+            anchors.right: parent.right
+            anchors.rightMargin: parent.width / 30
+            columns: 2
+            rows: 2
+            opacity: 0.9
+            spacing: height / 15
+
+            Text {
+                id: info_screen_anno_date
+                font.pixelSize: parent.height / 5.5
+                font.family: textFont.name
+                color: "#888888"
+                opacity: 1.0
+                text: "Datum:"
+            }
+
             Text {
                 id: info_screen_text_date
                 font.pixelSize: parent.height / 5
                 font.family: textFont.name
-                width: info_screen_anno_date.width
                 color: "#FFFFFF"
                 opacity: 1.0
                 text: ""
                 elide: Text.ElideRight
                 maximumLineCount: 1
             }
+
+            Text {
+                id: info_screen_anno_rating
+                font.pixelSize: parent.height / 5.5
+                font.family: textFont.name
+                color: "#888888"
+                opacity: 0.0
+                text: "Bewertung:"
+            }
+
+            Row {
+                id: info_screen_rating_stars_grid
+                opacity: 0.0
+                anchors.leftMargin: info_screen_anno_rating.height * 0.5
+                spacing: info_screen_anno_rating.height * 0.2
+
+                Image {
+                    id: info_screen_star1
+                    height: info_screen_anno_rating.height * 0.95
+                    fillMode: Image.PreserveAspectFit
+                    source: "qrc:///img/star.png"
+                    smooth: true
+                }
+
+                Image {
+                    id: info_screen_star2
+                    height: info_screen_anno_rating.height * 0.95
+                    fillMode: Image.PreserveAspectFit
+                    source: "qrc:///img/star.png"
+                    smooth: true
+                }
+
+                Image {
+                    id: info_screen_star3
+                    height: info_screen_anno_rating.height * 0.95
+                    fillMode: Image.PreserveAspectFit
+                    source: "qrc:///img/star.png"
+                    smooth: true
+                }
+
+                Image {
+                    id: info_screen_star4
+                    height: info_screen_anno_rating.height * 0.95
+                    fillMode: Image.PreserveAspectFit
+                    source: "qrc:///img/star.png"
+                    smooth: true
+                }
+
+                Image {
+                    id: info_screen_star5
+                    height: info_screen_anno_rating.height * 0.95
+                    fillMode: Image.PreserveAspectFit
+                    source: "qrc:///img/star.png"
+                    smooth: true
+                }
+            }
+
         }
     }
 
@@ -319,6 +393,7 @@ Item {
         info_screen_info_image.scale = 1.0
         info_screen_leftGrid.opacity = 0.9
         info_screen_rightGrid.opacity = 0.9
+        info_screen_middleGrid.opacity = 0.9
         info_screen_leftGrid_annotations.opacity = 0.9
     }
 
@@ -330,6 +405,7 @@ Item {
             info_screen_anno_description.text = "Description:"
             info_screen_anno_date.text = "Date:"
             info_screen_anno_camera.text = "Camera:"
+            info_screen_anno_rating.text = "Rating:"
         }
         else {
             info_screen_anno_fileName.text = "Dateiname:"
@@ -338,6 +414,7 @@ Item {
             info_screen_anno_description.text = "Beschreibung:"
             info_screen_anno_date.text = "Datum:"
             info_screen_anno_camera.text = "Kamera:"
+            info_screen_anno_rating.text = "Bewertung:"
         }
 
     }
@@ -359,6 +436,33 @@ Item {
 
         if (info_screen_text_date.text === "") info_screen_anno_date.opacity = 0.0;
         else info_screen_anno_date.opacity = 1.0;
+
+        var rating = _supervisor.getExifTagOfCurrent("imgRating")
+
+        if (rating >= 0) {
+            if (rating > 0) info_screen_star1.source = "qrc:///img/star.png"
+            else info_screen_star1.source = "qrc:///img/star_neq.png"
+
+            if (rating > 1) info_screen_star2.source = "qrc:///img/star.png"
+            else info_screen_star2.source = "qrc:///img/star_neq.png"
+
+            if (rating > 2) info_screen_star3.source = "qrc:///img/star.png"
+            else info_screen_star3.source = "qrc:///img/star_neq.png"
+
+            if (rating > 3) info_screen_star4.source = "qrc:///img/star.png"
+            else info_screen_star4.source = "qrc:///img/star_neq.png"
+
+            if (rating > 4) info_screen_star5.source = "qrc:///img/star.png"
+            else info_screen_star5.source = "qrc:///img/star_neq.png"
+
+            info_screen_anno_rating.opacity = 1.0
+            info_screen_rating_stars_grid.opacity = 0.7
+        }
+        else
+        {
+            info_screen_anno_rating.opacity = 0.0
+            info_screen_rating_stars_grid.opacity = 0.0
+        }
     }
 
     function update_fade(duration) {
@@ -399,6 +503,7 @@ Item {
             NumberAnimation { target: info_screen_imageNumber; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_rightGrid; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_middleGrid; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.0; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
 
@@ -409,6 +514,7 @@ Item {
             NumberAnimation { target: info_screen_info_image; easing.type: Easing.InOutQuad; properties: "scale"; to: 1.0; duration: transition_dummy.duration / 2.5 }
             NumberAnimation { target: info_screen_leftGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_rightGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
+            NumberAnimation { target: info_screen_middleGrid; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
             NumberAnimation { target: info_screen_leftGrid_annotations; properties: "opacity"; to: 0.9; duration: transition_dummy.duration / 2.5; easing.type: Easing.Linear }
         }
 
