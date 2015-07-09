@@ -26,6 +26,8 @@
         <file alias="wait.png">img/wait.png</file>
         <file alias="error_small.png">img/error_small.png</file>
         <file alias="logoText_black.png">img/logoText_black.png</file>
+        <file alias="star.png">img/star.png</file>
+        <file alias="star_neq.png">img/star_neg.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file alias="main.qml">qml/picture-show2/main.qml</file>
