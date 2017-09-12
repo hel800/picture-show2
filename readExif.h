@@ -82,6 +82,49 @@ static QDateTime readOriginalDate(const QString &fname)
     return originalDate;
 }
 
+static short readRating(const QString &fname)
+{
+    short rating = -1;
+
+    QFile file(fname);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        return rating;
+    }
+
+    QByteArray rawBuffer = file.read(100000);
+    const unsigned char * buf = (const unsigned char *) rawBuffer.constData();
+    unsigned fsize = rawBuffer.size();
+
+    EXIFInfo result;
+    int code = result.parseFrom(buf, fsize);
+
+    if (code)
+    {
+        qDebug("Exif parsing second try!");
+
+        file.reset();
+        rawBuffer = file.readAll();
+        buf = (const unsigned char *) rawBuffer.constData();
+        fsize = file.size();
+        file.close();
+
+        if (code)
+        {
+            qDebug("Exif parsing failed!");
+            return rating;
+        }
+    }
+    else
+    {
+        file.close();
+    }
+
+    rating = result.Rating;
+
+    return rating;
+}
+
 static EXIFInfo readExifHeader(const QString &fname)
 {
     EXIFInfo headerData;
