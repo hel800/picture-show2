@@ -46,7 +46,7 @@ ImageProvider::ImageProvider(QList<QFileInfo> *list, int *ind)
     this->m_optimalScreenSize = QSize(2304, 1296);
 }
 
-QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+QPixmap ImageProvider::requestPixmap(const QString &id, QSize* /*size*/, const QSize& /*requestedSize*/)
 {
     QPixmap pixmap;
     if (id == "current")

@@ -38,7 +38,7 @@ class ImageProvider : public QQuickImageProvider
 public:
     explicit ImageProvider(QList<QFileInfo> * list, int * ind);
 
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+    QPixmap requestPixmap(const QString &id, QSize *, const QSize &);
 
     void setLoadingPointers(ImageState * cur, ImageState * next, ImageState * prev, ImageState * jump);
     bool getJumpLoadingFinished();

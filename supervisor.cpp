@@ -1232,7 +1232,7 @@ void Supervisor::leftMousePress()
         this->prevImagePressed();
 }
 
-void Supervisor::resizeEvent( QResizeEvent * event )
+void Supervisor::resizeEvent( QResizeEvent* /*event*/ )
 {
     if (m_panoramaModeActive)
     {

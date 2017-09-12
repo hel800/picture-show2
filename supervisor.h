@@ -144,7 +144,7 @@ public slots:
     void mouseMoveEvent ( QMouseEvent * event );
     void mouseWheelEvent ( QWheelEvent * event );
     void leftMousePress ();
-    void resizeEvent( QResizeEvent * event );
+    void resizeEvent( QResizeEvent * );
 
 private slots:
     void startDirectoryLoading(bool forceLargeData = false);
