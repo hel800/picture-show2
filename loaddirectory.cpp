@@ -191,9 +191,8 @@ void loadDirectory::run()
         tempList.erase(
             std::remove_if(tempList.begin(), tempList.end(),
                 [&](const QString & filename) {
-                    XMPInfo xmp;
-                    xmp.ParseImage(filename);
-                    return xmp.m_Rating < m_RatingFilter; }),
+                    short rating = getRatingOfImage(filename);
+                    return rating < m_RatingFilter; }),
             tempList.end());
     }
 
@@ -295,6 +294,22 @@ void loadDirectory::addItemsInDir(QList<QString> &t_list, QStringList t_filters,
     QList<QFileInfo> f_info_list = t_directory.entryInfoList(t_filters, QDir::Files, QDir::Name | QDir::IgnoreCase);
     foreach (QFileInfo inf, f_info_list)
         t_list.append(inf.absoluteFilePath());
+}
+
+short loadDirectory::getRatingOfImage(const QString & filename)
+{
+    // first check xmp
+    XMPInfo xmp;
+    xmp.ParseImage(filename);
+    short rating = xmp.m_Rating;
+
+    // fallback to exif rating
+    if ( rating == -1 )
+    {
+        rating = readRating(filename);
+    }
+
+    return rating;
 }
 
 bool fileCreateLessThan(const QPair<QFileInfo, QDateTime> &f1, const QPair<QFileInfo, QDateTime> &f2)

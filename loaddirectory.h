@@ -74,6 +74,7 @@ signals:
 
 private:
     void addItemsInDir(QList<QString> &t_list, QStringList t_filters, QDir t_directory);
+    short getRatingOfImage(const QString & filename);
 
     Sorting m_sorting;
     QString m_path;
