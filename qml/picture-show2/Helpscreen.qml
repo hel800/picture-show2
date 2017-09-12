@@ -65,7 +65,7 @@ Item {
 
             help_screen_title_text.text = "Kurzhilfe"
             help_screen_handbook.text = "Handbuch anzeigen"
-            help_screen_info_text1.text = "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version 5). \n\n2015 by Sebastian Schäfer / web: http://hel800.github.io/picture-show2/"
+            help_screen_info_text1.text = "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version 5). \n\n2017 by Sebastian Schäfer -- web: http://hel800.github.io/picture-show2/"
 
         }
         else {
@@ -76,7 +76,7 @@ Item {
 
             help_screen_title_text.text = "Quick Help"
             help_screen_handbook.text = "Show Handbook"
-            help_screen_info_text1.text = "This application is published under the GPL v3 licence. It can be used and modified freely, but has to be remain published under the GPL at all times. The Qt Framework (version 5) is used. \n\n2015 by Sebastian Schäfer / web: http://hel800.github.io/picture-show2/"
+            help_screen_info_text1.text = "This application is published under the GPL v3 licence. It can be used and modified freely, but has to be remain published under the GPL at all times. The Qt Framework (version 5) is used. \n\n2017 by Sebastian Schäfer -- web: http://hel800.github.io/picture-show2/"
         }
     }
 
@@ -235,7 +235,7 @@ Item {
                 anchors.right: parent.right
                 smooth: true;
                 wrapMode: Text.Wrap
-                text: "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version %1). \n\n2012 by Sebastian Schäfer / web: http://code.google.com/p/picture-show/"
+                text: "Dieses Programm unterliegt der GPL v3 Lizenz. Es kann frei verwendet und verändert werden, muss allerdings stets unter GPL Lizenz veröffentlicht werden. Es verwendet das Qt Framework (version 5). \n\n2017 by Sebastian Schäfer -- web: http://hel800.github.io/picture-show2/"
             }
         }
     }
