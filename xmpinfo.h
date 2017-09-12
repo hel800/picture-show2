@@ -46,7 +46,7 @@ protected:
     std::string m_LastError;
 
     long GetXMPHeaderStartPosition(const QByteArray &buffer);
-    long GetXMPHeaderEndPosition(const QByteArray &buffer);
+    long GetXMPHeaderEndPosition(const QByteArray &buffer, long start);
 
     QString GetDescriptionValueFromXML(const QString xml, const QString tag);
 

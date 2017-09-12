@@ -63,24 +63,19 @@ bool XMPInfo::ParseImage(const QString & filename)
         file.close();
     }
 
-    long headerEnd = GetXMPHeaderEndPosition(rawBuffer);
+    long headerEnd = GetXMPHeaderEndPosition(rawBuffer, headerOffset);
     if (headerEnd == -1)
     {
         m_LastError = "No XMP Information found!";
         return false;
     }
 
-    unsigned short headerSize = headerEnd - headerOffset;
-
-    QString extractedHeaderString;
-    extractedHeaderString = QString::fromLatin1(rawBuffer.mid(
-                                                headerOffset,
-                                                29));
+    unsigned short headerSize = (headerEnd + 1) - headerOffset;
 
     QString xmlHeader;
     xmlHeader = QString::fromLatin1(rawBuffer.mid(
-                                    headerOffset + 29,
-                                    headerSize - 29));
+                                    headerOffset,
+                                    headerSize ));
 
     QString rating = GetDescriptionValueFromXML(xmlHeader, "xmp:Rating");
 
@@ -93,7 +88,6 @@ bool XMPInfo::ParseImage(const QString & filename)
     }
 
     return true;
-
 }
 
 std::string XMPInfo::GetError()
@@ -103,24 +97,28 @@ std::string XMPInfo::GetError()
 
 long XMPInfo::GetXMPHeaderStartPosition(const QByteArray & buffer)
 {
-    unsigned offs  = 0;    // current offset into buffer
+    long offs  = 0;    // current offset into buffer
 
-    for(offs = 0; offs < buffer.size() - 3; offs++)
-      if(buffer[offs] == '\x68' && buffer[offs+1] == '\x74'
-        && buffer[offs+2] == '\x74' && buffer[offs+3] == '\x70')
-        break;
+    for(offs = 0; offs < buffer.size() - 10; offs++)
+        if(buffer[offs] == '\x3c'
+          && buffer[offs+1] == '\x78' && buffer[offs+2] == '\x3a'
+          && buffer[offs+3] == '\x78' && buffer[offs+4] == '\x6d'
+          && buffer[offs+5] == '\x70' && buffer[offs+6] == '\x6d'
+          && buffer[offs+7] == '\x65' && buffer[offs+8] == '\x74'
+          && buffer[offs+9] == '\x61' && buffer[offs+10] == '\x20')
+          break;
 
-    if(offs >= buffer.size() - 3)
+    if(offs >= buffer.size() - 10)
       return -1;
 
     return offs;
 }
 
-long XMPInfo::GetXMPHeaderEndPosition(const QByteArray & buffer)
+long XMPInfo::GetXMPHeaderEndPosition(const QByteArray & buffer, long start)
 {
-    unsigned offs  = 0;    // current offset into buffer
+    long offs = start;
 
-    for(offs = 0; offs < buffer.size() - 11; offs++)
+    for(offs = start; offs < buffer.size() - 11; offs++)
       if(buffer[offs] == '\x3c' && buffer[offs+1] == '\x2f'
         && buffer[offs+2] == '\x78' && buffer[offs+3] == '\x3a'
         && buffer[offs+4] == '\x78' && buffer[offs+5] == '\x6d'
@@ -128,6 +126,8 @@ long XMPInfo::GetXMPHeaderEndPosition(const QByteArray & buffer)
         && buffer[offs+8] == '\x65' && buffer[offs+9] == '\x74'
         && buffer[offs+10] == '\x61' && buffer[offs+11] == '\x3e')
         break;
+
+    offs += 11;
 
     if(offs >= buffer.size() - 11)
       return -1;
@@ -137,10 +137,8 @@ long XMPInfo::GetXMPHeaderEndPosition(const QByteArray & buffer)
 
 QString XMPInfo::GetDescriptionValueFromXML(const QString xml, const QString tag)
 {
-
     QRegExp rx(tag + "=\"(\\d)\"", Qt::CaseInsensitive);
-
-    int pos = rx.indexIn(xml);
+    rx.indexIn(xml);
     QStringList capturedValues = rx.capturedTexts();
 
     if (capturedValues.size() != 2)
@@ -150,19 +148,4 @@ QString XMPInfo::GetDescriptionValueFromXML(const QString xml, const QString tag
     }
 
     return QString(capturedValues.last());
-//    QXmlStreamReader parser(xml);
-
-//    while (!parser.atEnd())
-//    {
-//        if (parser.readNextStartElement() && parser.name() == "rdf:Description")
-//        {
-//            xmp:Rating
-//        }
-
-//        if (parser.hasError())
-//        {
-//            m_LastError = "XML parse error!";
-//            return QVariant();
-//        }
-//    }
 }
