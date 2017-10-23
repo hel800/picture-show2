@@ -24,7 +24,7 @@ public:
     QList<QUrl> getSelectedCollection(QString &col_name);
 
 private slots:
-    void on_listWidget_doubleClicked(const QModelIndex &index);
+    void on_listWidget_doubleClicked(const QModelIndex &/*index*/);
 
     void on_pushButton_deleteColl_clicked();
 
