@@ -707,7 +707,7 @@ void SettingsDialog::saveSettings()
     settings.setValue("openTabIndex", QVariant(ui->tabWidget_open->currentIndex()));
 }
 
-void SettingsDialog::on_comboBox_language_currentIndexChanged(int index)
+void SettingsDialog::on_comboBox_language_currentIndexChanged(int /*index*/)
 {
     if (!this->languageChangeSignalOff)
     {
@@ -744,22 +744,22 @@ void SettingsDialog::on_pushButton_help_clicked()
     this->m_helpWindow->exec();
 }
 
-void SettingsDialog::on_comboBox_scaling_currentIndexChanged(int index)
+void SettingsDialog::on_comboBox_scaling_currentIndexChanged(int /*index*/)
 {
     emit propertiesChanged();
 }
 
-void SettingsDialog::on_comboBox_bgColor_currentIndexChanged(int index)
+void SettingsDialog::on_comboBox_bgColor_currentIndexChanged(int /*index*/)
 {
     emit propertiesChanged();
 }
 
-void SettingsDialog::on_comboBox_directoryPath_currentIndexChanged(int index)
+void SettingsDialog::on_comboBox_directoryPath_currentIndexChanged(int /*index*/)
 {
 
 }
 
-void SettingsDialog::on_comboBox_rating_currentTextChanged(const QString & text)
+void SettingsDialog::on_comboBox_rating_currentTextChanged(const QString & /*text*/)
 {
 
 }

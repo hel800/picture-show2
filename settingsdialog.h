@@ -142,14 +142,14 @@ private slots:
     void readDirListCanceled();
 
     void on_pushButton_browse_clicked();
-    void on_comboBox_language_currentIndexChanged(int index);
+    void on_comboBox_language_currentIndexChanged(int /*index*/);
     void on_pushButton_deleteHistory_clicked();
     void on_comboBox_effect_currentIndexChanged(int index);
     void on_pushButton_help_clicked();
-    void on_comboBox_scaling_currentIndexChanged(int index);
-    void on_comboBox_bgColor_currentIndexChanged(int index);
-    void on_comboBox_directoryPath_currentIndexChanged(int index);
-    void on_comboBox_rating_currentTextChanged(const QString & text);
+    void on_comboBox_scaling_currentIndexChanged(int /*index*/);
+    void on_comboBox_bgColor_currentIndexChanged(int /*index*/);
+    void on_comboBox_directoryPath_currentIndexChanged(int /*index*/);
+    void on_comboBox_rating_currentTextChanged(const QString & /*text*/);
     void on_pushButton_load_clicked();
     void on_pushButton_clearZone_clicked();
     void on_pushButton_saveColl_clicked();

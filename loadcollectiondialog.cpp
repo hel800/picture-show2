@@ -94,7 +94,7 @@ QList<QUrl> LoadCollectionDialog::getSelectedCollection(QString & col_name)
     return QList<QUrl>();
 }
 
-void LoadCollectionDialog::on_listWidget_doubleClicked(const QModelIndex &index)
+void LoadCollectionDialog::on_listWidget_doubleClicked(const QModelIndex &/*index*/)
 {
      this->accept();
 }

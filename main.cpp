@@ -39,14 +39,18 @@ int main(int argc, char *argv[])
     QString appVersion = QString("2.2 beta ");
 
     #if defined (_MSC_VER)
-        #if _MSC_VER >= 1800
-            appVersion += QString("(MSVC v12.0 ");
+        #if _MSC_VER >= 1900
+            appVersion += QString("(MSVC v14.1 (VS2017) ");
+        #elif _MSC_VER >= 1900
+            appVersion += QString("(MSVC v14.0 (VS2015) ");
+        #elif _MSC_VER >= 1800
+            appVersion += QString("(MSVC v12.0 (VS2013) ");
         #elif _MSC_VER >= 1700
-            appVersion += QString("(MSVC v11.0 ");
+            appVersion += QString("(MSVC v11.0 (VS2012) ");
         #elif _MSC_VER >= 1600
-            appVersion += QString("(MSVC v10.0 ");
+            appVersion += QString("(MSVC v10.0 (VS2010) ");
         #elif _MSC_VER >= 1500
-            appVersion += QString("(MSVC v9.0 ");
+            appVersion += QString("(MSVC v9.0 (VS2008) ");
         #else
             appVersion += QString("(MSVC < 9.0 ");
         #endif
