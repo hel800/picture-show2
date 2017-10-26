@@ -42,7 +42,7 @@ IPTCInfo::~IPTCInfo()
 
 }
 
-int IPTCInfo::OpenFile(const std::string filename)
+int IPTCInfo::OpenFile(const std::string& filename)
 {
     char * buffer = new char[30];	//dummy buffer
     qint64 bytesread = 0;
@@ -58,6 +58,7 @@ int IPTCInfo::OpenFile(const std::string filename)
     {
         qDebug("Can't read file");
         qDebug(filename.c_str());
+        delete[] buffer;
         return 0;
     }
 
@@ -66,6 +67,7 @@ int IPTCInfo::OpenFile(const std::string filename)
     {
         file.close();
         qDebug("File to small --> no image!");
+        delete[] buffer;
         return 0;
     }
 
@@ -92,6 +94,7 @@ int IPTCInfo::OpenFile(const std::string filename)
         free(file_buffer);
         file.close();
         qDebug("Error when reading whole file!");
+        delete[] buffer;
         return 0;
     }
 
@@ -135,7 +138,7 @@ int IPTCInfo::OpenFile(const std::string filename)
 
     free(file_buffer);
     file.close();
-
+    delete[] buffer;
     return 1;
 }
 
@@ -208,7 +211,7 @@ unsigned char* IPTCInfo::GetIPTCHeader(unsigned char* buffer, const char* type, 
 
 void IPTCInfo::ParseHeader(unsigned char *buffer)
 {
-    unsigned long ret,pos = 0,len = 0;	//first two bytes are size info
+    unsigned long pos = 0,len = 0;	//first two bytes are size info
     char type;
     std::string cnt;
 
@@ -217,7 +220,7 @@ void IPTCInfo::ParseHeader(unsigned char *buffer)
 
     while(pos < len)
     {
-        ret = GetNextHeaderInfo(buffer+pos,&type,cnt);
+        unsigned long ret = GetNextHeaderInfo(buffer+pos,&type,cnt);
         if(ret == 0)
             return;
 

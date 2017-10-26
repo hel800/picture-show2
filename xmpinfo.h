@@ -40,9 +40,6 @@ public:
     std::string GetError();
 
 protected:
-    long m_AppHeaderLength;
-    long m_AppHeaderStart;
-
     std::string m_LastError;
 
     long GetXMPHeaderStartPosition(const QByteArray &buffer);

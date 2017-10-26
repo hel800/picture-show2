@@ -16,7 +16,6 @@ public:
 
 private:
     QPair<QFileInfo, QDateTime> * m_Container;
-    int m_Pos;
 
 };
 

@@ -31,6 +31,7 @@ March 2013
 
 loadDirectory::loadDirectory() : QThread()
 {
+    this->m_sorting=DATE_CREATED;
     this->m_dirList = NULL;
     this->m_subdirs = false;
     this->m_RatingFilter = -1;

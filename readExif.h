@@ -54,19 +54,9 @@ static QDateTime readOriginalDate(const QString &fname)
 
     if (code)
     {
-        qDebug("Exif parsing second try!");
-
-        file.reset();
-        rawBuffer = file.readAll();
-        buf = (const unsigned char *) rawBuffer.constData();
-        fsize = file.size();
         file.close();
-
-        if (code)
-        {
-            qDebug("Exif parsing failed!");
-            return originalDate;
-        }
+        qDebug("Exif parsing failed!");
+        return originalDate;
     }
     else
     {
@@ -101,19 +91,9 @@ static short readRating(const QString &fname)
 
     if (code)
     {
-        qDebug("Exif parsing second try!");
-
-        file.reset();
-        rawBuffer = file.readAll();
-        buf = (const unsigned char *) rawBuffer.constData();
-        fsize = file.size();
         file.close();
-
-        if (code)
-        {
-            qDebug("Exif parsing failed!");
-            return rating;
-        }
+        qDebug("Exif parsing failed!");
+        return rating;
     }
     else
     {
@@ -137,7 +117,7 @@ static EXIFInfo readExifHeader(const QString &fname)
 
     QByteArray rawBuffer = file.readAll();
     const unsigned char * buf = (const unsigned char *) rawBuffer.constData();
-    size_t fsize = file.size();
+    unsigned int fsize = static_cast<unsigned int>(file.size());
     file.close();
 
     int code = headerData.parseFrom(buf, fsize);
