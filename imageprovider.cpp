@@ -170,11 +170,6 @@ void ImageProvider::setLoadingPointers(ImageState *cur, ImageState *next, ImageS
      this->m_loadingJumpto = jump;
 }
 
-bool ImageProvider::getJumpLoadingFinished()
-{
-    return (this->m_loadingJumpCounter == 0);
-}
-
 void ImageProvider::setCacheSize(size_t bytes)
 {
     this->m_maxCacheSize = bytes;
@@ -298,7 +293,6 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
         }
 
         delete new_pixmap;
-        new_pixmap = NULL;
         new_pixmap = new QPixmap(QPixmap::fromImage(newImage.transformed(trans)));
     }
 

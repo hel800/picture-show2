@@ -47,7 +47,6 @@ bool XMPInfo::ParseImage(const QString & filename)
 
         file.reset();
         rawBuffer = file.readAll();
-        fsize = rawBuffer.size();
         file.close();
 
         headerOffset = GetXMPHeaderStartPosition(rawBuffer);

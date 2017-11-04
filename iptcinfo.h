@@ -60,7 +60,7 @@ public:
     std::string m_CopyrightNotice;
 
 //    int SaveHeaders(const std::string filename);
-    int OpenFile(const std::string filename);
+    int OpenFile(const std::string& filename);
     IPTCInfo();
     virtual ~IPTCInfo();
 
