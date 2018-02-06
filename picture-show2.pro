@@ -81,3 +81,6 @@ FORMS += \
     helpwindow.ui \
     savecolldialog.ui \
     loadcollectiondialog.ui
+
+target.path = /home/pi
+INSTALLS += target

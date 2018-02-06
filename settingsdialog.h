@@ -110,6 +110,9 @@ public:
     void updateLanguage();
     void updateHistory();
 
+    void open() override;
+    int exec() override;
+
     void addDirectoryToHistory(const QString & dir);
 
 public slots:

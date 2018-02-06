@@ -25,6 +25,7 @@ February 2013
 #include "ui_settingsdialog.h"
 
 #include <iostream>
+#include <QDebug>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -108,6 +109,7 @@ void SettingsDialog::setOnTopHint(bool state)
 
 SettingsDialog::OpenMode SettingsDialog::getOpenMode()
 {
+    return MODE_FOLDER;
     if (ui->tabWidget_open->currentIndex() == 1)
         return MODE_DROPLIST;
     else
@@ -116,7 +118,8 @@ SettingsDialog::OpenMode SettingsDialog::getOpenMode()
 
 QString SettingsDialog::getCurrentDirectory()
 {
-    return ui->comboBox_directoryPath->lineEdit()->text();
+    return "/home/pi/Pictures";
+    //return ui->comboBox_directoryPath->lineEdit()->text();
 }
 
 void SettingsDialog::setCurrentDirectory(const QString & dir)
@@ -126,6 +129,8 @@ void SettingsDialog::setCurrentDirectory(const QString & dir)
 
 double SettingsDialog::getCurrentFadeTime()
 {
+    return 0.03;
+
     if (ui->comboBox_fadeTime->currentIndex() == 0)
         return 0.03; // 33 executions --> 15 ms between shots
     else if (ui->comboBox_fadeTime->currentIndex() == 1)
@@ -140,6 +145,8 @@ double SettingsDialog::getCurrentFadeTime()
 
 int SettingsDialog::getCurrentFadeLength()
 {
+    return 1000;
+
     if (ui->comboBox_fadeTime->currentIndex() == 0)
         return 500;
     else if (ui->comboBox_fadeTime->currentIndex() == 1)
@@ -152,8 +159,21 @@ int SettingsDialog::getCurrentFadeLength()
         return 1000;
 }
 
+void SettingsDialog::open()
+{
+    qDebug() << "show";
+}
+
+
+int SettingsDialog::exec()
+{
+    qDebug() << "show";
+    return 1;
+}
+
 QVariant SettingsDialog::getCurrentFadeLengthForQml()
 {
+    return QVariant( 1000 );
     return QVariant(this->getCurrentFadeLength());
 }
 
@@ -170,11 +190,12 @@ QVariant SettingsDialog::getBlendTypeForQml()
     else if (ui->comboBox_effect->currentIndex() == 5)
         return QVariant("ANDROID_STYLE");
     else
-        return QVariant("HARD");
+        return QVariant("SLIDE");
 }
 
 QVariant SettingsDialog::getMouseControlForQml()
 {
+    return true;
     return QVariant(ui->checkBox_mouseControl->isChecked());
 }
 
@@ -283,8 +304,7 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
                 int posA = versionNr.indexIn(current_version_text);
                 QStringList caps = versionNr.capturedTexts();
                 if (posA != -1 && caps.size() > 1)
-                    current_version = caps.at(1).toDouble();
-                else
+                    current_version = caps.at(1).toDouble();                else
                     return;
 
                 int posB = versionNr.indexIn(available_version_text);
@@ -383,6 +403,8 @@ void SettingsDialog::readDirListCanceled()
 
 BlendType SettingsDialog::getBlendType()
 {
+    return SLIDE;
+
     if (ui->comboBox_effect->currentIndex() == 1)
         return FADE;
     else if (ui->comboBox_effect->currentIndex() == 2)
@@ -428,6 +450,7 @@ void SettingsDialog::setIncludeSubdirs(bool inc)
 
 bool SettingsDialog::getLoopSlideShow()
 {
+    return true;
     return ui->checkBox_loop->isChecked();
 }
 
@@ -457,6 +480,7 @@ QString SettingsDialog::getLanguage()
 
 bool SettingsDialog::getMouseControl()
 {
+    return true;
     return ui->checkBox_mouseControl->isChecked();
 }
 
@@ -489,6 +513,7 @@ void SettingsDialog::setTimerValue(int value)
 
 int SettingsDialog::getTimerValue()
 {
+    return 5;
     QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     int val = settings.value("automaticTimerValue", QVariant(false)).toInt();
 
@@ -544,6 +569,7 @@ void SettingsDialog::setInfoBarActive(bool state)
 
 bool SettingsDialog::getInfoBarActive()
 {
+    return false;
     QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     return settings.value("infobarActive", QVariant(false)).toBool();
 }
@@ -729,7 +755,7 @@ void SettingsDialog::on_pushButton_deleteHistory_clicked()
 void SettingsDialog::on_comboBox_effect_currentIndexChanged(int index)
 {
     if (index == 0)
-        ui->comboBox_fadeTime->setEnabled(false);
+        ui->comboBox_fadeTime->setEnabled(true);
     else
         ui->comboBox_fadeTime->setEnabled(true);
 }

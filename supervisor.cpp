@@ -99,7 +99,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_timerInputValue = QString("8");
 
     m_automaticForward = new QTimer(this);
-    m_automaticForwardActive = false;
+    m_automaticForwardActive = true;
     connect(m_automaticForward, SIGNAL(timeout()), this, SLOT(nextImagePressed()));
 
     m_messageTimeout = new QTimer(this);
@@ -147,11 +147,14 @@ Supervisor::Supervisor(QObject *parent) :
 
     this->bindings();
 
-    if (!m_setDialog->getFirstStart())
-        QTimer::singleShot(1000, m_setDialog, SLOT(show()));
+
+    //if (!m_setDialog->getFirstStart())
+        QTimer::singleShot(500, this, SLOT(applyNewOptions()));
+        /*
     else
         QTimer::singleShot(900, this, SLOT(showHelpOverlay()));
 
+    */
     emit refresh();
 }
 
@@ -259,9 +262,9 @@ void Supervisor::applyNewOptions()
         QPushButton *noButton = msgBox.addButton(tr("Nein"), QMessageBox::NoRole);
         msgBox.setDefaultButton(noButton);
 
-        msgBox.exec();
+        //msgBox.exec();
 
-        if (msgBox.clickedButton() == dynamic_cast<QAbstractButton*>(yesButton))
+        if (true /*msgBox.clickedButton() == dynamic_cast<QAbstractButton*>(yesButton)*/)
         {
             m_wTask.clear();
             this->hideOverlays();
@@ -846,6 +849,7 @@ QVariant Supervisor::getAppVersion()
     return QVariant(qApp->applicationVersion());
 }
 
+
 void Supervisor::keyPressEvent( QKeyEvent * event )
 {
     emit bubbleBox(QVariant(""), QVariant(8000));
@@ -896,7 +900,8 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
 
             this->moveOpenDialogToMiddle();
             m_quickView->unsetCursor();
-            m_setDialog->show();
+            //m_setDialog->show();
+            this->applyNewOptions();
         }
         break;
     case Qt::Key_Escape:
@@ -1015,7 +1020,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
             if (m_helpActive)
             {
                 this->moveOpenDialogToMiddle();
-                m_setDialog->showHelpDialog();
+                //m_setDialog->showHelpDialog();
             }
         }
         break;
@@ -1155,6 +1160,11 @@ void Supervisor::mouseDoubleClickEvent ( QMouseEvent * event )
 
 void Supervisor::mousePressEvent ( QMouseEvent * event )
 {
+     this->nextImagePressed();
+
+        event->accept();
+
+    return;
     if (m_setDialog->getMouseControl())
     {
         switch (event->button()) {
@@ -1182,7 +1192,7 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
 
             this->moveOpenDialogToMiddle();
             m_quickView->unsetCursor();
-            m_setDialog->show();
+            //m_setDialog->show();
         }
             break;
         case Qt::RightButton:
@@ -1355,7 +1365,7 @@ void Supervisor::processWaitingQueue()
             m_wTask.dequeue();
             this->moveOpenDialogToMiddle();
             m_quickView->unsetCursor();
-            m_setDialog->show();
+            //m_setDialog->show();
         }
     }
     else if (m_wTask.head() == JUMP_TO_DIALOG)

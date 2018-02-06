@@ -765,13 +765,13 @@ Rectangle {
                                 property: "anchors.horizontalCenterOffset";
                                 easing.type: Easing.InOutSine
                                 to: -(((transition_start.target.sourceSize.width / transition_start.target.sourceSize.height) * root.height) - root.width) / 2;
-                                duration: (transition_start.target.sourceSize.width / transition_start.target.sourceSize.height) * 4000
+                                duration: /*(transition_start.target.sourceSize.width / transition_start.target.sourceSize.height) **/ 4000
                             }
             NumberAnimation {   target: transition_start.target;
                                 property: "anchors.horizontalCenterOffset";
                                 easing.type: Easing.InOutSine
                                 to: (((transition_start.target.sourceSize.width / transition_start.target.sourceSize.height) * root.height) - root.width) / 2;
-                                duration: (transition_start.target.sourceSize.width / transition_start.target.sourceSize.height) * 4000
+                                duration: /*(transition_start.target.sourceSize.width / transition_start.target.sourceSize.height) **/ 4000
             }
         }
     }
