@@ -25,9 +25,11 @@ March 2013
 #include "threadeddatereader.h"
 
 #include "xmpinfo.h"
+#include "xmptoolbox.h"
 
 #include <time.h>
 #include <QThreadPool>
+#include <QElapsedTimer>
 
 loadDirectory::loadDirectory() : QThread()
 {
@@ -113,8 +115,8 @@ QString& loadDirectory::getErrorMsg()
 
 void loadDirectory::run()
 {
-//    clock_t start, end;
-//    start = clock();
+    QElapsedTimer timer;
+    timer.start();
 
     QStringList filters;
     filters << "*.jpeg" << "*.jpg" << "*.JPG" << "*.JPEG";
@@ -232,45 +234,59 @@ void loadDirectory::run()
     // SORTING
     if (this->m_sorting == DATE_CREATED)
     {
-        QList< QPair<QFileInfo, QDateTime> > temp2list;
+        std::vector< std::pair<QFileInfo, QDateTime> > temp2list;
 
         for(const auto& file : tempList)
         {
             QFileInfo info(file);
-            QDateTime date = readOriginalDate(info.absoluteFilePath());
-//            qDebug(date.toString("dd.MM.yyyy hh:mm").toStdString().c_str());
-
-//            QDateTime emptyDate;
-
-            QPair<QFileInfo, QDateTime> pair;
+            //QDateTime date = readOriginalDate(info.absoluteFilePath());
+            QDateTime date = XMPToolBox::readExifDate( file );
+            std::pair<QFileInfo, QDateTime> pair;
             pair.first = info;
             pair.second = date;
-            temp2list << pair;
+            temp2list.push_back(pair);
+
+            qDebug( date.toString( Qt::ISODate ).toStdString().c_str() );
 
 //            threadedDateReader *reader = new threadedDateReader();
 //            reader->setResultContainer(&temp2list.last());
 //            QThreadPool::globalInstance()->start(reader);
         }
 
-//        QThreadPool::globalInstance()->waitForDone();
+        //        QThreadPool::globalInstance()->waitForDone();
 
-        qSort(temp2list.begin(), temp2list.end(), fileCreateLessThan);
+        std::sort( temp2list.begin(),
+                   temp2list.end(),
+                   []( std::pair<QFileInfo, QDateTime> f1, std::pair<QFileInfo, QDateTime> f2 ) {
+                     QDateTime f1_date = f1.second;
+                     QDateTime f2_date = f2.second;
 
-        for (int i = 0; i < temp2list.size(); i++)
-            this->m_dirList->append(temp2list.at(i).first);
+                     if ( f1_date.isValid() && f2_date.isValid() )
+                       return f1_date < f2_date;
+                     else if ( f2_date.isValid() && !f1_date.isValid() )
+                       return false;
+                     else if ( f1_date.isValid() && !f2_date.isValid() )
+                       return true;
+                     else
+                       return f1.first.fileName() < f2.first.fileName();
+                   } );
+
+        for ( const auto& p : temp2list )
+        {
+          this->m_dirList->append( p.first );
+        }
     }
     else
     {
-        for (int i = 0; i < tempList.size(); i++)
-            this->m_dirList->append(tempList.at(i));
+      for ( int i = 0; i < tempList.size(); i++ )
+        this->m_dirList->append( tempList.at( i ) );
 
-        qSort(this->m_dirList->begin(), this->m_dirList->end(), fileNameLessThan);
+      qSort( this->m_dirList->begin(), this->m_dirList->end(), fileNameLessThan );
     }
 
-//    end = clock();
-//    qDebug(QString::number(end - start).toStdString().c_str());
+    qDebug( QString::number( timer.elapsed() ).toLocal8Bit().data() );
 
-    emit loadDirectoryFinished(true);
+    emit loadDirectoryFinished( true );
 }
 
 void loadDirectory::addItemsInDir(QList<QString> &t_list, QStringList t_filters, QDir t_directory)

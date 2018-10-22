@@ -967,12 +967,12 @@ Press &quot;O&quot; to open pictures!</translation>
         <translation>LARGE_DATA3</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="207"/>
+        <location filename="loaddirectory.cpp" line="206"/>
         <source>, eventuell muss die Einstellung des Bewertungsfilters überprüft werden</source>
         <translation>, propably the rating filter setting needs to be checked</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="210"/>
+        <location filename="loaddirectory.cpp" line="209"/>
         <source>Das angegebene Verzeichnis enthält keine unterstützten Bilder</source>
         <translation>The specified directory does not contain any supported pictures</translation>
     </message>
@@ -981,12 +981,12 @@ Press &quot;O&quot; to open pictures!</translation>
         <translation type="vanished">The folder doesn&apos;t contain supported pictrues</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="219"/>
+        <location filename="loaddirectory.cpp" line="218"/>
         <source>LARGE_DATA</source>
         <translation>LARGE_DATA</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="226"/>
+        <location filename="loaddirectory.cpp" line="225"/>
         <source>LARGE_DATA2</source>
         <translation>LARGE_DATA2</translation>
     </message>

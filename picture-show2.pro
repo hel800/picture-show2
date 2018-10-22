@@ -36,6 +36,16 @@ QML_IMPORT_PATH =
 # CONFIG += mobility
 # MOBILITY +=
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../XMP-Toolkit-SDK-CC201607/public/libraries/windows_x64/release/ -lXMPCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../XMP-Toolkit-SDK-CC201607/public/libraries/windows_x64/release/ -lXMPCore
+#else:unix: LIBS += -L$$PWD/../../XMP-Toolkit-SDK-CC201607/public/libraries/windows_x64/ -lXMPCore
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../XMP-Toolkit-SDK-CC201607/public/libraries/windows_x64/release/ -lXMPFiles
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../XMP-Toolkit-SDK-CC201607/public/libraries/windows_x64/release/ -lXMPFiles
+#else:unix: LIBS += -L$$PWD/../../XMP-Toolkit-SDK-CC201607/public/libraries/windows_x64/ -lXMPFiles
+
+INCLUDEPATH += $$PWD/../../XMP-Toolkit-SDK-CC201607/public/include
+DEPENDPATH += $$PWD/../../XMP-Toolkit-SDK-CC201607/public/include
+
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     settingsdialog.cpp \
@@ -48,7 +58,8 @@ SOURCES += main.cpp \
     readdirlist.cpp \
     loadcollectiondialog.cpp \
     threadeddatereader.cpp \
-    xmpinfo.cpp
+    xmpinfo.cpp \
+    xmptoolbox.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
@@ -74,7 +85,8 @@ HEADERS += \
     readdirlist.h \
     loadcollectiondialog.h \
     threadeddatereader.h \
-    xmpinfo.h
+    xmpinfo.h \
+    xmptoolbox.h
 
 FORMS += \
     settingsdialog.ui \
