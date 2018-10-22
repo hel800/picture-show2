@@ -720,7 +720,17 @@
          </item>
          <item>
           <property name="text">
+           <string>1 Stern</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>1 Stern und mehr</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2 Sterne</string>
           </property>
          </item>
          <item>
@@ -730,7 +740,17 @@
          </item>
          <item>
           <property name="text">
+           <string>3 Sterne</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>3 Sterne und mehr</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4 Sterne</string>
           </property>
          </item>
          <item>
@@ -1177,7 +1197,6 @@
   <tabstop>checkBox_historySave</tabstop>
  </tabstops>
  <resources>
-  <include location="resources.qrc"/>
   <include location="resources.qrc"/>
  </resources>
  <connections>

@@ -115,8 +115,8 @@ QString& loadDirectory::getErrorMsg()
 
 void loadDirectory::run()
 {
-    QElapsedTimer timer;
-    timer.start();
+    //QElapsedTimer timer;
+    //timer.start();
 
     QStringList filters;
     filters << "*.jpeg" << "*.jpg" << "*.JPG" << "*.JPEG";
@@ -189,16 +189,26 @@ void loadDirectory::run()
 
 
     // CHECK FOR RATING FILTER
-    if (m_RatingFilter > 1)
+    if ( m_RatingFilter > 0 )
     {
-        tempList.erase(
-            std::remove_if(tempList.begin(), tempList.end(),
-                [&](const QString & filename) {
-                    short rating = getRatingOfImage(filename);
-                    return rating < m_RatingFilter; }),
-            tempList.end());
+      tempList.erase( std::remove_if( tempList.begin(),
+                                      tempList.end(),
+                                      [&]( const QString& filename ) {
+                                        short rating = getRatingOfImage( filename );
+                                        // even index: inclusive filter - more than
+                                        if ( m_RatingFilter % 2 == 0 )
+                                        {
+                                          return rating < m_RatingFilter / 2;
+                                        }
+                                        // odd index: exclusive filter
+                                        else
+                                        {
+                                          auto ratingFil = ( m_RatingFilter + 1 ) / 2;
+                                          return rating < ratingFil || rating > ratingFil;
+                                        }
+                                      } ),
+                      tempList.end() );
     }
-
 
     // CHECK FOR ZERO IMAGES
     if (tempList.size() == 0)
@@ -246,8 +256,6 @@ void loadDirectory::run()
             pair.second = date;
             temp2list.push_back(pair);
 
-            qDebug( date.toString( Qt::ISODate ).toStdString().c_str() );
-
 //            threadedDateReader *reader = new threadedDateReader();
 //            reader->setResultContainer(&temp2list.last());
 //            QThreadPool::globalInstance()->start(reader);
@@ -284,7 +292,7 @@ void loadDirectory::run()
       qSort( this->m_dirList->begin(), this->m_dirList->end(), fileNameLessThan );
     }
 
-    qDebug( QString::number( timer.elapsed() ).toLocal8Bit().data() );
+    //qDebug( QString::number( timer.elapsed() ).toLocal8Bit().data() );
 
     emit loadDirectoryFinished( true );
 }
