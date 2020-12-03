@@ -144,6 +144,7 @@ public slots:
     void mouseMoveEvent ( QMouseEvent * event );
     void mouseWheelEvent ( QWheelEvent * event );
     void leftMousePress ();
+    void touchEvent( QTouchEvent * event );
     void resizeEvent( QResizeEvent * event );
 
 private slots:

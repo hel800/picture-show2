@@ -42,7 +42,8 @@ enum BlendType {
 
 enum Sorting {
     FILENAME,
-    DATE_CREATED
+    DATE_CREATED,
+    RANDOM
 };
 
 enum ImageState {

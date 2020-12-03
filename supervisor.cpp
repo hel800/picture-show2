@@ -1242,6 +1242,53 @@ void Supervisor::leftMousePress()
         this->prevImagePressed();
 }
 
+void Supervisor::touchEvent(QTouchEvent *event)
+{
+    if (m_setDialog->getMouseControl() == false)
+        return;
+
+    auto num = event->touchPoints().size();
+    auto state = event->touchPointStates();
+
+    if ( num == 1 && state == Qt::TouchPointPressed )
+    {
+        const auto point = event->touchPoints()[0];
+        const auto w = qApp->screens()[0]->size().width();
+        const auto h = qApp->screens()[0]->size().height();
+
+        const auto x = point.screenPos().x();
+        const auto y = point.screenPos().y();
+
+        // lower area --> info
+        if ( y > h * 0.8 )
+        {
+            if (!this->overlayActive() && m_showLoaded)
+            {
+                m_overlayTransitions++;
+                m_infoActive = !m_infoActive;
+                emit infoBox();
+            }
+            qDebug() << "info";
+            return;
+        }
+
+        // left area
+        if ( x < w * 0.35 )
+        {
+            qDebug() << "prev";
+            this->prevImagePressed();
+            return;
+        }
+        // right area
+        else if ( x > w * 0.65)
+        {
+            this->nextImagePressed();
+            qDebug() << "next";
+            return;
+        }
+    }
+}
+
 void Supervisor::resizeEvent( QResizeEvent * event )
 {
     if (m_panoramaModeActive)
@@ -1538,6 +1585,7 @@ void Supervisor::bindings()
     connect(m_quickView, SIGNAL(mouseDoubleClicked(QMouseEvent*)), this, SLOT(mouseDoubleClickEvent(QMouseEvent*)));
     connect(m_quickView, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
     connect(m_quickView, SIGNAL(mouseWheelTurned(QWheelEvent*)), this, SLOT(mouseWheelEvent(QWheelEvent*)));
+    connect(m_quickView, SIGNAL(screenTouched(QTouchEvent*)), this, SLOT(touchEvent(QTouchEvent*)));
     connect(m_quickView, SIGNAL(windowResized(QResizeEvent*)), this, SLOT(resizeEvent(QResizeEvent*)));
     connect(m_quickView->engine(), SIGNAL(warnings(QList<QQmlError>)), this, SLOT(errorOccurred(QList<QQmlError>)));
 

@@ -259,6 +259,16 @@ void loadDirectory::run()
         for (int i = 0; i < temp2list.size(); i++)
             this->m_dirList->append(temp2list.at(i).first);
     }
+    else if (this->m_sorting == RANDOM)
+    {
+        for (int i = 0; i < tempList.size(); i++)
+            this->m_dirList->append(tempList.at(i));
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+
+        std::shuffle(this->m_dirList->begin(), this->m_dirList->end(), g);
+    }
     else
     {
         for (int i = 0; i < tempList.size(); i++)

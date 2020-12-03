@@ -40,6 +40,7 @@ signals:
     void mouseReleased( QMouseEvent * event );
     void mouseDoubleClicked( QMouseEvent * event );
     void mouseWheelTurned( QWheelEvent * event );
+    void screenTouched( QTouchEvent * event );
     void windowResized( QResizeEvent * event );
 
 protected:
@@ -51,6 +52,8 @@ protected:
     void mouseDoubleClickEvent( QMouseEvent * event) { emit mouseDoubleClicked(event); }
     void wheelEvent( QWheelEvent * event ) { emit mouseWheelTurned(event); }
     void resizeEvent(QResizeEvent *event);
+    bool event(QEvent *event);
+
 
 protected slots:
     void windowStateEvent(Qt::WindowState windowState);

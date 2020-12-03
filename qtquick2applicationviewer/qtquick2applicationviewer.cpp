@@ -13,6 +13,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtQml/QQmlEngine>
+#include <QDebug>
 
 #include <iostream>
 
@@ -191,6 +192,18 @@ void QtQuick2ApplicationViewer::windowStateEvent(Qt::WindowState windowState)
     else
         this->unsetCursor();
 #endif
+}
+
+bool QtQuick2ApplicationViewer::event(QEvent *event)
+{
+     event->accept();
+     QTouchEvent *touchEvent = dynamic_cast<QTouchEvent*>(event);
+     if ( touchEvent )
+     //if(event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchBegin)
+     {
+          emit screenTouched(touchEvent);
+     }
+     return QQuickView::event(event);
 }
 
 

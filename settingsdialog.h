@@ -180,6 +180,8 @@ private:
     QString m_qSet_organization;
     QString m_qSet_application;
 
+    bool m_UseDialog;
+
 };
 
 #endif // SETTINGSDIALOG_H

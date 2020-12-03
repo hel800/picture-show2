@@ -31,7 +31,14 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
-    ui->setupUi(this);    
+#if defined(Q_PROCESSOR_ARM)
+    m_UseDialog = false;
+    qDebug() << "ARM platform: no dialog usage";
+#else
+    m_UseDialog = true;
+#endif
+
+    ui->setupUi(this);
     this->setModal(true);
     this->setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     ui->groupBox_news->hide();
@@ -109,7 +116,11 @@ void SettingsDialog::setOnTopHint(bool state)
 
 SettingsDialog::OpenMode SettingsDialog::getOpenMode()
 {
-    return MODE_FOLDER;
+    if ( m_UseDialog == false )
+    {
+        return MODE_FOLDER;
+    }
+
     if (ui->tabWidget_open->currentIndex() == 1)
         return MODE_DROPLIST;
     else
@@ -118,8 +129,12 @@ SettingsDialog::OpenMode SettingsDialog::getOpenMode()
 
 QString SettingsDialog::getCurrentDirectory()
 {
-    return "/home/pi/Pictures";
-    //return ui->comboBox_directoryPath->lineEdit()->text();
+    if ( m_UseDialog == false )
+    {
+        return "/media/Bilderrahmen";
+    }
+
+    return ui->comboBox_directoryPath->lineEdit()->text();
 }
 
 void SettingsDialog::setCurrentDirectory(const QString & dir)
@@ -173,12 +188,13 @@ int SettingsDialog::exec()
 
 QVariant SettingsDialog::getCurrentFadeLengthForQml()
 {
-    return QVariant( 1000 );
+    return QVariant( 1500 );
     return QVariant(this->getCurrentFadeLength());
 }
 
 QVariant SettingsDialog::getBlendTypeForQml()
 {
+    return QVariant("FADE_BLACK");
     if (ui->comboBox_effect->currentIndex() == 1)
         return QVariant("FADE");
     else if (ui->comboBox_effect->currentIndex() == 2)
@@ -195,8 +211,7 @@ QVariant SettingsDialog::getBlendTypeForQml()
 
 QVariant SettingsDialog::getMouseControlForQml()
 {
-    return true;
-    return QVariant(ui->checkBox_mouseControl->isChecked());
+    return getMouseControl();
 }
 
 QVariant SettingsDialog::getLanguageForQml()
@@ -206,6 +221,7 @@ QVariant SettingsDialog::getLanguageForQml()
 
 QVariant SettingsDialog::getBackgroundColorQml()
 {
+    return 0;
     return QVariant(ui->comboBox_bgColor->currentIndex());
 }
 
@@ -403,7 +419,7 @@ void SettingsDialog::readDirListCanceled()
 
 BlendType SettingsDialog::getBlendType()
 {
-    return SLIDE;
+    return ANDROID_STYLE;
 
     if (ui->comboBox_effect->currentIndex() == 1)
         return FADE;
@@ -421,8 +437,21 @@ BlendType SettingsDialog::getBlendType()
 
 Sorting SettingsDialog::getDirectorySorting()
 {
-    if (ui->comboBox_sort->currentIndex() == 1)
+    int val = 0;
+    if (m_UseDialog == false)
+    {
+        QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+        val = settings.value("sortOrder", QVariant(0)).toInt();
+    }
+    else
+    {
+        val = ui->comboBox_sort->currentIndex();
+    }
+
+    if (val == 1)
         return DATE_CREATED;
+    else if (val == 2)
+        return RANDOM;
     else
         return FILENAME;
 }
@@ -431,13 +460,21 @@ void SettingsDialog::setDirectorySorting(Sorting sort)
 {
     if (sort == DATE_CREATED)
         ui->comboBox_sort->setCurrentIndex(1);
+    if (sort == RANDOM)
+        ui->comboBox_sort->setCurrentIndex(2);
     else
         ui->comboBox_sort->setCurrentIndex(0);
 }
 
 bool SettingsDialog::getIncludeSubdirs()
 {
-    return ui->checkBox_subdirs->isChecked();
+    if( m_UseDialog )
+    {
+        return ui->checkBox_subdirs->isChecked();
+    }
+
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+    return settings.value("includeSubdirs", QVariant(false)).toBool();
 }
 
 void SettingsDialog::setIncludeSubdirs(bool inc)
@@ -472,6 +509,11 @@ ScaleType SettingsDialog::getScaleType()
 
 QString SettingsDialog::getLanguage()
 {
+    if (m_UseDialog == false)
+    {
+        return QString("de");
+    }
+
     if (ui->comboBox_language->currentIndex() == 0)
         return QString("de");
     else
@@ -480,8 +522,8 @@ QString SettingsDialog::getLanguage()
 
 bool SettingsDialog::getMouseControl()
 {
-    return true;
-    return ui->checkBox_mouseControl->isChecked();
+    QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
+    return settings.value("mouseControl", QVariant(false)).toBool();
 }
 
 LoadingType SettingsDialog::getLoadingType()
@@ -513,14 +555,13 @@ void SettingsDialog::setTimerValue(int value)
 
 int SettingsDialog::getTimerValue()
 {
-    return 5;
     QSettings settings(m_qSet_format, m_qSet_scope, m_qSet_organization, m_qSet_application);
     int val = settings.value("automaticTimerValue", QVariant(false)).toInt();
 
     if (val < 4)
         val = 8;
-    if (val > 99)
-        val = 99;
+//    if (val > 99)
+//        val = 99;
 
     return val;
 }
@@ -609,14 +650,17 @@ QSize SettingsDialog::getWindowSize()
 
 void SettingsDialog::updateLanguage()
 {
-    this->languageChangeSignalOff = true;
-    this->saveSettings();
-    ui->retranslateUi(this);
-    int currentIndex = ui->comboBox_directoryPath->currentIndex();
-    this->loadSettings();
-    if (currentIndex != -1)
-        ui->comboBox_directoryPath->setCurrentIndex(currentIndex);
-    this->languageChangeSignalOff = false;
+    if (m_UseDialog)
+    {
+        this->languageChangeSignalOff = true;
+        this->saveSettings();
+        ui->retranslateUi(this);
+        int currentIndex = ui->comboBox_directoryPath->currentIndex();
+        this->loadSettings();
+        if (currentIndex != -1)
+            ui->comboBox_directoryPath->setCurrentIndex(currentIndex);
+        this->languageChangeSignalOff = false;
+    }
 }
 
 void SettingsDialog::updateHistory()
@@ -657,6 +701,7 @@ void SettingsDialog::addDirectoryToHistory(const QString & dir)
 
 int SettingsDialog::getScaleTypeQml()
 {
+    return 2;
     if (ui->comboBox_scaling->currentIndex() == 0)
         return 1;
     else
