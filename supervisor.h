@@ -29,7 +29,6 @@ February 2013
 #include <QQuickItem>
 #include <QQmlContext>
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QStyleHints>
 #include <QTranslator>
 #include <QTimer>
@@ -170,9 +169,9 @@ private slots:
     void hideMessage();
     void blendJumpToPreview(bool state = true);
 
-    void queueTask(WaitingTask task);
+    void queueTask(Supervisor::WaitingTask task);
 
-    void startInputMode(InputMode mode, int timeout = 5000);
+    void startInputMode(Supervisor::InputMode mode, int timeout = 5000);
     void inputModeTimeout();
     void timerInputValueTimeout();
 

@@ -48,7 +48,7 @@ class SettingsDialog;
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
-    Q_ENUMS(ScaleType)
+    Q_ENUM(ScaleType)
     Q_PROPERTY(double fadeTime READ getCurrentFadeTime NOTIFY propertiesChanged)
     Q_PROPERTY(ScaleType scale READ getScaleType NOTIFY propertiesChanged)
     

@@ -23,6 +23,7 @@ February 2013
 
 #include "supervisor.h"
 #include "xmpinfo.h"
+#include <QRegularExpression>
 
 Supervisor::Supervisor(QObject *parent) :
     QObject(parent)
@@ -46,7 +47,7 @@ Supervisor::Supervisor(QObject *parent) :
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
 //    m_quickView->engine()->setImportPathList(QStringList());
-    m_quickView->engine()->addImportPath("./qml");
+    // m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
 //    m_quickView->setMainQmlFile(QString("./qml/picture-show2/main.qml"));
@@ -75,7 +76,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
     m_quickView->setTitle("picture show 2");
 
-    m_quickView->showExpanded(false);
+    m_quickView->showExpanded( false );
 
     if (m_setDialog->getFullScreen())
         m_quickView->showExpanded(true);
@@ -185,7 +186,7 @@ Supervisor::~Supervisor()
     delete m_inputMessageTimeout;
     delete m_imgProvider;
     delete m_dirLoader;
-    delete m_setDialog;
+    m_setDialog->deleteLater();
 }
 
 void Supervisor::setView(QtQuick2ApplicationViewer *view)
@@ -736,8 +737,8 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
     else if (tag_string == "dateTimeOriginal")
     {
         QString dateTime = QString::fromStdString(exif.DateTimeOriginal).trimmed();
-        QRegExp exp("^[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$");
-        if (exp.exactMatch(dateTime))
+        QRegularExpression exp("^[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$");
+        if (exp.match(dateTime).hasMatch())
         {
             QDateTime dt = QDateTime::fromString(dateTime, "yyyy:MM:dd hh:mm:ss");
             if (dt.isValid())
@@ -857,7 +858,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         {
             QQuickItem * msgBox = object->findChild<QQuickItem *>("messageBox");
             if (msgBox)
-                m_quickView->sendEvent(msgBox, event);
+                QCoreApplication::sendEvent(msgBox, event);
         }
 
         if (event->key() != Qt::Key_Return
@@ -980,16 +981,16 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     case Qt::Key_F11:
         {
         if (m_quickView->isExpanded())
-            {
-                m_quickView->showExpanded(false);
+        {
+            m_quickView->showExpanded(false);
 //                m_setDialog->setOnTopHint(false);
-            }
-            else
-            {
-                m_quickView->showExpanded(true);
+        }
+        else
+        {
+            m_quickView->showExpanded(true);
 //                m_setDialog->setOnTopHint(true);
-            }
-            emit refresh();
+        }
+        emit refresh();
         }
         break;
     case Qt::Key_H:
@@ -1170,7 +1171,7 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
             m_mousePressTimer->start(dc_speed + 1);
             break;
         }
-        case Qt::MidButton:
+        case Qt::MiddleButton:
         {
             if (m_currentlyWaiting)
                 return;
@@ -1827,7 +1828,7 @@ void Supervisor::timerInputValueTimeout()
     }
     else if (m_activeInputMode == MODE_JUMPTO)
     {
-        m_jumpToImageValue.replace("_", QString("")).trimmed();
+        m_jumpToImageValue = m_jumpToImageValue.replace("_", QString("")).trimmed();
         this->startInputMode(MODE_JUMPTO, -1);
         this->showJumpToPreview();
     }

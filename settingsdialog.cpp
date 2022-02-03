@@ -234,7 +234,7 @@ void SettingsDialog::dropEvent( QDropEvent * event )
     }
     else
     {
-        QList<QUrl> dupplicates_removed = url_list.toSet().subtract(this->m_current_collection).toList();
+        QList<QUrl> dupplicates_removed = QSet(url_list.cbegin(), url_list.cend()).subtract(this->m_current_collection).values();
 
         ui->label_collection->setText(tr("In Drop Zone: "));
         ui->label_droppingInstruction->setText(tr("Bitte warten..."));
@@ -264,12 +264,12 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
     {
         QString dataRetrieved = QString(reply->readAll());
 
-        QRegExp rx("current_version___(.{3,20})___current_version");
-        int pos = rx.indexIn(dataRetrieved);
+        QRegularExpression rx("current_version___(.{3,20})___current_version");
+        QRegularExpressionMatch match = rx.match( dataRetrieved );
 
-        if (pos != -1)
+        if (match.hasMatch())
         {
-            QStringList list = rx.capturedTexts();
+            QStringList list = match.capturedTexts();
             if (list.size() > 1)
             {
                 QString current_version_text = qApp->applicationVersion();
@@ -278,18 +278,18 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
                 double current_version = 0.0;
                 double available_version = 0.0;
 
-                QRegExp versionNr("([0-9]{1,2}.[0-9]{1,3})");
+                QRegularExpression versionNr("([0-9]{1,2}.[0-9]{1,3})");
+                QRegularExpressionMatch version_match = versionNr.match( current_version_text );
 
-                int posA = versionNr.indexIn(current_version_text);
-                QStringList caps = versionNr.capturedTexts();
-                if (posA != -1 && caps.size() > 1)
+                QStringList caps = version_match.capturedTexts();
+                if (version_match.hasMatch() && caps.size() > 1)
                     current_version = caps.at(1).toDouble();
                 else
                     return;
 
-                int posB = versionNr.indexIn(available_version_text);
-                QStringList caps2 = versionNr.capturedTexts();
-                if (posB != -1 && caps2.size() > 1)
+                QRegularExpressionMatch av_version_match = versionNr.match( current_version_text );
+                QStringList caps2 = av_version_match.capturedTexts();
+                if (av_version_match.hasMatch() && caps2.size() > 1)
                     available_version = caps2.at(1).toDouble();
                 else
                     return;
@@ -324,7 +324,7 @@ void SettingsDialog::readDirListReady()
 
     if (num_elements > 0)
     {
-        this->m_current_collection.unite(this->m_dirListReader->getUrlList().toSet());
+        this->m_current_collection.unite( QSet( this->m_dirListReader->getUrlList().cbegin(), this->m_dirListReader->getUrlList().cend() ) );
 
         int num_addedElements = num_elements_after - num_elements_before;
 
@@ -366,7 +366,7 @@ void SettingsDialog::readDirListCanceled()
     {
         ui->label_droppingInstruction->setText(tr("Bitte warten..."));
 
-        QList<QUrl> dupplicates_removed = this->m_cachedDropList.toSet().subtract(this->m_current_collection).toList();
+        QList<QUrl> dupplicates_removed = QSet( this->m_cachedDropList.cbegin(), this->m_cachedDropList.cend()).subtract(this->m_current_collection).values();
 
         this->m_dirListReader->setUrlList(dupplicates_removed);
         this->m_dirListReader->start(QThread::NormalPriority);
@@ -660,7 +660,7 @@ void SettingsDialog::loadSettings()
     int languageID = settings.value("languageID", QVariant(-1)).toInt();
     if (languageID == -1)
     {
-        QStringList parts = QLocale::system().name().split("_", QString::SkipEmptyParts);
+        QStringList parts = QLocale::system().name().split("_", Qt::SkipEmptyParts);
 
         qDebug(parts.at(0).toStdString().c_str());
         if (parts.size() > 0 && parts.at(0) == "de")

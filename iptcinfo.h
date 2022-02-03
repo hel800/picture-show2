@@ -19,7 +19,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 IPTCInfo class has been adapted from code
 of Christian Tratz (cat@cat-software.de)
 
-author: Christian Tratz, Sebastian Sch‰fer
+author: Christian Tratz, Sebastian Sch√§fer
 February 2013
 
 --------------------------------------------------------------------*/

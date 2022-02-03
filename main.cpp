@@ -25,7 +25,7 @@ February 2013
 #include <QtWidgets/QApplication>
 #include <QtQml>
 #include <QTimer>
-#include <QGLFormat>
+//#include <QGLFormat>
 #include <QMessageBox>
 #include "qtquick2applicationviewer.h"
 
@@ -36,21 +36,23 @@ February 2013
 
 int main(int argc, char *argv[])
 {
-    QString appVersion = QString("2.2 beta ");
+    QString appVersion = QString("2.4 beta ");
 
     #if defined (_MSC_VER)
-        #if _MSC_VER >= 1910
-            appVersion += QString("(MSVC v14.1 (VS2017) ");
+        #if _MSC_VER >= 1920
+            appVersion += QString("(MSVC v16 (VS2019) ");
+        #elif _MSC_VER >= 1910
+            appVersion += QString("(MSVC v15 (VS2017) ");
         #elif _MSC_VER >= 1900
-            appVersion += QString("(MSVC v14.0 (VS2015) ");
+            appVersion += QString("(MSVC v14 (VS2015) ");
         #elif _MSC_VER >= 1800
-            appVersion += QString("(MSVC v12.0 (VS2013) ");
+            appVersion += QString("(MSVC v12 (VS2013) ");
         #elif _MSC_VER >= 1700
-            appVersion += QString("(MSVC v11.0 (VS2012) ");
+            appVersion += QString("(MSVC v11 (VS2012) ");
         #elif _MSC_VER >= 1600
-            appVersion += QString("(MSVC v10.0 (VS2010) ");
+            appVersion += QString("(MSVC v10 (VS2010) ");
         #elif _MSC_VER >= 1500
-            appVersion += QString("(MSVC v9.0 (VS2008) ");
+            appVersion += QString("(MSVC v9 (VS2008) ");
         #else
             appVersion += QString("(MSVC < 9.0 ");
         #endif
@@ -78,19 +80,19 @@ int main(int argc, char *argv[])
     app.setApplicationName(QString("picture show 2"));
     app.setApplicationVersion(appVersion);
 
-    if (!QGLFormat::hasOpenGL())
-    {
-        QMessageBox warning(QMessageBox::Warning,
-                            QString("OpenGL nicht unterstützt - OpenGL not supported"),
-                            QString("OpenGL Unterstützung wurde auf diesem System nicht gefunden. Das Programm wird keinen optimalen Leistungen erzielen! Soll dennoch gestartet werden?\n\nOpenGL not found on the system. The application will not achieve best performance! Should we start anyway?"),
-                            QMessageBox::Yes | QMessageBox::No);
+//    if (!QGLFormat::hasOpenGL())
+//    {
+//        QMessageBox warning(QMessageBox::Warning,
+//                            QString("OpenGL nicht unterstützt - OpenGL not supported"),
+//                            QString("OpenGL Unterstützung wurde auf diesem System nicht gefunden. Das Programm wird keinen optimalen Leistungen erzielen! Soll dennoch gestartet werden?\n\nOpenGL not found on the system. The application will not achieve best performance! Should we start anyway?"),
+//                            QMessageBox::Yes | QMessageBox::No);
 
-        if (warning.exec() == QMessageBox::No)
-        {
-            app.quit();
-            return -1;
-        }
-    }
+//        if (warning.exec() == QMessageBox::No)
+//        {
+//            app.quit();
+//            return -1;
+//        }
+//    }
 
     Supervisor sup(&app);
     if (!sup.isQmlReady())

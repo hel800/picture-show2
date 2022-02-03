@@ -1,6 +1,7 @@
 #include "xmpinfo.h"
 
 #include <QTextStream>
+#include <QRegularExpression>
 
 XMPInfo::XMPInfo()
 {
@@ -136,9 +137,14 @@ long XMPInfo::GetXMPHeaderEndPosition(const QByteArray & buffer, long start)
 
 QString XMPInfo::GetDescriptionValueFromXML(const QString xml, const QString tag)
 {
-    QRegExp rx(tag + "=\"(\\d)\"", Qt::CaseInsensitive);
-    rx.indexIn(xml);
-    QStringList capturedValues = rx.capturedTexts();
+    QRegularExpression  rx(tag + "=\"(\\d)\"", QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match = rx.match( xml );
+    if (match.hasMatch() == false )
+    {
+        return QString();
+    }
+
+    QStringList capturedValues = match.capturedTexts();
 
     if (capturedValues.size() != 2)
     {
