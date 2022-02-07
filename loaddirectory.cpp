@@ -23,7 +23,6 @@ March 2013
 #define _HAS_AUTO_PTR_ETC 1
 
 #include "loaddirectory.h"
-#include "threadeddatereader.h"
 
 #include "xmpinfo.h"
 //#include "xmptoolbox.h"
