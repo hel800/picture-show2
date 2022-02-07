@@ -271,24 +271,24 @@ void ImageProvider::loadNewPixmap(QString fname, QPixmap & pmap)
             newImage = newImage.mirrored(true, false);
         break;
         case 3:
-            trans.rotate(180.0);
+            trans = trans.rotate(180.0);
         break;
         case 4:
             newImage = newImage.mirrored(false, true);
         break;
         case 5:
             newImage = newImage.mirrored(true, false);
-            trans.rotate(270.0);
+            trans = trans.rotate(270.0);
         break;
         case 6:
-            trans.rotate(90.0);
+            trans = trans.rotate(90.0);
         break;
         case 7:
             newImage = newImage.mirrored(true, false);
-            trans.rotate(90.0);
+            trans = trans.rotate(90.0);
         break;
         case 8:
-            trans.rotate(270.0);
+            trans = trans.rotate(270.0);
         break;
         }
 
