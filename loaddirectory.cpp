@@ -20,6 +20,7 @@ author: Sebastian Schäfer
 March 2013
 
 --------------------------------------------------------------------*/
+#define _HAS_AUTO_PTR_ETC 1
 
 #include "loaddirectory.h"
 #include "threadeddatereader.h"
@@ -191,7 +192,7 @@ void loadDirectory::run()
     // CHECK FOR RATING FILTER
     if ( m_RatingFilter > 0 )
     {
-      tempList.erase( std::remove_if( tempList.begin(),
+        tempList.erase( std::remove_if( tempList.begin(),
                                       tempList.end(),
                                       [&]( const QString& filename ) {
                                         short rating = getRatingOfImage( filename );
@@ -255,13 +256,7 @@ void loadDirectory::run()
             pair.first = info;
             pair.second = date;
             temp2list.push_back(pair);
-
-//            threadedDateReader *reader = new threadedDateReader();
-//            reader->setResultContainer(&temp2list.last());
-//            QThreadPool::globalInstance()->start(reader);
         }
-
-        //        QThreadPool::globalInstance()->waitForDone();
 
         std::sort( temp2list.begin(),
                    temp2list.end(),
