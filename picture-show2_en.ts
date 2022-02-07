@@ -44,7 +44,7 @@
         <translation type="obsolete">OpenGL support is not available on this system. The application will not achieve optimal performance! Do you want to start anyway?</translation>
     </message>
     <message>
-        <location filename="imageprovider.cpp" line="263"/>
+        <location filename="imageprovider.cpp" line="258"/>
         <source>%1 x %2</source>
         <translation>%1 x %2</translation>
     </message>
@@ -89,7 +89,7 @@
         <translation>Open pictures  from a folder</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="752"/>
+        <location filename="settingsdialog.ui" line="772"/>
         <source>Sonstige Optionen</source>
         <translation>Miscellaneous options</translation>
     </message>
@@ -99,12 +99,12 @@
         <translation>Mouse control enabled: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1008"/>
+        <location filename="settingsdialog.ui" line="1028"/>
         <source>History speichern: </source>
         <translation>Save history: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="860"/>
+        <location filename="settingsdialog.ui" line="880"/>
         <source>History löschen</source>
         <translation>Delete History</translation>
     </message>
@@ -123,52 +123,52 @@
         <translation>Loop slide show: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="723"/>
+        <location filename="settingsdialog.ui" line="728"/>
         <source>1 Stern und mehr</source>
         <translation>1 star or more</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="728"/>
+        <location filename="settingsdialog.ui" line="738"/>
         <source>2 Sterne und mehr</source>
         <translation>2 stars or more</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="733"/>
+        <location filename="settingsdialog.ui" line="748"/>
         <source>3 Sterne und mehr</source>
         <translation>3 stars or more</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="738"/>
+        <location filename="settingsdialog.ui" line="758"/>
         <source>4 Sterne und mehr</source>
         <translation>4 stars or more</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="743"/>
+        <location filename="settingsdialog.ui" line="763"/>
         <source>5 Sterne</source>
         <translation>5 stars</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="895"/>
+        <location filename="settingsdialog.ui" line="915"/>
         <source>Speicher sparen</source>
         <translation>Save memory</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="900"/>
+        <location filename="settingsdialog.ui" line="920"/>
         <source>Leistung optimieren</source>
         <translation>Optimize performance</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="920"/>
+        <location filename="settingsdialog.ui" line="940"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Leistung optimieren&amp;quot; sollte nur verwendet werden, wenn Originalauflösung notwendig ist und ein großer Grafikspeicher zur Verfügung steht.&lt;/p&gt;&lt;p&gt;Im Zweifelsfall werden die Bilder schwarz angezeigt. &lt;/p&gt;&lt;p&gt;Bevorzugt sollte die Einstellung &amp;quot;Speicher sparen&amp;quot; verwendet werden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;Optimize performance&amp;quot; should only be used, if the original resolution of the images is required and the graphics device does provide enough memory.&lt;/p&gt;&lt;p&gt;In case of a memory shortage the images are displayed black. &lt;/p&gt;&lt;p&gt;The setting &amp;quot;Save memory&amp;quot; is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="813"/>
+        <location filename="settingsdialog.ui" line="833"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Speicher, der zum cachen der Bilder verwendet wird.&lt;/p&gt;&lt;p&gt;Der Gesamtspeicherbedarf der Anwendung setzt sich zusammen aus dem Cache-Speicher und dem Grundspeicherbedarf der Anwendung.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Memory used for caching pictures.&lt;/p&gt;&lt;p&gt;Total memory consumption of the application is composed of the cache memory and the basic requirements of the base application.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="995"/>
+        <location filename="settingsdialog.ui" line="1015"/>
         <source>Bei Updates benachrichtigen: </source>
         <translation>Update notification: </translation>
     </message>
@@ -257,32 +257,52 @@
         <translation>all pictures</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="982"/>
+        <location filename="settingsdialog.ui" line="723"/>
+        <source>1 Stern</source>
+        <translation>1 star</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="733"/>
+        <source>2 Sterne</source>
+        <translation>2 stars</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="743"/>
+        <source>3 Sterne</source>
+        <translation>3 stars</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="753"/>
+        <source>4 Sterne</source>
+        <translation>4 stars</translation>
+    </message>
+    <message>
+        <location filename="settingsdialog.ui" line="1002"/>
         <source>Hintergrundfarbe: </source>
         <translation>Background color: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1032"/>
+        <location filename="settingsdialog.ui" line="1052"/>
         <source>schwarz</source>
         <translation>black</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1037"/>
+        <location filename="settingsdialog.ui" line="1057"/>
         <source>dunkelgrau</source>
         <translation>dark grey</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1042"/>
+        <location filename="settingsdialog.ui" line="1062"/>
         <source>hellgrau</source>
         <translation>light grey</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1047"/>
+        <location filename="settingsdialog.ui" line="1067"/>
         <source>weiß</source>
         <translation>white</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1144"/>
+        <location filename="settingsdialog.ui" line="1164"/>
         <source>OK</source>
         <oldsource>Ok</oldsource>
         <translation>OK</translation>
@@ -292,7 +312,7 @@
         <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:7pt; font-weight:600;&quot;&gt;Press &apos;H&apos; for quick help during presentation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1099"/>
+        <location filename="settingsdialog.ui" line="1119"/>
         <source> Hilfe </source>
         <translation>Help</translation>
     </message>
@@ -328,7 +348,7 @@
         <translation type="obsolete">Apply</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1151"/>
+        <location filename="settingsdialog.ui" line="1171"/>
         <source>Abbrechen</source>
         <translation>Cancel</translation>
     </message>
@@ -434,12 +454,12 @@
         <translation>date taken</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1061"/>
+        <location filename="settingsdialog.ui" line="1081"/>
         <source>Ladeverhalten: </source>
         <translation>Loading strategy: </translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="969"/>
+        <location filename="settingsdialog.ui" line="989"/>
         <source>Cache Größe (MB): </source>
         <translation>Cache size (MD):</translation>
     </message>
@@ -468,17 +488,17 @@
         <translation>slide</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="1021"/>
+        <location filename="settingsdialog.ui" line="1041"/>
         <source>Sprache: </source>
         <translation>Language:</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="950"/>
+        <location filename="settingsdialog.ui" line="970"/>
         <source>Deutsch</source>
         <translation>Deutsch</translation>
     </message>
     <message>
-        <location filename="settingsdialog.ui" line="955"/>
+        <location filename="settingsdialog.ui" line="975"/>
         <source>English</source>
         <translation>English</translation>
     </message>
@@ -651,17 +671,17 @@ found</translation>
 <context>
     <name>Supervisor</name>
     <message>
-        <location filename="supervisor.cpp" line="64"/>
+        <location filename="supervisor.cpp" line="65"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="65"/>
+        <location filename="supervisor.cpp" line="66"/>
         <source>QML Error: %1</source>
         <translation>QML Error: %1</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="230"/>
+        <location filename="supervisor.cpp" line="231"/>
         <source>Frage</source>
         <translation>Question</translation>
     </message>
@@ -670,7 +690,7 @@ found</translation>
         <translation type="vanished">The picture directory has been changed. To show pictures from the new directory the show has to be restarted.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="237"/>
+        <location filename="supervisor.cpp" line="238"/>
         <source>&quot;Ja&quot; klicken, um neus Verzeichnis zu laden, &quot;Nein&quot; um altes Verzeichnis weiter anzuzeigen.</source>
         <translation>Click &quot;Yes&quot; to load a new show, click &quot;No&quot; to keep the images from the old directory.</translation>
     </message>
@@ -679,7 +699,7 @@ found</translation>
         <translation type="vanished">The sort mode has been changed. The show must be restarted for the new sort mode to take effect.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="243"/>
+        <location filename="supervisor.cpp" line="244"/>
         <source>&quot;Ja&quot; klicken, zum neustarten, &quot;Nein&quot; um alte Sortierung weiter zu verwenden.</source>
         <translation>Click &quot;Yes&quot; to restart the show, &quot;No&quot; to continue with the old sorting order.</translation>
     </message>
@@ -688,113 +708,113 @@ found</translation>
         <translation type="vanished">Options have been changed. The show has to be restarted so changed options take effect.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="236"/>
+        <location filename="supervisor.cpp" line="237"/>
         <source>Das Bilderverzeichnis wurde geändert. Damit die Bilder aus dem neuen Verzeichnis angezeigt werden, muss eine neue Show geladen werden.</source>
         <translation>The directory has been changed. In order to show the pictures from the new directory, a new picture show has to be started.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="242"/>
+        <location filename="supervisor.cpp" line="243"/>
         <source>Der Sortierungsmodus wurde geändert. Damit die neue Sortierung angewendet wird, muss die Show neu geladen werden. Sie startet neu von Beginn.</source>
         <translation>Sorting has been changed. In order to apply the new sorting, the picture show has to be restarted. It will start with the first picture.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="248"/>
+        <location filename="supervisor.cpp" line="249"/>
         <source>Die Filterung nach Bewertung wurde geändert. Damit die neue Filterung angewendet wird, muss die Show neu geladen werden. Sie startet neu von Beginn.</source>
         <translation>The rating filter has been changed. In order to apply the new rating filter, the show has to be restarted. It will start with the first picture.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="249"/>
+        <location filename="supervisor.cpp" line="250"/>
         <source>&quot;Ja&quot; klicken, zum neustarten, &quot;Nein&quot; um alte Filterung weiter zu verwenden.</source>
         <translation>Click &quot;Yes&quot; to restart, &quot;No&quot; to maintain the old filter setting.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="254"/>
+        <location filename="supervisor.cpp" line="255"/>
         <source>Einstellungen wurden geändert. Damit sie wirksam werden, muss die Show neu geladen werden. Sie startet neu von Beginn.</source>
         <translation>Settings have been changed. In order to take effect, the picture show has to be restarted. It will start with the first picture.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="255"/>
+        <location filename="supervisor.cpp" line="256"/>
         <source>&quot;Ja&quot; klicken, zum neustarten, &quot;Nein&quot; um die alte Einstellung weiter zu verwenden.</source>
         <translation>Click &quot;Yes&quot; to restart the show, &quot;No&quot; to continue with the previous settings.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="258"/>
-        <location filename="supervisor.cpp" line="383"/>
-        <location filename="supervisor.cpp" line="391"/>
-        <location filename="supervisor.cpp" line="399"/>
-        <location filename="supervisor.cpp" line="936"/>
+        <location filename="supervisor.cpp" line="259"/>
+        <location filename="supervisor.cpp" line="384"/>
+        <location filename="supervisor.cpp" line="392"/>
+        <location filename="supervisor.cpp" line="400"/>
+        <location filename="supervisor.cpp" line="937"/>
         <source>Ja</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="259"/>
-        <location filename="supervisor.cpp" line="383"/>
-        <location filename="supervisor.cpp" line="391"/>
-        <location filename="supervisor.cpp" line="399"/>
-        <location filename="supervisor.cpp" line="936"/>
+        <location filename="supervisor.cpp" line="260"/>
+        <location filename="supervisor.cpp" line="384"/>
+        <location filename="supervisor.cpp" line="392"/>
+        <location filename="supervisor.cpp" line="400"/>
+        <location filename="supervisor.cpp" line="937"/>
         <source>Nein</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="381"/>
+        <location filename="supervisor.cpp" line="382"/>
         <source>Viele Daten</source>
         <translation>Large amount of data</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="382"/>
+        <location filename="supervisor.cpp" line="383"/>
         <source>Das Laden kann einige Zeit in Anspruch nehmen. Soll fortgesetzt werden?</source>
         <translation>Loading can take a while. Do you want to proceed?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="389"/>
+        <location filename="supervisor.cpp" line="390"/>
         <source>Viele Bilder</source>
         <translation>Large amount of pictures</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="390"/>
+        <location filename="supervisor.cpp" line="391"/>
         <source>Das Laden von vielen Bildern mit Datumssortierung kann Zeit in Anspruch nehmen. Soll fortgesetzt werden?</source>
         <translation>Loading of large amount of pictures with date taken sorting can take a while. Do you want to proceed?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="397"/>
+        <location filename="supervisor.cpp" line="398"/>
         <source>Viele Unterordner</source>
         <translation>Many subfolders</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="398"/>
+        <location filename="supervisor.cpp" line="399"/>
         <source>Es wurden viele Unterordner gefunden. Das Laden kann einige Zeit in Anspruch nehmen. Soll fortgesetzt werden?</source>
         <translation>A large amount of subfolders has been found. Loading can take a while. Do you want to proceed?</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="458"/>
-        <location filename="supervisor.cpp" line="504"/>
+        <location filename="supervisor.cpp" line="459"/>
+        <location filename="supervisor.cpp" line="505"/>
         <source>Es gab ein Problem beim Laden des Bildes: &quot;%1&quot;.</source>
         <translation>There was a problem while loading the picture: &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="933"/>
+        <location filename="supervisor.cpp" line="934"/>
         <source>Timer beendet!</source>
         <translation>Timer stopped!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1262"/>
+        <location filename="supervisor.cpp" line="1263"/>
         <source>Die Show beinhaltet nur ein Bild, welches nicht geladen werden konnte: &quot;%1&quot;!</source>
         <translation>The show only contains a single picture, which could not be loaded: &quot;%1&quot;!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1280"/>
+        <location filename="supervisor.cpp" line="1281"/>
         <source>Es gab ein Problem beim Laden des Bildes: &quot;%1&quot;! Es befinden sich weitere Bilder in ther Show!</source>
         <translation>There was a problem loading the picture: &quot;%1&quot;! There are more pictures in the show!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1583"/>
+        <location filename="supervisor.cpp" line="1584"/>
         <source>Willkommen in picture-show 2!
 &quot;O&quot; drücken, um Bilder zu öffnen!</source>
         <translation>Welcome to picture-show 2!
 Press &quot;O&quot; to load pictures from your computer!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1747"/>
+        <location filename="supervisor.cpp" line="1748"/>
         <source>Bildnummer eingeben und ENTER drücken</source>
         <translation>Enter the number of the picture and press ENTER</translation>
     </message>
@@ -815,26 +835,26 @@ Press &quot;O&quot; to load pictures from your computer!</translation>
         <translation type="obsolete">Loading pictures and sorting them according to date taken may take a little while. Press ENTER to continue, ESC to cancel.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="404"/>
-        <location filename="supervisor.cpp" line="457"/>
-        <location filename="supervisor.cpp" line="503"/>
-        <location filename="supervisor.cpp" line="1261"/>
-        <location filename="supervisor.cpp" line="1279"/>
+        <location filename="supervisor.cpp" line="405"/>
+        <location filename="supervisor.cpp" line="458"/>
+        <location filename="supervisor.cpp" line="504"/>
+        <location filename="supervisor.cpp" line="1262"/>
+        <location filename="supervisor.cpp" line="1280"/>
         <source>Fehler</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="405"/>
+        <location filename="supervisor.cpp" line="406"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="421"/>
+        <location filename="supervisor.cpp" line="422"/>
         <source>Timer beendet</source>
         <translation>Timer stopped</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="422"/>
+        <location filename="supervisor.cpp" line="423"/>
         <source>Das letzte Bild der Show wurde erreicht</source>
         <translation>The last picture of the show has been reached</translation>
     </message>
@@ -847,22 +867,22 @@ Press &quot;O&quot; to load pictures from your computer!</translation>
         <translation type="obsolete">The previous picture does not exist: \&quot;%1\&quot;. The show should be restarted.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="715"/>
+        <location filename="supervisor.cpp" line="716"/>
         <source>%1/%2</source>
         <translation>%1/%2</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="760"/>
+        <location filename="supervisor.cpp" line="761"/>
         <source>%1  (%2 kB)</source>
         <translation>%1  (%2 kB)</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="785"/>
+        <location filename="supervisor.cpp" line="786"/>
         <source>%1 Sek  </source>
         <translation>%1 sec</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="791"/>
+        <location filename="supervisor.cpp" line="792"/>
         <source>1/%1  Sek</source>
         <translation>1/%1  sec</translation>
     </message>
@@ -871,12 +891,12 @@ Press &quot;O&quot; to load pictures from your computer!</translation>
         <translation type="obsolete">%1  sec</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="798"/>
+        <location filename="supervisor.cpp" line="799"/>
         <source>f/%1</source>
         <translation>f/%1</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="805"/>
+        <location filename="supervisor.cpp" line="806"/>
         <source>%1  mm</source>
         <translation>%1  mm</translation>
     </message>
@@ -889,7 +909,7 @@ Press &quot;O&quot; to load pictures from your computer!</translation>
         <translation type="obsolete">Timer stopped! </translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="936"/>
+        <location filename="supervisor.cpp" line="937"/>
         <source>Beenden?</source>
         <translation>Exit?</translation>
     </message>
@@ -908,17 +928,17 @@ Press &quot;O&quot; to load pictures from your computer!</translation>
 Press &quot;O&quot; to open pictures!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1660"/>
+        <location filename="supervisor.cpp" line="1661"/>
         <source>Informationsleiste mit &quot;I&quot; ein- und wieder ausblenden!</source>
         <translation>Show and hide info bar with &quot;I&quot;!</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1733"/>
+        <location filename="supervisor.cpp" line="1734"/>
         <source>Starte Timer:  %1 Sekunden</source>
         <translation>Start Timer: %1 seconds</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1741"/>
+        <location filename="supervisor.cpp" line="1742"/>
         <source>Stoppe Timer</source>
         <translation>Stopping Timer</translation>
     </message>
@@ -927,12 +947,12 @@ Press &quot;O&quot; to open pictures!</translation>
         <translation type="vanished">Enter number of picture and press ENTER</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1749"/>
+        <location filename="supervisor.cpp" line="1750"/>
         <source>Timer gestoppt. </source>
         <translation>Timer stopped.</translation>
     </message>
     <message>
-        <location filename="supervisor.cpp" line="1755"/>
+        <location filename="supervisor.cpp" line="1756"/>
         <source>Springe zu: %1 / %2</source>
         <translation>Jump to: %1 / %2</translation>
     </message>
@@ -952,27 +972,27 @@ Press &quot;O&quot; to open pictures!</translation>
         <translation type="vanished">The dropped pictures are invalid</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="131"/>
+        <location filename="loaddirectory.cpp" line="136"/>
         <source>Die abgelegten Bilder sind ungültig</source>
         <translation>The dropped pictures are invalid</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="145"/>
+        <location filename="loaddirectory.cpp" line="150"/>
         <source>Das angegebene Verzeichnis existiert nicht</source>
         <translation>The folder doesn&apos;t exist</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="166"/>
+        <location filename="loaddirectory.cpp" line="171"/>
         <source>LARGE_DATA3</source>
         <translation>LARGE_DATA3</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="206"/>
+        <location filename="loaddirectory.cpp" line="221"/>
         <source>, eventuell muss die Einstellung des Bewertungsfilters überprüft werden</source>
         <translation>, propably the rating filter setting needs to be checked</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="209"/>
+        <location filename="loaddirectory.cpp" line="224"/>
         <source>Das angegebene Verzeichnis enthält keine unterstützten Bilder</source>
         <translation>The specified directory does not contain any supported pictures</translation>
     </message>
@@ -981,12 +1001,12 @@ Press &quot;O&quot; to open pictures!</translation>
         <translation type="vanished">The folder doesn&apos;t contain supported pictrues</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="218"/>
+        <location filename="loaddirectory.cpp" line="233"/>
         <source>LARGE_DATA</source>
         <translation>LARGE_DATA</translation>
     </message>
     <message>
-        <location filename="loaddirectory.cpp" line="225"/>
+        <location filename="loaddirectory.cpp" line="240"/>
         <source>LARGE_DATA2</source>
         <translation>LARGE_DATA2</translation>
     </message>
