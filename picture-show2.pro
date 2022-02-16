@@ -40,7 +40,7 @@ CONFIG += qtquickcompiler
 
 # TODO: exiv2 with linux
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../Exiv2/lib/ -lexiv2
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Exiv2/lib/ -lexiv2
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../Exiv2/lib/ -lexiv2
 
 INCLUDEPATH += $$PWD/../../../Exiv2/include
 DEPENDPATH += $$PWD/../../../Exiv2/include
