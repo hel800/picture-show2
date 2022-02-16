@@ -29,7 +29,6 @@ February 2013
 #include <QQuickItem>
 #include <QQmlContext>
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QStyleHints>
 #include <QTranslator>
 #include <QTimer>
@@ -86,9 +85,6 @@ class Supervisor : public QObject
 public:
     explicit Supervisor(QObject *parent = 0);
     ~Supervisor();
-
-    void setView(QtQuick2ApplicationViewer * view);
-    void setDialog(SettingsDialog * dialog);
 
     void bindings();
     bool isQmlReady();
@@ -170,9 +166,9 @@ private slots:
     void hideMessage();
     void blendJumpToPreview(bool state = true);
 
-    void queueTask(WaitingTask task);
+    void queueTask(Supervisor::WaitingTask task);
 
-    void startInputMode(InputMode mode, int timeout = 5000);
+    void startInputMode(Supervisor::InputMode mode, int timeout = 5000);
     void inputModeTimeout();
     void timerInputValueTimeout();
 
@@ -188,20 +184,20 @@ private:
     void printState();
 
     // HELPER CLASSES
-    SettingsDialog * m_setDialog;
+    QScopedPointer<SettingsDialog> m_setDialog;
     QTranslator m_translator;
-    QtQuick2ApplicationViewer * m_quickView;
-    loadDirectory * m_dirLoader;
-    ImageProvider * m_imgProvider;
+    QScopedPointer<QtQuick2ApplicationViewer> m_quickView;
+    QScopedPointer<loadDirectory> m_dirLoader;
+    QScopedPointer<ImageProvider> m_imgProvider;
 
     // Automatic Timer and Wait Timer
-    QTimer * m_automaticForward;
+    QScopedPointer<QTimer> m_automaticForward;
     bool m_automaticForwardActive;
-    QTimer * m_messageTimeout;
-    QTimer * m_inputMessageTimeout;
-    QTimer * m_inputTimeout;
-    QTimer * m_mousePressTimer;
-    QTimer * m_jumptoPreview;
+    QScopedPointer<QTimer> m_messageTimeout;
+    QScopedPointer<QTimer> m_inputMessageTimeout;
+    QScopedPointer<QTimer> m_inputTimeout;
+    QScopedPointer<QTimer> m_mousePressTimer;
+    QScopedPointer<QTimer> m_jumptoPreview;
     QQueue<WaitingTask> m_wTask;
 
     // LIST containing all images

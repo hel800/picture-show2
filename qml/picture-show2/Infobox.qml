@@ -21,8 +21,8 @@ February 2013
 
 --------------------------------------------------------------------*/
 
-import QtQuick 2.0
-import QtGraphicalEffects 1.0
+import QtQuick 6.0
+import Qt5Compat.GraphicalEffects
 import my.library 1.0
 
 Item {

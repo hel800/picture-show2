@@ -23,13 +23,20 @@ February 2013
 
 #include "supervisor.h"
 #include "xmpinfo.h"
+#include <QRegularExpression>
 
 Supervisor::Supervisor(QObject *parent) :
     QObject(parent)
+  , m_setDialog(new SettingsDialog())
+  , m_quickView(new QtQuick2ApplicationViewer())
+  , m_dirLoader(new loadDirectory())
+  , m_automaticForward(new QTimer(this))
+  , m_messageTimeout(new QTimer(this))
+  , m_inputMessageTimeout(new QTimer(this))
+  , m_inputTimeout(new QTimer(this))
+  , m_mousePressTimer(new QTimer(this))
+  , m_jumptoPreview(new QTimer(this))
 {
-    m_quickView = new QtQuick2ApplicationViewer();
-    m_setDialog = new SettingsDialog();
-
     if (m_setDialog->getLanguage() != "de")
     {
         if (m_translator.load(QCoreApplication::applicationDirPath() + "/picture-show2_" + m_setDialog->getLanguage(), "."))
@@ -40,13 +47,13 @@ Supervisor::Supervisor(QObject *parent) :
 
     m_quickView->setMinimumSize(QSize(640, 480));
     QQmlContext * context = m_quickView->engine()->rootContext();
-    context->setContextProperty("_settings_dialog", m_setDialog);
+    context->setContextProperty("_settings_dialog", m_setDialog.data());
     context->setContextProperty("_supervisor", this);
 
     qmlRegisterType<QTimer>("my.library", 1, 0, "QTimer");
 
 //    m_quickView->engine()->setImportPathList(QStringList());
-    m_quickView->engine()->addImportPath("./qml");
+    // m_quickView->engine()->addImportPath("./qml");
 
     m_quickView->setMainQmlFile(QString("qrc:///qml/main.qml"));
 //    m_quickView->setMainQmlFile(QString("./qml/picture-show2/main.qml"));
@@ -75,7 +82,7 @@ Supervisor::Supervisor(QObject *parent) :
     m_quickView->setWindowProps(this->checkValidPosition(m_setDialog->getWindowPosition(), m_setDialog->getWindowSize()), m_setDialog->getWindowSize());
     m_quickView->setTitle("picture show 2");
 
-    m_quickView->showExpanded(false);
+    m_quickView->showExpanded( false );
 
     if (m_setDialog->getFullScreen())
         m_quickView->showExpanded(true);
@@ -83,14 +90,13 @@ Supervisor::Supervisor(QObject *parent) :
     this->moveOpenDialogToMiddle();
 
     ///------   ------///
-    m_dirLoader = new loadDirectory();
     m_dirLoader->setDirectoryList(&m_current_directory_list);
     m_currentIndex = -1;
-    m_imgProvider = new ImageProvider(&m_current_directory_list, &m_currentIndex);
+    m_imgProvider.reset(new ImageProvider(&m_current_directory_list, &m_currentIndex));
     m_imgProvider->setLoadingPointers(&m_loadingStateCurrent, &m_loadingStateNext, &m_loadingStatePrev, &m_loadingStateJumpto);
     m_imgProvider->setLoadingType(m_setDialog->getLoadingType());
     m_imgProvider->setVirtualScreenSize(m_quickView->screen()->virtualGeometry().size());
-    m_quickView->engine()->addImageProvider(QLatin1String("pictures"), m_imgProvider);
+    m_quickView->engine()->addImageProvider(QLatin1String("pictures"), m_imgProvider.data());
     m_blendingsActive = 0;
     m_overlayTransitions = 0;
     m_waitingActive = false;
@@ -98,30 +104,24 @@ Supervisor::Supervisor(QObject *parent) :
     m_timerValue = m_setDialog->getTimerValue();
     m_timerInputValue = QString("8");
 
-    m_automaticForward = new QTimer(this);
     m_automaticForwardActive = false;
-    connect(m_automaticForward, SIGNAL(timeout()), this, SLOT(nextImagePressed()));
+    connect(m_automaticForward.data(), SIGNAL(timeout()), this, SLOT(nextImagePressed()));
 
-    m_messageTimeout = new QTimer(this);
     m_messageTimeout->setSingleShot(true);
-    connect(m_messageTimeout, SIGNAL(timeout()), this, SLOT(hideMessage()));
+    connect(m_messageTimeout.data(), SIGNAL(timeout()), this, SLOT(hideMessage()));
 
-    m_inputMessageTimeout = new QTimer(this);
     m_inputMessageTimeout->setSingleShot(true);
-    connect(m_inputMessageTimeout, SIGNAL(timeout()), this, SLOT(inputModeTimeout()));
+    connect(m_inputMessageTimeout.data(), SIGNAL(timeout()), this, SLOT(inputModeTimeout()));
 
-    m_inputTimeout = new QTimer(this);
     m_inputTimeout->setSingleShot(true);
-    connect(m_inputTimeout, SIGNAL(timeout()), this, SLOT(timerInputValueTimeout()));
+    connect(m_inputTimeout.data(), SIGNAL(timeout()), this, SLOT(timerInputValueTimeout()));
 
-    m_mousePressTimer = new QTimer(this);
     m_mousePressTimer->setSingleShot(true);
-    connect(m_mousePressTimer, SIGNAL(timeout()), this, SLOT(leftMousePress()));
+    connect(m_mousePressTimer.data(), SIGNAL(timeout()), this, SLOT(leftMousePress()));
 
-    m_jumptoPreview = new QTimer(this);
     m_jumptoPreview->setSingleShot(true);
     m_jumptoPreview->setInterval(400);
-    connect(m_jumptoPreview, SIGNAL(timeout()), this, SLOT(showJumpToPreview()));
+    connect(m_jumptoPreview.data(), SIGNAL(timeout()), this, SLOT(showJumpToPreview()));
 
     m_showLoaded = false;
     m_currentlyLoading = false;
@@ -148,7 +148,7 @@ Supervisor::Supervisor(QObject *parent) :
     this->bindings();
 
     if (!m_setDialog->getFirstStart())
-        QTimer::singleShot(1000, m_setDialog, SLOT(show()));
+        QTimer::singleShot(1000, m_setDialog.data(), SLOT(show()));
     else
         QTimer::singleShot(900, this, SLOT(showHelpOverlay()));
 
@@ -158,10 +158,7 @@ Supervisor::Supervisor(QObject *parent) :
 Supervisor::~Supervisor()
 {
     if (!m_qml_ready)
-    {
-        delete m_setDialog;
         return;
-    }
 
     if (m_quickView->isExpanded())
     {
@@ -181,21 +178,6 @@ Supervisor::~Supervisor()
 
     m_quickView->rootObject()->disconnect();
     this->disconnect();
-
-    delete m_inputMessageTimeout;
-    delete m_imgProvider;
-    delete m_dirLoader;
-    delete m_setDialog;
-}
-
-void Supervisor::setView(QtQuick2ApplicationViewer *view)
-{
-    m_quickView = view;
-}
-
-void Supervisor::setDialog(SettingsDialog * dialog)
-{
-    m_setDialog = dialog;
 }
 
 void Supervisor::applyNewOptions()
@@ -226,7 +208,7 @@ void Supervisor::applyNewOptions()
          (currentRatingFilter != m_setDialog->getRatingFilterValue()) )
     {
         // MESSAGE!!!
-        QMessageBox msgBox(m_setDialog);
+        QMessageBox msgBox(m_setDialog.data());
         msgBox.setWindowTitle(tr("Frage"));
         msgBox.setIcon(QMessageBox::Question);
 
@@ -402,7 +384,7 @@ void Supervisor::directoryLoadingFinished(bool success)
         {
             this->showCustomMessage(QString("qrc:///img/message_error.png"),
                                 tr("Fehler"),
-                                tr("%1: %2").arg(m_dirLoader->getErrorMsg()).arg(m_dirLoader->getDirectory()));
+                                tr("%1: %2").arg(m_dirLoader->getErrorMsg(), m_dirLoader->getDirectory()));
             if (m_wTask.isEmpty())
                 this->queueTask(OPEN_DIALOG);
         }
@@ -700,7 +682,7 @@ void Supervisor::answerOfQuestion(QVariant answer)
         else
         {
             this->moveOpenDialogToMiddle();
-            QTimer::singleShot(500, m_setDialog, SLOT(show()));
+            QTimer::singleShot(500, m_setDialog.data(), SLOT(show()));
         }
         break;
     default:
@@ -736,8 +718,8 @@ QVariant Supervisor::getExifTagOfCurrent(QVariant tagname)
     else if (tag_string == "dateTimeOriginal")
     {
         QString dateTime = QString::fromStdString(exif.DateTimeOriginal).trimmed();
-        QRegExp exp("^[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$");
-        if (exp.exactMatch(dateTime))
+        QRegularExpression exp("^[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$");
+        if (exp.match(dateTime).hasMatch())
         {
             QDateTime dt = QDateTime::fromString(dateTime, "yyyy:MM:dd hh:mm:ss");
             if (dt.isValid())
@@ -857,7 +839,7 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
         {
             QQuickItem * msgBox = object->findChild<QQuickItem *>("messageBox");
             if (msgBox)
-                m_quickView->sendEvent(msgBox, event);
+                QCoreApplication::sendEvent(msgBox, event);
         }
 
         if (event->key() != Qt::Key_Return
@@ -980,16 +962,16 @@ void Supervisor::keyPressEvent( QKeyEvent * event )
     case Qt::Key_F11:
         {
         if (m_quickView->isExpanded())
-            {
-                m_quickView->showExpanded(false);
+        {
+            m_quickView->showExpanded(false);
 //                m_setDialog->setOnTopHint(false);
-            }
-            else
-            {
-                m_quickView->showExpanded(true);
+        }
+        else
+        {
+            m_quickView->showExpanded(true);
 //                m_setDialog->setOnTopHint(true);
-            }
-            emit refresh();
+        }
+        emit refresh();
         }
         break;
     case Qt::Key_H:
@@ -1170,7 +1152,7 @@ void Supervisor::mousePressEvent ( QMouseEvent * event )
             m_mousePressTimer->start(dc_speed + 1);
             break;
         }
-        case Qt::MidButton:
+        case Qt::MiddleButton:
         {
             if (m_currentlyWaiting)
                 return;
@@ -1515,23 +1497,23 @@ void Supervisor::bindings()
         return;
 
     // SettingsDialog Bindings
-    connect(m_setDialog, SIGNAL(accepted()), this, SLOT(applyNewOptions()));
-    connect(m_setDialog, SIGNAL(accepted()), m_quickView, SLOT(hideCursorOnFullscreen()));
-    connect(m_setDialog, SIGNAL(rejected()), m_quickView, SLOT(hideCursorOnFullscreen()));
-    connect(m_setDialog, SIGNAL(languageChanged(QVariant)), this, SLOT(changeLanguage(QVariant)));
-    connect(m_setDialog, SIGNAL(propertiesChanged()), this, SIGNAL(refresh()));
+    connect(m_setDialog.data(), SIGNAL(accepted()), this, SLOT(applyNewOptions()));
+    connect(m_setDialog.data(), SIGNAL(accepted()), m_quickView.data(), SLOT(hideCursorOnFullscreen()));
+    connect(m_setDialog.data(), SIGNAL(rejected()), m_quickView.data(), SLOT(hideCursorOnFullscreen()));
+    connect(m_setDialog.data(), SIGNAL(languageChanged(QVariant)), this, SLOT(changeLanguage(QVariant)));
+    connect(m_setDialog.data(), SIGNAL(propertiesChanged()), this, SIGNAL(refresh()));
 
     // QQuickWindow Bindings
-    connect(m_quickView, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(keyPressEvent(QKeyEvent*)));
+    connect(m_quickView.data(), SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(keyPressEvent(QKeyEvent*)));
 //    connect(m_quickView, SIGNAL(keyReleased(QKeyEvent*)), this, SLOT(keyReleaseEvent(QKeyEvent*)));
-    connect(m_quickView, SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
-    connect(m_quickView, SIGNAL(mouseDoubleClicked(QMouseEvent*)), this, SLOT(mouseDoubleClickEvent(QMouseEvent*)));
-    connect(m_quickView, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
-    connect(m_quickView, SIGNAL(mouseWheelTurned(QWheelEvent*)), this, SLOT(mouseWheelEvent(QWheelEvent*)));
-    connect(m_quickView, SIGNAL(windowResized(QResizeEvent*)), this, SLOT(resizeEvent(QResizeEvent*)));
+    connect(m_quickView.data(), SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
+    connect(m_quickView.data(), SIGNAL(mouseDoubleClicked(QMouseEvent*)), this, SLOT(mouseDoubleClickEvent(QMouseEvent*)));
+    connect(m_quickView.data(), SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
+    connect(m_quickView.data(), SIGNAL(mouseWheelTurned(QWheelEvent*)), this, SLOT(mouseWheelEvent(QWheelEvent*)));
+    connect(m_quickView.data(), SIGNAL(windowResized(QResizeEvent*)), this, SLOT(resizeEvent(QResizeEvent*)));
     connect(m_quickView->engine(), SIGNAL(warnings(QList<QQmlError>)), this, SLOT(errorOccurred(QList<QQmlError>)));
 
-    connect(m_dirLoader, SIGNAL(loadDirectoryFinished(bool)), this, SLOT(directoryLoadingFinished(bool)));
+    connect(m_dirLoader.data(), SIGNAL(loadDirectoryFinished(bool)), this, SLOT(directoryLoadingFinished(bool)));
 
     // QML Bindings
     QObject * rootObject = (QObject*)m_quickView->rootObject();
@@ -1827,7 +1809,7 @@ void Supervisor::timerInputValueTimeout()
     }
     else if (m_activeInputMode == MODE_JUMPTO)
     {
-        m_jumpToImageValue.replace("_", QString("")).trimmed();
+        m_jumpToImageValue = m_jumpToImageValue.replace("_", QString("")).trimmed();
         this->startInputMode(MODE_JUMPTO, -1);
         this->showJumpToPreview();
     }

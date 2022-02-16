@@ -20,12 +20,12 @@ author: Sebastian Schäfer
 March 2013
 
 --------------------------------------------------------------------*/
+#define _HAS_AUTO_PTR_ETC 1
 
 #include "loaddirectory.h"
-#include "threadeddatereader.h"
 
 #include "xmpinfo.h"
-#include "xmptoolbox.h"
+//#include "xmptoolbox.h"
 
 #include <time.h>
 #include <QThreadPool>
@@ -138,7 +138,7 @@ void loadDirectory::run()
 
         this->m_dirList->clear();
 
-        tempList.append(this->m_dropList->toList());
+        tempList.append(this->m_dropList->values());
     }
     else
     {
@@ -191,7 +191,7 @@ void loadDirectory::run()
     // CHECK FOR RATING FILTER
     if ( m_RatingFilter > 0 )
     {
-      tempList.erase( std::remove_if( tempList.begin(),
+        tempList.erase( std::remove_if( tempList.begin(),
                                       tempList.end(),
                                       [&]( const QString& filename ) {
                                         short rating = getRatingOfImage( filename );
@@ -249,19 +249,13 @@ void loadDirectory::run()
         for(const auto& file : tempList)
         {
             QFileInfo info(file);
-            //QDateTime date = readOriginalDate(info.absoluteFilePath());
-            QDateTime date = XMPToolBox::readExifDate( file );
+            QDateTime date = readOriginalDate(info.absoluteFilePath());
+            //QDateTime date = XMPToolBox::readExifDate( file );
             std::pair<QFileInfo, QDateTime> pair;
             pair.first = info;
             pair.second = date;
             temp2list.push_back(pair);
-
-//            threadedDateReader *reader = new threadedDateReader();
-//            reader->setResultContainer(&temp2list.last());
-//            QThreadPool::globalInstance()->start(reader);
         }
-
-        //        QThreadPool::globalInstance()->waitForDone();
 
         std::sort( temp2list.begin(),
                    temp2list.end(),
@@ -287,9 +281,9 @@ void loadDirectory::run()
     else
     {
       for ( int i = 0; i < tempList.size(); i++ )
-        this->m_dirList->append( tempList.at( i ) );
+        this->m_dirList->append( QFileInfo( tempList.at( i ) ) );
 
-      qSort( this->m_dirList->begin(), this->m_dirList->end(), fileNameLessThan );
+      std::sort( this->m_dirList->begin(), this->m_dirList->end(), fileNameLessThan );
     }
 
     //qDebug( QString::number( timer.elapsed() ).toLocal8Bit().data() );

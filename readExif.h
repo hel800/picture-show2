@@ -16,7 +16,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 
 ......................................................................
 
-author: Sebastian Sch‰fer
+author: Sebastian Sch√§fer
 February 2013
 
 --------------------------------------------------------------------*/
@@ -41,9 +41,7 @@ static QDateTime readOriginalDate(const QString &fname)
 
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly))
-    {
         return originalDate;
-    }
 
     QByteArray rawBuffer = file.read(100000);
     const unsigned char * buf = (const unsigned char *) rawBuffer.constData();
@@ -51,24 +49,14 @@ static QDateTime readOriginalDate(const QString &fname)
 
     EXIFInfo result;
     int code = result.parseFrom(buf, fsize);
+    file.close();
 
-    if (code)
+    if (code != 0)
     {
-        file.close();
         qDebug("Exif parsing failed!");
         return originalDate;
     }
-    else
-    {
-        file.close();
-    }
-
-    QString date = QString::fromStdString(result.DateTimeOriginal);
-    if(!date.isEmpty())
-    {
-        originalDate = QDateTime::fromString(date, QString("yyyy:MM:dd HH:mm:ss"));
-    }
-
+    originalDate = QDateTime::fromString(QString::fromStdString(result.DateTimeOriginal), QString("yyyy:MM:dd HH:mm:ss"));
     return originalDate;
 }
 

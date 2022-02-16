@@ -48,7 +48,7 @@ class SettingsDialog;
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
-    Q_ENUMS(ScaleType)
+    Q_ENUM(ScaleType)
     Q_PROPERTY(double fadeTime READ getCurrentFadeTime NOTIFY propertiesChanged)
     Q_PROPERTY(ScaleType scale READ getScaleType NOTIFY propertiesChanged)
     
@@ -156,15 +156,15 @@ private slots:
     void on_pushButton_loadColl_clicked();
 
 private:
-    Ui::SettingsDialog *ui;
+    QScopedPointer<Ui::SettingsDialog> m_GUI;
     bool languageChangeSignalOff;
 
-    HelpWindow * m_helpWindow;
-    QNetworkAccessManager * m_networkManager;
+    QSharedPointer<HelpWindow> m_helpWindow;
+    QSharedPointer<QNetworkAccessManager> m_networkManager;
 
     // Drag and Drop Support
-    readDirList * m_dirListReader;
-    QSet<QString> * m_droppedItemsList;
+    QSharedPointer<readDirList> m_dirListReader;
+    QSet<QString> *m_droppedItemsList;
     QList<QUrl> m_cachedDropList;
     QSet<QUrl> m_current_collection;
     bool m_dropListChanged;

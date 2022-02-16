@@ -29,13 +29,6 @@
         <file alias="star.png">img/star.png</file>
         <file alias="star_neq.png">img/star_neg.png</file>
     </qresource>
-    <qresource prefix="/qml">
-        <file alias="main.qml">qml/picture-show2/main.qml</file>
-        <file alias="Helpscreen.qml">qml/picture-show2/Helpscreen.qml</file>
-        <file alias="Messagebox.qml">qml/picture-show2/Messagebox.qml</file>
-        <file alias="Infobox.qml">qml/picture-show2/Infobox.qml</file>
-        <file alias="BubbleMessage.qml">qml/picture-show2/BubbleMessage.qml</file>
-    </qresource>
     <qresource prefix="/fonts">
         <file alias="good_times.ttf">fonts/good_times.ttf</file>
         <file alias="pt_sans.ttf">fonts/pt_sans.ttf</file>
@@ -43,5 +36,12 @@
     <qresource prefix="/doc">
         <file alias="help_de.html">doc/help_de.html</file>
         <file alias="help_en.html">doc/help_en.html</file>
+    </qresource>
+    <qresource prefix="/qml">
+        <file alias="BubbleMessage.qml">qml/picture-show2/BubbleMessage.qml</file>
+        <file alias="Helpscreen.qml">qml/picture-show2/Helpscreen.qml</file>
+        <file alias="Infobox.qml">qml/picture-show2/Infobox.qml</file>
+        <file alias="main.qml">qml/picture-show2/main.qml</file>
+        <file alias="Messagebox.qml">qml/picture-show2/Messagebox.qml</file>
     </qresource>
 </RCC>

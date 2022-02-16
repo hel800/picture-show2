@@ -16,7 +16,7 @@ along with picture-show. If not, see <http://www.gnu.org/licenses/>.
 
 ......................................................................
 
-author: Sebastian Sch‰fer
+author: Sebastian Sch√§fer
 February 2013
 
 --------------------------------------------------------------------*/

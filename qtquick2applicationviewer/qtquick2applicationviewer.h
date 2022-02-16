@@ -58,9 +58,12 @@ protected slots:
 private:
     class QtQuick2ApplicationViewerPrivate *d;
 
-    QPoint lastMousePos;
+    QPointF lastMousePos;
     QPoint positionBeforeFullscreen;
     QSize sizeBeforeFullscreen;
+
+    bool mouseLeftButtonDown;
+    bool fullScreenActive;
 };
 
 #endif // QTQUICK2APPLICATIONVIEWER_H
