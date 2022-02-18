@@ -36,6 +36,7 @@ Supervisor::Supervisor(QObject *parent) :
   , m_inputTimeout(new QTimer(this))
   , m_mousePressTimer(new QTimer(this))
   , m_jumptoPreview(new QTimer(this))
+  , m_panoramaModeActive(false)
 {
     if (m_setDialog->getLanguage() != "de")
     {
@@ -178,6 +179,8 @@ Supervisor::~Supervisor()
 
     m_quickView->rootObject()->disconnect();
     this->disconnect();
+
+    m_quickView->deleteLater();
 }
 
 void Supervisor::applyNewOptions()
@@ -1498,19 +1501,19 @@ void Supervisor::bindings()
 
     // SettingsDialog Bindings
     connect(m_setDialog.data(), SIGNAL(accepted()), this, SLOT(applyNewOptions()));
-    connect(m_setDialog.data(), SIGNAL(accepted()), m_quickView.data(), SLOT(hideCursorOnFullscreen()));
-    connect(m_setDialog.data(), SIGNAL(rejected()), m_quickView.data(), SLOT(hideCursorOnFullscreen()));
+    connect(m_setDialog.data(), SIGNAL(accepted()), m_quickView, SLOT(hideCursorOnFullscreen()));
+    connect(m_setDialog.data(), SIGNAL(rejected()), m_quickView, SLOT(hideCursorOnFullscreen()));
     connect(m_setDialog.data(), SIGNAL(languageChanged(QVariant)), this, SLOT(changeLanguage(QVariant)));
     connect(m_setDialog.data(), SIGNAL(propertiesChanged()), this, SIGNAL(refresh()));
 
     // QQuickWindow Bindings
-    connect(m_quickView.data(), SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(keyPressEvent(QKeyEvent*)));
+    connect(m_quickView, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(keyPressEvent(QKeyEvent*)));
 //    connect(m_quickView, SIGNAL(keyReleased(QKeyEvent*)), this, SLOT(keyReleaseEvent(QKeyEvent*)));
-    connect(m_quickView.data(), SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
-    connect(m_quickView.data(), SIGNAL(mouseDoubleClicked(QMouseEvent*)), this, SLOT(mouseDoubleClickEvent(QMouseEvent*)));
-    connect(m_quickView.data(), SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
-    connect(m_quickView.data(), SIGNAL(mouseWheelTurned(QWheelEvent*)), this, SLOT(mouseWheelEvent(QWheelEvent*)));
-    connect(m_quickView.data(), SIGNAL(windowResized(QResizeEvent*)), this, SLOT(resizeEvent(QResizeEvent*)));
+    connect(m_quickView, SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
+    connect(m_quickView, SIGNAL(mouseDoubleClicked(QMouseEvent*)), this, SLOT(mouseDoubleClickEvent(QMouseEvent*)));
+    connect(m_quickView, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
+    connect(m_quickView, SIGNAL(mouseWheelTurned(QWheelEvent*)), this, SLOT(mouseWheelEvent(QWheelEvent*)));
+    connect(m_quickView, SIGNAL(windowResized(QResizeEvent*)), this, SLOT(resizeEvent(QResizeEvent*)));
     connect(m_quickView->engine(), SIGNAL(warnings(QList<QQmlError>)), this, SLOT(errorOccurred(QList<QQmlError>)));
 
     connect(m_dirLoader.data(), SIGNAL(loadDirectoryFinished(bool)), this, SLOT(directoryLoadingFinished(bool)));

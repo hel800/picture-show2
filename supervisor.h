@@ -186,7 +186,7 @@ private:
     // HELPER CLASSES
     QScopedPointer<SettingsDialog> m_setDialog;
     QTranslator m_translator;
-    QScopedPointer<QtQuick2ApplicationViewer> m_quickView;
+    QtQuick2ApplicationViewer * m_quickView;
     QScopedPointer<loadDirectory> m_dirLoader;
     QScopedPointer<ImageProvider> m_imgProvider;
 
