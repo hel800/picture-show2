@@ -35,7 +35,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     m_GUI->setupUi(this);
     this->setModal(true);
     this->setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    m_GUI->groupBox_news->hide();
+    m_GUI->tabWidget_news->hide();
     m_GUI->pushButton_load->setFocus();
     m_GUI->label_folderImage->setVisible(false);
     m_GUI->line_dropbox->setVisible(false);
@@ -55,6 +55,9 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     this->m_helpWindow->setModal(true);
 
     connect(this->m_networkManager.data(), SIGNAL(finished(QNetworkReply*)), this, SLOT(networkReplyReady(QNetworkReply*)));
+
+    connect(this, &QDialog::accepted, this, &SettingsDialog::saveSettings);
+    connect(this, &QDialog::rejected, this, &SettingsDialog::saveSettings);
 
     m_GUI->comboBox_directoryPath->setEditable(true);
     if (m_GUI->comboBox_effect->currentIndex() == 0)
@@ -297,7 +300,7 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
                     updateText += QString("</span></a></p></body></html>");
 
                     m_GUI->label_updateText->setText(updateText);
-                    m_GUI->groupBox_news->show();
+                    m_GUI->tabWidget_news->show();
                 }
             }
         }
