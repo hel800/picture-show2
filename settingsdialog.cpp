@@ -281,7 +281,7 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
                 else
                     return;
 
-                QRegularExpressionMatch av_version_match = versionNr.match( current_version_text );
+                QRegularExpressionMatch av_version_match = versionNr.match( available_version_text );
                 QStringList caps2 = av_version_match.capturedTexts();
                 if (av_version_match.hasMatch() && caps2.size() > 1)
                     available_version = caps2.at(1).toDouble();
