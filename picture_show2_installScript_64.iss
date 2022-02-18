@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{20F1BC48-DFBD-4C8C-8C24-3A61EB7CC8F9}
 AppName=picture-show2
-AppVersion=2.4 beta
-;AppVerName=picture-show2 2.01 beta
+AppVersion=2.41
+;AppVerName=picture-show2 2.41
 AppPublisher=bsSoft
 AppPublisherURL=https://hel800.github.io/picture-show2/
 AppSupportURL=https://hel800.github.io/picture-show2/
@@ -18,7 +18,7 @@ DefaultGroupName=picture-show2
 AllowNoIcons=yes
 LicenseFile=D:\dev\code\picture-show2\src\license.txt
 OutputDir=D:\dev\code\picture-show2\install\x64
-OutputBaseFilename=picture-show2_24beta_x64_setup
+OutputBaseFilename=picture-show2_241_x64_setup
 SetupIconFile=D:\dev\code\picture-show2\src\img\box_icon.ico
 Compression=lzma
 SolidCompression=yes
