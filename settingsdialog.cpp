@@ -24,6 +24,7 @@ February 2013
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
+#include <QImageReader>
 #include <iostream>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
@@ -682,6 +683,8 @@ void SettingsDialog::loadSettings()
     m_GUI->checkBox_updateNotification->setChecked(settings.value("checkForUpdates", QVariant(true)).toBool());
     m_GUI->comboBox_bgColor->setCurrentIndex(settings.value("bgColor", QVariant(1)).toInt());
     m_GUI->tabWidget_open->setCurrentIndex(settings.value("openTabIndex", QVariant(0)).toInt());
+
+    QImageReader::setAllocationLimit(settings.value("allocationLimitInMb", QVariant(512)).toInt());
 }
 
 void SettingsDialog::saveSettings()
