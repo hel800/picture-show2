@@ -164,7 +164,7 @@ private:
 
     // Drag and Drop Support
     QSharedPointer<readDirList> m_dirListReader;
-    QSet<QString> *m_droppedItemsList;
+    QSet<QString> m_droppedItemsList;
     QList<QUrl> m_cachedDropList;
     QSet<QUrl> m_current_collection;
     bool m_dropListChanged;

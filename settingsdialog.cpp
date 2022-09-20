@@ -310,13 +310,13 @@ void SettingsDialog::networkReplyReady(QNetworkReply * reply)
 
 void SettingsDialog::readDirListReady()
 {
-    int num_elements_before = this->m_droppedItemsList->size();
+    int num_elements_before = this->m_droppedItemsList.size();
     QList<QFileInfo> newItems = this->m_dirListReader->getItemList();
 
     foreach (QFileInfo info, newItems)
-        this->m_droppedItemsList->insert(info.absoluteFilePath());
+        this->m_droppedItemsList.insert(info.absoluteFilePath());
 
-    int num_elements_after = this->m_droppedItemsList->size();
+    int num_elements_after = this->m_droppedItemsList.size();
 
     int num_elements = num_elements_after;
 
@@ -372,7 +372,7 @@ void SettingsDialog::readDirListCanceled()
     }
     else if (!this->m_dirListReader->success)
     {
-        if (this->m_droppedItemsList->size() > 0)
+        if (this->m_droppedItemsList.size() > 0)
             m_GUI->label_droppingInstruction->setText(tr("Hier weitere Bilder und/oder Ordner ablegen..."));
         else
             m_GUI->label_droppingInstruction->setText(tr("Hier Bilder und/oder Ordner ablegen..."));
@@ -471,7 +471,7 @@ void SettingsDialog::setLoadingType(LoadingType type)
 QSet<QString> * SettingsDialog::getDroppedItems()
 {
     this->m_dropListChanged = false;
-    return this->m_droppedItemsList;
+    return &this->m_droppedItemsList;
 }
 
 bool SettingsDialog::getDropListChanged()
@@ -774,7 +774,7 @@ void SettingsDialog::on_pushButton_load_clicked()
             return;
         }
 
-        if (this->m_droppedItemsList->size() == 0)
+        if (this->m_droppedItemsList.size() == 0)
         {
             QMessageBox::warning(this, tr("Keine Bilder gefunden"), tr("Es wurden keine Bilder/Ordner abgelegt, oder keine unterstützten Bilder in den Ordnern gefunden!"));
             return;
@@ -789,7 +789,7 @@ void SettingsDialog::on_pushButton_clearZone_clicked()
     if (this->m_dirListReader->isRunning())
         this->m_dirListReader->cancel();
 
-    this->m_droppedItemsList->clear();
+    this->m_droppedItemsList.clear();
     this->m_current_collection.clear();
 
     m_GUI->label_collection->setText(tr("In Drop Zone: "));
@@ -885,7 +885,7 @@ void SettingsDialog::on_pushButton_loadColl_clicked()
         QString col_name;
         QList<QUrl> collection_list = loadCollDialog.getSelectedCollection(col_name);
 
-        this->m_droppedItemsList->clear();
+        this->m_droppedItemsList.clear();
         this->m_current_collection.clear();
 
         if (collection_list.size() > 0)
